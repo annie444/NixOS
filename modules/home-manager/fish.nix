@@ -102,7 +102,7 @@ in
         enable = true;
         defaultCommand = "bfs . -type f";
         fileWidgetCommand = "bfs . -type f";
-        fileWidgetOptions = [ "--preview 'bat -n 20 {}'" ];
+        fileWidgetOptions = [ "--preview 'bat {}'" ];
         changeDirWidgetCommand = "bfs . -type d";
         changeDirWidgetOptions = [ "--preview 'tre -C {} | bat -n 200'" ];
         historyWidgetOptions = [ 
@@ -126,7 +126,7 @@ in
         settings = {
           aliases = {
             icl = "issue close";
-            icr = "issue create"
+            icr = "issue create";
             il = "issue list";
             ire = "issue reopen";
             iv = "issue view";
@@ -742,9 +742,8 @@ in
           vim = "nvim";
           vi = "nvim";
           vimdiff = "nvim -d";
-          gd = "batdiff";
+          gd = "delta";
           bathelp = "bat --plain --language=help $argv";
-          ssh = "kitten ssh";
           note = "nvim -c ':ObsidianToday<CR>' $argv";
           trm = "trash-rm";
           tre = "trash-empty";
@@ -768,12 +767,9 @@ in
           config.enable = true;
           functions.enable = true;
         };
-        promptInit = ''
-          starship init fish | source
-        '';
+
         shellInit = ''
           set -U fish_term24bit 1
-          set -U EDITOR nvim
           
           # Aliases
           fish_config theme choose "Dracula Official"
@@ -783,10 +779,6 @@ in
           if test "$(uname)" = "Darwin"
             alias apptainer "limactl shell apptainer"
           end
-          set -gx fzf_preview_dir eza --all --color=always
-          set -gx fzf_preview_file bat
-          set -gx fzf_fd_opts --hidden
-          set -gx fzf_diff_highlighter delta --paging=never --width=20
         
           if set -q KITTY_INSTALLATION_DIR
             source "$KITTY_INSTALLATION_DIR/shell-integration/fish/vendor_conf.d/kitty-shell-integration.fish"
@@ -797,14 +789,11 @@ in
             $argv --help 2>&1 | bathelp
           end
         
-          set -gx MANPAGER "sh -c 'col -bx | bat -l man -p'"
-          set -gx MANROFFOPT "-c"
-          set -gx BAT_THEME "Dracula"
-          set -gx XDG_CONFIG_HOME "$HOME/.config"
-          set -gx XDG_CACHE_HOME "$HOME/.cache"
-          set -gx COLORTERM "truecolor"
-          set -gx TERM "xterm-256color"
-          set -gx EDITOR "nvim"
+          set -Ux MANPAGER "sh -c 'col -bx | bat -l man -p'"
+          set -Ux MANROFFOPT "-c"
+          set -Ux COLORTERM "truecolor"
+          set -Ux TERM "xterm-256color"
+          set -Ux EDITOR "nvim"
           
           if test -d "$HOME/Library/Group\ Containers/2BUA8C4S2C.com.1password/t"
             set -gx SSH_AUTH_SOCK "~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock"
