@@ -2,8 +2,8 @@
 
 with lib;
 
-let cfg = config.tmux; in {
-  options.tmux.enable = mkEnableOption "tmux profile";
+let cfg = config.profiles.tmux; in {
+  options.profiles.tmux.enable = mkEnableOption "tmux profile";
 
   config = mkIf cfg.enable {
     programs.tmux = {

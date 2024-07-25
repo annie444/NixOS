@@ -3,9 +3,9 @@
 with lib;
 
 let
-  cfg = config.homelab;
+  cfg = config.roles.homelab;
 in {
-  options.homelab = {
+  options.roles.homelab = {
     enable = mkEnableOption "Enable homelab services";
     hostname = mkOption {
       type = types.str;

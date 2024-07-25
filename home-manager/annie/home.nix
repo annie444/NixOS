@@ -56,8 +56,8 @@
   # programs.neovim.enable = true;
   # home.packages = with pkgs; [ steam ];
 
-  imports.fish.enable = true;
-  imports.tmux.enable = true;
+  profiles.fish.enable = true;
+  profiles.tmux.enable = true;
 
   # Enable home-manager and git
   programs.home-manager.enable = true;

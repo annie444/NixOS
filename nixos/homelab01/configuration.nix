@@ -46,13 +46,11 @@
     };
   };
 
-  boot.loader.efi.canTouchEfiVariables = true;
-
   time.timeZone = "Americas/Los_Angeles";
 
   networking.hostName = "homelab01";
 
-  imports.homelab = {
+  roles.homelab = {
     enable = true;
     hostname = "homelab01";
   };

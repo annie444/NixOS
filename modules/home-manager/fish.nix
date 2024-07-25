@@ -3,10 +3,10 @@
 with lib;
 
 let
-  cfg = config.fish;
+  cfg = config.profiles.fish;
 in
 {
-  options.fish = {
+  options.profiles.fish = {
     enable = mkEnableOption "enable fish profile";
   };
   config = mkIf cfg.enable {
