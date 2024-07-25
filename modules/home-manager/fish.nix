@@ -18,7 +18,7 @@ in
       direnv
       neovim
       autojump
-      dircolors
+      coreutils-full
       btop
       tre-command
       gnupg
