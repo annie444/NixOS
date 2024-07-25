@@ -1,5 +1,4 @@
-type = "lvm_pv";
-                vg = "pool";{
+{
   disko.devices = {
     disk = {
       nvme1 = {
@@ -8,13 +7,29 @@ type = "lvm_pv";
         content = {
           type = "gpt";
           partitions = {
+	    boot = {
+              size = "3G";
+              type = "ef02"; # for grub MBR
+	      content = {
+	        type = "filesystem";
+		format = "vfat";
+		mountpoint = "/boot";
+	      };
+            };
             ESP = {
-              size = "500M";
-              type = "EF00";
+              size = "3G";
+              type = "ef00";
               content = {
                 type = "filesystem";
                 format = "vfat";
-                mountpoint = "/boot";
+                mountpoint = "/boot/efi";
+              };
+            };
+            swap = {
+	      size = "168G";
+              content = {
+                type = "swap";
+		resumeDevice = true;
               };
             };
             root = {
@@ -24,11 +39,6 @@ type = "lvm_pv";
                 vg = "pool";
               };
 	    };
-            swap = {
-              swapfile = {
-                size = "168G";
-              };
-            };
           };
         };
       };
@@ -38,10 +48,6 @@ type = "lvm_pv";
         content = {
           type = "gpt";
           partitions = {
-            boot = {
-              size = "1M";
-              type = "EF02"; # for grub MBR
-            };
             root = {
               size = "100%";
               content = {
@@ -58,10 +64,6 @@ type = "lvm_pv";
         content = {
           type = "gpt";
           partitions = {
-            boot = {
-              size = "1M";
-              type = "EF02"; # for grub MBR
-            };
             mdadm = {
               size = "100%";
               content = {
@@ -78,10 +80,6 @@ type = "lvm_pv";
         content = {
           type = "gpt";
           partitions = {
-            boot = {
-              size = "1M";
-              type = "EF02"; # for grub MBR
-            };
             mdadm = {
               size = "100%";
               content = {
@@ -98,10 +96,6 @@ type = "lvm_pv";
         content = {
           type = "gpt";
           partitions = {
-            boot = {
-              size = "1M";
-              type = "EF02"; # for grub MBR
-            };
             mdadm = {
               size = "100%";
               content = {
@@ -118,10 +112,6 @@ type = "lvm_pv";
         content = {
           type = "gpt";
           partitions = {
-            boot = {
-              size = "1M";
-              type = "EF02"; # for grub MBR
-            };
             mdadm = {
               size = "100%";
               content = {

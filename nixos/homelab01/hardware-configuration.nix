@@ -12,74 +12,11 @@
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-amd" ];
   boot.extraModulePackages = [ ];
+  boot.loader.efi = {
+    canTouchEfiVariables = true;
+    efiSysMountPoint = "/boot/efi"; # ← use the same mount point here.
+  };
 
-  fileSystems."/" =
-    { device = "/dev/disk/by-uuid/a9dc091c-1170-4ec6-8d8c-6b97ecf493b2";
-      fsType = "btrfs";
-      options = [ "subvol=rootfs" ];
-    };
-
-  fileSystems."/nix" =
-    { device = "/dev/disk/by-uuid/a9dc091c-1170-4ec6-8d8c-6b97ecf493b2";
-      fsType = "btrfs";
-      options = [ "subvol=nix" ];
-    };
-
-  fileSystems."/.swapvol" =
-    { device = "/dev/disk/by-uuid/a9dc091c-1170-4ec6-8d8c-6b97ecf493b2";
-      fsType = "btrfs";
-      options = [ "subvol=swap" ];
-    };
-
-  fileSystems."/partition-root" =
-    { device = "/dev/disk/by-uuid/a9dc091c-1170-4ec6-8d8c-6b97ecf493b2";
-      fsType = "btrfs";
-    };
-
-  fileSystems."/home" =
-    { device = "/dev/disk/by-uuid/a9dc091c-1170-4ec6-8d8c-6b97ecf493b2";
-      fsType = "btrfs";
-      options = [ "subvol=home" ];
-    };
-
-  fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/5391-4278";
-      fsType = "vfat";
-      options = [ "fmask=0022" "dmask=0022" ];
-    };
-
-  fileSystems."/mnt/ssd1" =
-    { device = "/dev/disk/by-uuid/d13f2b44-c255-4dbc-bfa0-126a47e0ec3f";
-      fsType = "btrfs";
-    };
-
-  fileSystems."/mnt/wd1" =
-    { device = "/dev/disk/by-uuid/8ac212c2-cea4-41d4-b634-0d9c08f0bdc5";
-      fsType = "btrfs";
-    };
-
-  fileSystems."/mnt/wd2" =
-    { device = "/dev/disk/by-uuid/fac263e7-62a3-48be-9619-adfc0fb0d014";
-      fsType = "btrfs";
-    };
-
-  fileSystems."/var/lib/kubelet/pods/76fad3c5-6f2c-4556-8bba-4325b3a91be7/volumes/kubernetes.io~projected/kube-api-access-88rcn" =
-    { device = "tmpfs";
-      fsType = "tmpfs";
-    };
-
-  fileSystems."/var/lib/kubelet/pods/52106c62-9f7c-48a5-91b1-d1d9db201ba0/volumes/kubernetes.io~projected/kube-api-access-h758j" =
-    { device = "tmpfs";
-      fsType = "tmpfs";
-    };
-
-  swapDevices = [ ];
-
-  # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
-  # (the default) this is the recommended approach. When using systemd-networkd it's
-  # still possible to use this option, but it's recommended to use it in conjunction
-  # with explicit per-interface declarations with `networking.interfaces.<interface>.useDHCP`.
-  networking.useDHCP = lib.mkDefault true;
   # networking.interfaces.cni0.useDHCP = lib.mkDefault true;
   # networking.interfaces.enp42s0.useDHCP = lib.mkDefault true;
   # networking.interfaces.enp5s0.useDHCP = lib.mkDefault true;
