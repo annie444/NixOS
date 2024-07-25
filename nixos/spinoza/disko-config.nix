@@ -97,16 +97,8 @@
         level = 5;
         metadata = "1.2";
         content = {
-          type = "gpt";
-          partitions = {
-            primary = {
-              size = "100%";
-              content = {
-                type = "lvm_pv";
-                vg = "pool";
-              };
-            };
-          };
+          type = "lvm_pv";
+          vg = "pool";
         };
       };
     };
