@@ -26,6 +26,7 @@
     self,
     nixpkgs,
     home-manager,
+    neovim-nightly-overlay,
     disko,
     ...
   } @ inputs: let
