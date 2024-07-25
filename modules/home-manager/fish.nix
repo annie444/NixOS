@@ -39,7 +39,6 @@ in
       thefuck
       zoxide
       direnv
-      neovim
       autojump
       coreutils-full
       btop
