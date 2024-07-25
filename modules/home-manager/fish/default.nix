@@ -92,6 +92,14 @@ in
       fish = {
         enable = true;
 
+        useBabelfish = true;
+
+        vendor = {
+          config.enable = true;
+          completions.enable = true;
+          functions.enable = true;
+        };
+
         shellAbbrs = {
           du = "dust";
           g = "git";

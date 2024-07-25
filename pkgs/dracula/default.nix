@@ -2,8 +2,7 @@
   lib,
   pkgs,
   fetchFromGitHub,
-}:
-pkgs.fishPlugins.buildFishPlugin rec {
+}: pkgs.fishPlugins.buildFishPlugin rec {
   pname = "dracula";
   version = "06-23-2023";
 
