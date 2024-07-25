@@ -70,7 +70,6 @@ in
 
       direnv = {
         enable = true;
-        enableFishIntegration = true;
       };
 
       zoxide = {
