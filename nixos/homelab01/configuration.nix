@@ -13,7 +13,7 @@
   # You can import other NixOS modules here
   imports = [
     # If you want to use modules your own flake exports (from modules/nixos):
-    # outputs.nixosModules.example
+    outputs.nixosModules.homelab
 
     # Or modules from other flakes (such as nixos-hardware):
     inputs.nixos-hardware.nixosModules.common-cpu-amd
@@ -51,6 +51,11 @@
   time.timeZone = "Americas/Los_Angeles";
 
   networking.hostName = "homelab01";
+
+  imports.homelab = {
+    enable = true;
+    hostname = "homelab01";
+  };
 
   services.pipewire = {
     enable = true;

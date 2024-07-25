@@ -64,7 +64,7 @@
         specialArgs = {inherit inputs outputs;};
         modules = [
           # > Our main nixos configuration file <
-	  disko.nixosModules.disko
+	        disko.nixosModules.disko
           ./nixos/configuration.nix
           ./nixos/homelab01/configuration.nix
           ./nixos/homelab01/disko-config.nix

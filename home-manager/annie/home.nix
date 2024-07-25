@@ -11,13 +11,15 @@
   # You can import other home-manager modules here
   imports = [
     # If you want to use modules your own flake exports (from modules/home-manager):
-    # outputs.homeManagerModules.example
+    outputs.homeManagerModules.fish
+    outputs.homeManagerModules.tmux
 
     # Or modules exported from other flakes (such as nix-colors):
     # inputs.nix-colors.homeManagerModules.default
 
     # You can also split up your configuration and import pieces of it here:
-    # ./nvim.nix
+    # ./tmux
+    # ./fish.nix
   ];
 
   nixpkgs = {
@@ -53,6 +55,9 @@
   # Add stuff for your user as you see fit:
   # programs.neovim.enable = true;
   # home.packages = with pkgs; [ steam ];
+
+  imports.fish.enable = true;
+  imports.tmux.enable = true;
 
   # Enable home-manager and git
   programs.home-manager.enable = true;
