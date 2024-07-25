@@ -3,4 +3,5 @@
 {
   # List your module files here
   homelab = import ./homelab.nix;
+  gui = import ./gui.nix;
 }

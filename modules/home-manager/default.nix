@@ -4,4 +4,5 @@
   # List your module files here
   fish = import ./fish.nix;
   tmux = import ./tmux;
+  nvim = import ./nvim;
 }

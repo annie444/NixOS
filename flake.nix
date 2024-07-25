@@ -18,6 +18,8 @@
     disko.inputs.nixpkgs.follows = "nixpkgs";
 
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+
+    neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
   };
 
   outputs = {
@@ -70,6 +72,26 @@
           ./nixos/homelab01/disko-config.nix
         ];
       };
+      homelab02 = nixpkgs.lib.nixosSystem {
+        specialArgs = {inherit inputs outputs;};
+        modules = [
+          # > Our main nixos configuration file <
+	        disko.nixosModules.disko
+          ./nixos/configuration.nix
+          ./nixos/homelab02/configuration.nix
+          ./nixos/homelab02/disko-config.nix
+        ];
+      };
+      spinoza = nixpkgs.lib.nixosSystem {
+        specialArgs = {inherit inputs outputs;};
+        modules = [
+          # > Our main nixos configuration file <
+	        disko.nixosModules.disko
+          ./nixos/configuration.nix
+          ./nixos/spinoza/configuration.nix
+          ./nixos/spinoza/disko-config.nix
+        ];
+      };
     };
 
     # Standalone home-manager configuration entrypoint
@@ -80,7 +102,7 @@
         extraSpecialArgs = {inherit inputs outputs;};
         modules = [
           # > Our main home-manager configuration file <
-          ./home-manager/home.nix
+          ./home-manager/annie/home.nix
         ];
       };
     };

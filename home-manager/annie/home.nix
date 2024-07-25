@@ -13,12 +13,13 @@
     # If you want to use modules your own flake exports (from modules/home-manager):
     outputs.homeManagerModules.fish
     outputs.homeManagerModules.tmux
+    outputs.homeManagerModules.nvim
 
     # Or modules exported from other flakes (such as nix-colors):
     # inputs.nix-colors.homeManagerModules.default
 
     # You can also split up your configuration and import pieces of it here:
-    # ./tmux
+    ./pkgs.nix
     # ./fish.nix
   ];
 
@@ -31,7 +32,7 @@
       outputs.overlays.unstable-packages
 
       # You can also add overlays exported from other flakes:
-      # neovim-nightly-overlay.overlays.default
+      neovim-nightly-overlay.overlays.default
 
       # Or define it inline, for example:
       # (final: prev: {
@@ -52,12 +53,12 @@
     homeDirectory = "/home/annie";
   };
 
-  # Add stuff for your user as you see fit:
-  # programs.neovim.enable = true;
-  # home.packages = with pkgs; [ steam ];
-
   profiles.fish.enable = true;
   profiles.tmux.enable = true;
+  profiles.nvim = {
+    enable = true;
+    package = inputs.neovim-nightly-overlay.packages.${pkgs.system}.default;
+  };
 
   # Enable home-manager and git
   programs.home-manager.enable = true;

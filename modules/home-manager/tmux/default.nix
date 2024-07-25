@@ -20,6 +20,7 @@ let cfg = config.profiles.tmux; in {
       extraConfig = builtins.readFile ./tmux.conf;
       terminal = "screen-256color";
       plugins = with pkgs.tmuxPlugins; [
+        sensible
         yank
         weather
         tmux-fzf
@@ -121,7 +122,6 @@ let cfg = config.profiles.tmux; in {
             set -g @dracula-clients-plural clients
           '';
         }
-        sensible
       ]
     };
 
