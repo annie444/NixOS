@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  outputs,
   pkgs,
   ...
 }: {
@@ -32,5 +33,6 @@
   home.packages = with pkgs; [
     # Add your packages here
     firefox
+    git
   ];
 }

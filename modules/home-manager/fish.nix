@@ -10,7 +10,7 @@ in
     enable = mkEnableOption "enable fish profile";
   };
   config = mkIf cfg.enable {
-    environment.systemPackages = (with pkgs; [
+    home.packages = (with pkgs; [
       starship
       thefuck
       zoxide
@@ -120,8 +120,8 @@ in
           source ~/.config/op/plugins.sh
         '';
 
-      } // optionalAttrs cfg.autosuggest { autosuggestions.enable = true; };
+      };
     };
-    users.defaultUserShell = pkgs.zsh;
+    users.defaultUserShell = pkgs.fish;
   };
 }
