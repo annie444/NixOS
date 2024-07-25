@@ -99,12 +99,9 @@
           compression = "zstd";
           "com.sun:auto-snapshot" = "false";
         };
+        mountpoint = "/";
         postCreateHook = "zfs list -t snapshot -H -o name | grep -E '^zroot@blank$' || zfs snapshot zroot@blank";
         datasets = {
-          zfs_root = {
-            type = "zfs_fs";
-            mountpoint = "/";
-          };
           zfs_home = {
             type = "zfs_fs";
             mountpoint = "/home";
