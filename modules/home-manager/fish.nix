@@ -803,6 +803,5 @@ in
 
       };
     };
-    users.defaultUserShell = pkgs.fish;
   };
 }

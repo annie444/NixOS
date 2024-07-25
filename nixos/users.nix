@@ -1,4 +1,4 @@
-{ ... }: {
+{ pkgs, ... }: {
   users.users = {
     annie = {
       initialPassword = "correcthorsebatterystaple";
@@ -8,6 +8,7 @@
 	      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBvhfZJ3pXA5ZJ3+6PPI6NxvOg5E/y3kKZ1NxkfTKZoD"
       ];
       extraGroups = ["wheel"];
+      defaultUserShell = pkgs.fish;
     };
   };
 }
