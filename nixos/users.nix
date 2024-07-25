@@ -1,4 +1,5 @@
 { pkgs, ... }: {
+  programs.fish.enable = true;
   users.users = {
     annie = {
       initialPassword = "correcthorsebatterystaple";
