@@ -73,7 +73,7 @@ in
 
       eza = {
         enable = true;
-        enableFishIntegration = true;
+        enableAlias = true;
         extraOptions = [
           "-1"
           "-G"
