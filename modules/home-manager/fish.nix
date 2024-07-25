@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, outputs, pkgs, lib, ... }:
 
 with lib;
 
@@ -6,10 +6,33 @@ let
   cfg = config.profiles.fish;
 in
 {
+  
   options.profiles.fish = {
     enable = mkEnableOption "enable fish profile";
   };
   config = mkIf cfg.enable {
+
+    nixpkgs = {
+      # You can add overlays here
+      overlays = [
+        # Add overlays your own flake exports (from overlays and pkgs dir):
+        outputs.overlays.additions
+        outputs.overlays.modifications
+        outputs.overlays.unstable-packages
+
+        # Or define it inline, for example:
+        # (final: prev: {
+        #   hi = final.hello.overrideAttrs (oldAttrs: {
+        #     patches = [ ./change-hello-to-hi.patch ];
+        #   });
+        # })
+      ];
+      # Configure your nixpkgs instance
+      config = {
+        # Disable if you don't want unfree packages
+        allowUnfree = true;
+      };
+    };
 
     home.packages = (with pkgs; [
       starship
@@ -32,7 +55,6 @@ in
       tealdeer
     ]) ++ (with pkgs.fishPlugins; [
       fzf-fish
-      gitnow
       z
       done
       autopair
