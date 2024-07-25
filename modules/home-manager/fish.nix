@@ -761,12 +761,6 @@ in
           cd = "z";
           ".." = "z ..";
         };
-        vendor = {
-          completions.enable = true;
-          config.enable = true;
-          functions.enable = true;
-        };
-
         shellInit = ''
           set -U fish_term24bit 1
           
