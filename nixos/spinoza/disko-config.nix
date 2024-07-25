@@ -32,13 +32,13 @@
 		            resumeDevice = true;
               };
             };
-            primary = {
+            zfs = {
               size = "100%";
               content = {
-                type = "lvm_pv";
-                vg = "pool";
+                type = "zfs";
+                pool = "zroot";
               };
-            }; 
+            };
           };
         };
       };
@@ -48,11 +48,11 @@
         content = {
           type = "gpt";
           partitions = {
-            mdadm = {
+            zfs = {
               size = "100%";
               content = {
-                type = "mdraid";
-                name = "raid5";
+                type = "zfs";
+                pool = "zroot";
               };
             }; 
           };
@@ -64,11 +64,11 @@
         content = {
           type = "gpt";
           partitions = {
-            mdadm = {
+            zfs = {
               size = "100%";
               content = {
-                type = "mdraid";
-                name = "raid5";
+                type = "zfs";
+                pool = "zroot";
               };
             }; 
           };
@@ -80,42 +80,35 @@
         content = {
           type = "gpt";
           partitions = {
-            mdadm = {
+            zfs = {
               size = "100%";
               content = {
-                type = "mdraid";
-                name = "raid5";
+                type = "zfs";
+                pool = "zroot";
               };
             }; 
           };
         };
       }; 
     };
-    mdadm = {
-      raid5 = {
-        type = "mdadm";
-        level = 5;
-        metadata = "1.2";
-        content = {
-          type = "lvm_pv";
-          vg = "pool";
+    zpool = {
+      zroot = {
+        type = "zpool";
+        mode = "raidz";
+        rootFsOptions = {
+          compression = "zstd";
+          "com.sun:auto-snapshot" = "false";
         };
-      };
-    };
-    lvm_vg = {
-      pool = {
-        type = "lvm_vg";
-        lvs = {
-          root = {
-            size = "100%FREE";
-            content = {
-              type = "filesystem";
-              format = "ext4";
-              mountpoint = "/";
-              mountOptions = [
-                "defaults"
-              ];
-            };
+        postCreateHook = "zfs list -t snapshot -H -o name | grep -E '^zroot@blank$' || zfs snapshot zroot@blank";
+        datasets = {
+          zfs_root = {
+            type = "zfs_fs";
+            mountpoint = "/";
+          };
+          zfs_home = {
+            type = "zfs_fs";
+            mountpoint = "/home";
+            options."com.sun:auto-snapshot" = "true";
           };
         };
       };
