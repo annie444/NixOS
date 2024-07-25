@@ -53,6 +53,10 @@ in
       ripgrep
       jq
       tealdeer
+      gitnow
+      spark
+      abbreviation-tips
+      dracula
     ]) ++ (with pkgs.fishPlugins; [
       fzf-fish
       z
@@ -60,10 +64,6 @@ in
       autopair
       puffer
       github-copilot-cli-fish
-      gitnow
-      spark
-      abbreviation-tips
-      dracula
     ]);
 
     programs = {
