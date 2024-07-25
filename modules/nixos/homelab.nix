@@ -30,10 +30,10 @@ in {
 	      "--disable servicelb"
 	      "--disable traefik"
 	      "--disable local-storage"
-      ] ++ (if networking.hostName == "homelab01" then [] else [
+      ] ++ (if cfg.hostname == "homelab01" then [] else [
 	        "--server https://homelab01:6443"
       ]));
-      clusterInit = (networking.hostName == "homelab01");
+      clusterInit = (cfg.hostname == "homelab01");
     };
 
     # List packages installed in system profile. To search, run:
