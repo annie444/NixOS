@@ -122,8 +122,7 @@ let cfg = config.profiles.tmux; in {
             set -g @dracula-clients-plural clients
           '';
         }
-      ]
+      ];
     };
-
   };
 }
