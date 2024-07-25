@@ -55,10 +55,7 @@
 
   profiles.fish.enable = true;
   profiles.tmux.enable = true;
-  profiles.nvim = {
-    enable = true;
-    package = inputs.neovim-nightly-overlay.packages.${pkgs.system}.default;
-  };
+  profiles.nvim.enable = true;
 
   # Enable home-manager and git
   programs.home-manager.enable = true;
