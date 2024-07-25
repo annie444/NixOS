@@ -73,7 +73,6 @@ in
 
       eza = {
         enable = true;
-        enableAlias = true;
         extraOptions = [
           "-1"
           "-G"
