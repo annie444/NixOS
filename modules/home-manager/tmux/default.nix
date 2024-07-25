@@ -10,7 +10,6 @@ let cfg = config.profiles.tmux; in {
       enable = true;
       baseIndex = 1;
       clock24 = true;
-      extraConfigBeforePlugins = "set -g mouse on";
       keyMode = "vi";
       newSession = true;
       shortcut = "Space";
