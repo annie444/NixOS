@@ -32,7 +32,9 @@
 
   home.packages = with pkgs; [
     # Add your packages here
-    firefox
-    git
+    kubectl
+    kubernetes-helm
+    kustomize
+    helmfile
   ];
 }

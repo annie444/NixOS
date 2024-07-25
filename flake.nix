@@ -18,15 +18,12 @@
     disko.inputs.nixpkgs.follows = "nixpkgs";
 
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
-
-    neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
   };
 
   outputs = {
     self,
     nixpkgs,
     home-manager,
-    neovim-nightly-overlay,
     disko,
     ...
   } @ inputs: let
