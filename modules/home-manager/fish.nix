@@ -674,7 +674,7 @@ in
           show_io_stat = true;
           io_mode = false;
           io_graph_combined = true;
-          io_graph_speeds = "".
+          io_graph_speeds = "";
           net_download = 100;
           net_upload = 100;
           net_auto = true;
