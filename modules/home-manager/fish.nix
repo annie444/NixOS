@@ -348,14 +348,14 @@ in
           };
 
           git_state = {
-            format = '[\($state( $progress_current of $progress_total)\)]($style) ';
-            cherry_pick = '[🍒 PICKING](bold red)';
-            rebase = '[⚗️ REBASING](bold red)';
-            merge = '[⚗️ MERGING](bold red)';
-            revert = '[⏪ REVERTING](bold red)';
-            bisect = '[🔍 BISECTING](bold red)';
-            am = '[AM 📬](bold red)';
-            am_or_rebase = '[AM 📬/⏪ REBASE](bold red)';
+            format = "[\($state( $progress_current of $progress_total)\)]($style) ";
+            cherry_pick = "[🍒 PICKING](bold red)";
+            rebase = "[⚗️ REBASING](bold red)";
+            merge = "[⚗️ MERGING](bold red)";
+            revert = "[⏪ REVERTING](bold red)";
+            bisect = "[🔍 BISECTING](bold red)";
+            am = "[AM 📬](bold red)";
+            am_or_rebase = "[AM 📬/⏪ REBASE](bold red)";
           };
 
           git_status = {
