@@ -49,6 +49,7 @@
   time.timeZone = "Americas/Los_Angeles";
 
   networking.hostName = "spinoza";
+  networking.hostId = "4c0902ca";
 
   roles.gui.enable = true;
 
