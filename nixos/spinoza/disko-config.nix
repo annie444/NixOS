@@ -32,11 +32,11 @@
 		            resumeDevice = true;
               };
             };
-            mdadm = {
+            primary = {
               size = "100%";
               content = {
-                type = "mdraid";
-                name = "raid5";
+                type = "lvm_pv";
+                vg = "pool";
               };
             }; 
           };
