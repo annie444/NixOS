@@ -10,6 +10,7 @@ in
   imports = [
     ./autojump.nix
     ./bat.nix
+    ./btop.nix
     ./dircolors.nix
     ./direnv.nix
     ./eza.nix
@@ -20,6 +21,7 @@ in
     ./jq.nix
     ./ripgrep.nix
     ./starship.nix
+    ./tealdeer.nix
     ./thefuck.nix
     ./zoxide.nix
   ];
@@ -52,10 +54,8 @@ in
     };
 
     home.packages = (with pkgs; [
-      btop
       tre-command
       delta
-      tealdeer
       gitnow
       spark
       abbreviation-tips
@@ -72,6 +72,7 @@ in
     profiles = {
       autojump.enable = true;
       bat.enable = true;
+      btop.enable = true;
       dircolors.enable = true;
       direnv.enable = true;
       eza.enable = true;
@@ -82,6 +83,7 @@ in
       jq.enable = true;
       ripgrep.enable = true;
       starship.enable = true;
+      tealdeer.enable = true;
       thefuck.enable = true;
       zoxide.enable = true;
     };
