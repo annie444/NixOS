@@ -26,7 +26,6 @@ in
       github-copilot-cli-fish
       gitnow
       spark
-      getopts
       abbreviation-tips
       dracula
     ]);
