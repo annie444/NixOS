@@ -58,9 +58,9 @@
           };
         };
       };
-      hisense1 = {
+      hitachi = {
         type = "disk";
-        device = "/dev/sda";
+        device = "/dev/sdc";
         content = {
           type = "gpt";
           partitions = {
@@ -74,9 +74,9 @@
           };
         };
       };
-      ssd1 = {
+      segate = {
         type = "disk";
-        device = "/dev/sdb";
+        device = "/dev/sdd";
         content = {
           type = "gpt";
           partitions = {
@@ -92,7 +92,7 @@
       }; 
       wd1 = {
         type = "disk";
-        device = "/dev/sdc";
+        device = "/dev/sda";
         content = {
           type = "gpt";
           partitions = {
