@@ -1,3 +1,0 @@
-[submodule "modules/home-manager/nvim/nvim-dots"]
-	path = modules/home-manager/nvim/nvim-dots
-	url = https://github.com/annie444/nvim-dots.git
