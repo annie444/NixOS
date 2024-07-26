@@ -42,10 +42,17 @@ function _G.format_code()
   }
 end
 
+---@alias keymap-opts { buffer: boolean, silent: boolean, expr: boolean, noremap: boolean, nowait: boolean , unique: boolean }
+
+---@alias keymap { cmd: string | function, opt: keymap-opts }
+
+---comment
+---@param keymaps table<string, keymap>
+---@param mode string
 function _G.set_keymaps(keymaps, mode)
   for keymap, value in pairs(keymaps) do
     if value.opt ~= nil then
-      vim.keymap.set(mode, keymap, value.cmd, value.opt, { desc = value.desc or "" })
+      vim.keymap.set(mode, keymap, value.cmd, value.opt)
     else
       local opt = { silent = true }
 
@@ -53,7 +60,7 @@ function _G.set_keymaps(keymaps, mode)
         opt = { expr = true }
       end
 
-      vim.keymap.set(mode, keymap, value.cmd, opt, { desc = value.desc or "" })
+      vim.keymap.set(mode, keymap, value.cmd, opt)
     end
   end
 end
@@ -123,6 +130,10 @@ command("LuaSnipEdit", function()
   require("luasnip.loaders").edit_snippet_files()
 end, { nargs = "*", desc = "Edit the available snippets in the filetype" })
 
+
+---comment
+---@param mappings table<string, (string | function)[]>
+---@param mode any
 function _G.which_key_add(mappings, mode)
   local which_key = require "which-key"
 
@@ -149,47 +160,24 @@ function _G.which_key_add(mappings, mode)
     -- add operators that will trigger motion and text object completion
     -- to enable all native operators, set the preset / operators plugin above
     -- operators = { gc = "Comments" },
-    key_labels = {
-      -- override the label used to display some keys. It doesn't effect WK in any other way.
-      -- For example:
-      -- ["<space>"] = "SPC",
-      -- ["<cr>"] = "RET",
-      -- ["<tab>"] = "TAB",
-    },
     icons = {
       breadcrumb = "»", -- symbol used in the command line area that shows your active key combo
       separator = "➜", -- symbol used between a key and it's label
       group = "+", -- symbol prepended to a group
     },
-    popup_mappings = {
-      scroll_down = "<c-d>", -- binding to scroll down inside the popup
-      scroll_up = "<c-u>",   -- binding to scroll up inside the popup
-    },
-    window = {
-      border = "none",          -- none, single, double, shadow
-      position = "bottom",      -- bottom, top
+    win = {
       margin = { 1, 0, 1, 0 },  -- extra window margin [top, right, bottom, left]
       padding = { 2, 0, 2, 0 }, -- extra window padding [top, right, bottom, left]
       winblend = 0,
     },
     layout = {
-      height = { min = 4, max = 25 },                                         -- min and max height of the columns
-      width = { min = 20, max = 50 },                                         -- min and max width of the columns
-      spacing = 3,                                                            -- spacing between columns
-      align = "left",                                                         -- align columns left, center or right
+      height = { min = 4, max = 25 }, -- min and max height of the columns
+      width = { min = 20, max = 50 }, -- min and max width of the columns
+      spacing = 3,                    -- spacing between columns
+      align = "left",                 -- align columns left, center or right
     },
-    ignore_missing = true,                                                    -- enable this to hide mappings for which you didn't specify a label
-    hidden = { "<silent>", ":", "<Cmd>", "<cr>", "call", "lua", "^:", "^ " }, -- hide mapping boilerplate
-    show_help = true,                                                         -- show help message on the command line when the popup is visible
-    triggers = "auto",                                                        -- automatically setup triggers
-    -- triggers = {"<leader>"} -- or specify a list manually
-    triggers_blacklist = {
-      -- list of mode / prefixes that should never be hooked by WhichKey
-      -- this is mostly relevant for key maps that start with a native binding
-      -- most people should not need to change this
-      i = { "j", "k" },
-      v = { "j", "k" },
-    },
+    show_help = true,                 -- show help message on the command line when the popup is visible
+    triggers = { "<auto>", mode = "nixsotc" },
   }
 
   local opts = {
