@@ -128,6 +128,7 @@
       zpool0 = {
         type = "zpool";
         mode = "raidz";
+        mountpoint = "/mnt/zpool0";
         rootFsOptions = {
           compression = "zstd";
           "com.sun:auto-snapshot" = "false";
@@ -144,6 +145,7 @@
       zpool1 = {
         type = "zpool";
         mode = "raidz";
+        mountpoint = "/mnt/zpool1";
         rootFsOptions = {
           compression = "zstd";
           "com.sun:auto-snapshot" = "false";
