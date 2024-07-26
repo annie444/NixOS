@@ -1,8 +1,8 @@
 # .sops.yaml
 keys:
-  - &personalmbp age1ca6dvkttshcs4ealm8nttymp92lmqe62cvgxrgnkkstygu4ujg9qsjfexq
+  - &personalmbp age1vzktrphual65cu0htt6sy2klt5k7t52nuvqum4envkda5v8xdvfsgn8tvh
 creation_rules: 
-  - path_regex: secrets/secrets.yaml$
-    key-groups:
+  - path_regex: secrets/[^/]+\.(yaml|json|env|ini)$
+    key_groups:
       - age:
         - *personalmbp
