@@ -128,7 +128,6 @@
       zpool0 = {
         type = "zpool";
         mode = "raidz";
-        mountpoint = "/mnt/zpool0";
         rootFsOptions = {
           compression = "zstd";
           "com.sun:auto-snapshot" = "false";
@@ -138,14 +137,16 @@
           zfs_fs0 = {
             type = "zfs_fs";
             mountpoint = "/mnt/zfs_fs0";
-            options."com.sun:auto-snapshot" = "true";
+            options = {
+              "com.sun:auto-snapshot" = "true";
+              mountpoint = "legacy";
+            };
           };
         };
       };
       zpool1 = {
         type = "zpool";
         mode = "raidz";
-        mountpoint = "/mnt/zpool1";
         rootFsOptions = {
           compression = "zstd";
           "com.sun:auto-snapshot" = "false";
@@ -155,7 +156,10 @@
           zfs_fs1 = {
             type = "zfs_fs";
             mountpoint = "/mnt/zfs_fs1";
-            options."com.sun:auto-snapshot" = "true";
+            options = {
+              "com.sun:auto-snapshot" = "true";
+              mountpoint = "legacy";
+            };
           };
         };
       };

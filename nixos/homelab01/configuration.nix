@@ -51,7 +51,9 @@
   networking.hostName = "homelab01";
   networking.hostId = "d58b8d19";
 
-  sops.secrets."k3s/token" = {};
+  sops.secrets."k3s/token" = {
+    restartUnits = [ "k3s.service" ];
+  };
 
   roles.homelab = {
     enable = true;
