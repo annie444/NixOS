@@ -1,13 +1,10 @@
-{ config, inputs, lib, pkgs, meta, ... }:
+{ config, sops, inputs, lib, pkgs, meta, ... }:
 
 with lib;
 
 let
   cfg = config.roles.homelab;
 in {
-  imports = [
-    inputs.sops-nix.nixosModules.sops
-  ];
 
   options.roles.homelab = {
     enable = mkEnableOption "Enable homelab services";
