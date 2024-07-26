@@ -49,6 +49,7 @@
   time.timeZone = "Americas/Los_Angeles";
 
   networking.hostName = "homelab02";
+  networking.hostId = "10fe182f";
 
   roles.homelab = {
     enable = true;
