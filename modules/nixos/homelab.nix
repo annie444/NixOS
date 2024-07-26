@@ -13,6 +13,11 @@ in {
       default = "homelab01";
       description = "Hostname of the server";
     };
+    tokenFile = mkOption {
+      type = types.path;
+      default = "/etc/k3s/token";
+      description = "Path to the token file";
+    };
   };
   config = mkIf cfg.enable {
     # Fixes for longhorn
@@ -26,7 +31,7 @@ in {
     services.k3s = {
       enable = true;
       role = "server";
-      tokenFile = sops.secrets."k3s/token".path;
+      tokenFile = 
       extraFlags = toString ([
 	      "--write-kubeconfig-mode \"0644\""
 	      "--cluster-init"

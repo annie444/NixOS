@@ -51,9 +51,12 @@
   networking.hostName = "homelab01";
   networking.hostId = "d58b8d19";
 
+  sops.secrets."k3s/token" = {};
+
   roles.homelab = {
     enable = true;
     hostname = "homelab01";
+    tokenFile = sops.secrets."k3s/token".path;
   };
 
   services.pipewire = {
