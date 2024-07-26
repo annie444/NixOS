@@ -32,10 +32,17 @@
 
   home.packages = with pkgs; [
     # Add your packages here
+
+    # Kubernetes integration
     kubectl
     kubernetes-helm
     kustomize
     helmfile
+    
+    # 1Password
+    _1password
+    _1password-cli
+
     valgrind
 
     # build tools

@@ -11,7 +11,6 @@ in
   };
   config = mkIf cfg.enable {
     home.packages = with pkgs; [
-      gh
       gh-dash
     ];
     programs = {

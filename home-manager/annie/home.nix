@@ -53,6 +53,14 @@
     homeDirectory = "/home/annie";
   };
 
+  programs._1password-shell-plugins = {
+    # enable 1Password shell plugins for bash, zsh, and fish shell
+    enable = true;
+    # the specified packages as well as 1Password CLI will be
+    # automatically installed and configured to use shell plugins
+    plugins = with pkgs; [ gh ];
+  };
+
   profiles.fish.enable = true;
   profiles.tmux.enable = true;
   profiles.nvim.enable = true;
