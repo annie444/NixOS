@@ -51,12 +51,12 @@
       sshKeyPaths = [ "/home/annie/.ssh/jpeg_id25519" ];
       generateKey = true;
     };
-    defaultSopsFile = ../secrets/annie/secrets.yaml;
+    defaultSopsFile = ../../secrets/annie/secrets.yaml;
     defaultSopsFormat = "yaml";
     validateSopsFiles = true;
     secrets.publicKey = {
       format = "binary";
-      sopsFile = ../secrets/annie/publickey.gpg.enc;
+      sopsFile = ../../secrets/annie/publickey.gpg.enc;
     };
     secrets."ssh/github/public" = {
       path = "/home/annie/.ssh/github_id25519.pub";
