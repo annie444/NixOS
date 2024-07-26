@@ -81,7 +81,7 @@
 
   users.users = {
     annie = {
-      hashedPasswordFile = sops.secrets."annie/password".path;
+      hashedPasswordFile = config.sops.secrets."annie/password".path;
       isNormalUser = true;
       openssh.authorizedKeys.keys = [
 	      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILVVe3niALKXj/d7z0Bn27uF5e64GfjPgcWOXXwziJpW"
