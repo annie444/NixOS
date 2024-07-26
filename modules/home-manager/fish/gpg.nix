@@ -18,7 +18,7 @@ in
       mutableKeys = true;
       mutableTrust = true;
       publicKeys."annie.ehler.4@gmail.com" = {
-        source = config.sops.secrets.publicKeys.path;
+        source = config.sops.secrets.publicKey.path;
         trust = "ultimate";
       };
     };
