@@ -69,13 +69,6 @@ in
       withNodeJs = true;
 
       coc.enable = false;
-
-      extraPython3Packages = pyPkgs: with pyPkgs; [
-        python-lsp-server
-        python-lsp-ruff
-        pynvim
-      ];
-
     };
 
     home.file."./.config/nvim/" = {
