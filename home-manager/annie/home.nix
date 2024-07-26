@@ -47,10 +47,7 @@
   };
 
   sops = {
-    age = {
-      sshKeyPaths = [ "/home/annie/.ssh/jpeg_id25519" ];
-      generateKey = true;
-    };
+    age.keyFile = "${config.xdg.configHome}/sops/age/keys.txt";
     defaultSopsFile = ../../secrets/annie/secrets.yaml;
     defaultSopsFormat = "yaml";
     validateSopsFiles = true;

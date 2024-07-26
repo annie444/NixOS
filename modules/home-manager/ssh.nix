@@ -71,9 +71,8 @@ in
       serverAliveCountMax = 3;
       hashKnownHosts = false;
       userKnownHostsFile = "~/.ssh/known_hosts";
-      controlMaster = false;
+      controlMaster = "no";
       controlPath = "~/.ssh/%C";
-      controlPersist = false;
 
       matchBlocks = {
         mayfirst = {
@@ -112,7 +111,7 @@ in
         spinoza = {
           host = "spinoza";
           hostname = "spinoza.ipac.caltech.edu";
-          port = "22";
+          port = 22;
           user = "annie";
           identityFile = cfg.ipacKeyPath;
         };
