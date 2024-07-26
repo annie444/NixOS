@@ -40,7 +40,13 @@ let
 in
 {
 
-  options.profiles.nvim.enable = mkEnableOption "neovim profile";
+  options.profiles.nvim = {
+    enable = mkEnableOption "neovim profile";
+    package = mkOption {
+      type = types.package;
+      default = pkgs.neovim;
+    };
+  };
 
   config = mkIf cfg.enable {
 
@@ -56,7 +62,7 @@ in
 
     programs.neovim = {
       enable = true;
-      package = pkgs.neovim-nightly;
+      package = cfg.package;
 
       defaultEditor = true;
 
