@@ -158,8 +158,6 @@ in
           if test -d "$HOME/.asdf"
             source ~/.asdf/asdf.fish
           end
-        
-          source ~/.config/op/plugins.sh
         '';
 
       };
