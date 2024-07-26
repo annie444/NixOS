@@ -41,8 +41,8 @@
     
     # 1Password
     _1password
-    _1password-cli
 
+    # Memory leak detection
     valgrind
 
     # build tools
