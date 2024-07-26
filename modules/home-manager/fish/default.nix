@@ -31,6 +31,8 @@ in
   };
   config = mkIf cfg.enable {
 
+    
+
     nixpkgs = {
       # You can add overlays here
       overlays = [
@@ -162,5 +164,11 @@ in
 
       };
     };
+
+    home.file."./.config/fish/themes/Dracula Official.theme" = {
+      recursive = true;
+      source = ./DraculaOfficial.theme;
+    };
+
   };
 }
