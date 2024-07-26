@@ -56,7 +56,7 @@
     validateSopsFiles = true;
     secrets.privatekey = {
       format = "binary";
-      sopsFile = "secrets/annie/privatekey.gpg.enc";
+      sopsFile = ../secrets/annie/privatekey.gpg.enc;
     };
     secrets."ssh/github/public" = {
       path = "/home/annie/.ssh/github_id25519.pub";
