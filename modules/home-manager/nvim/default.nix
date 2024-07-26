@@ -56,7 +56,7 @@ in
 
     programs.neovim = {
       enable = true;
-      package = pkgs.unstable.neovim;
+      package = pkgs.neovim-nightly;
 
       defaultEditor = true;
 
