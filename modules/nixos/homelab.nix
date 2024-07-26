@@ -18,6 +18,10 @@ in {
       default = "/etc/k3s/token";
       description = "Path to the token file";
     };
+    ipaddr = mkOption {
+      type = types.str;
+      description = "Hostname of the server";
+    };
   };
   config = mkIf cfg.enable {
     # Fixes for longhorn
@@ -39,7 +43,7 @@ in {
 	      "--disable traefik"
 	      "--disable local-storage"
       ] ++ (if cfg.hostname == "homelab01" then [] else [
-	        "--server https://homelab01:6443"
+	        "--server https://${cfg.ipaddr}:6443"
       ]));
       clusterInit = (cfg.hostname == "homelab01");
     };

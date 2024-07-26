@@ -47,6 +47,7 @@
     enable = true;
     hostname = "homelab02";
     tokenFile = config.sops.secrets."k3s/token".path;
+    ipaddr = "192.168.4.72";
   };
 
   services.pipewire = {
