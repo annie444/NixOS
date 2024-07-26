@@ -5,4 +5,5 @@
   fish = import ./fish;
   tmux = import ./tmux;
   nvim = import ./nvim;
+  ssh = import ./ssh.nix;
 }

@@ -14,6 +14,7 @@
     outputs.homeManagerModules.fish
     outputs.homeManagerModules.tmux
     outputs.homeManagerModules.nvim
+    outputs.homeManagerModules.ssh
 
     inputs.sops-nix.homeManagerModules.sops
 
@@ -57,6 +58,30 @@
       format = "binary";
       sopsFile = "secrets/annie/privatekey.gpg.enc";
     };
+    secrets."ssh/github/public" = {
+      path = "/home/annie/.ssh/github_id25519.pub";
+    };
+    secrets."ssh/github/private" = {
+      path = "/home/annie/.ssh/github_id25519";
+    };
+    secrets."ssh/ipac/public" = {
+      path = "/home/annie/.ssh/ipac_id25519.pub";
+    };
+    secrets."ssh/ipac/private" = {
+      path = "/home/annie/.ssh/ipac_id25519";
+    };
+    secrets."ssh/homelab/public" = {
+      path = "/home/annie/.ssh/jpeg_id25519.pub";
+    };
+    secrets."ssh/homelab/private" = {
+      path = "/home/annie/.ssh/jpeg_id25519";
+    };
+    secrets."ssh/mayfirst/public" = {
+      path = "/home/annie/.ssh/mayfirst_id25519.pub";
+    };
+    secrets."ssh/mayfirst/private" = {
+      path = "/home/annie/.ssh/mayfirst_id25519";
+    };
   };
 
   # Enable the k9s program
@@ -67,6 +92,14 @@
   profiles.fish.enable = true;
   profiles.tmux.enable = true;
   profiles.nvim.enable = true;
+
+  profiles.ssh = {
+    enable = true;
+    mayfirstKeyPath = config.sops.secrets."ssh/mayfirst/private".path;
+    homelabKeyPath = config.sops.secrets."ssh/homelab/private".path;
+    ipacKeyPath = config.sops.secrets."ssh/ipac/private".path;
+    githubKeyPath = config.sops.secrets."ssh/github/private".path;
+  };
 
   # Enable home-manager and git
   programs.home-manager.enable = true;
