@@ -47,80 +47,40 @@
         type = "disk";
         device = "/dev/nvme1n1";
         content = {
-          type = "gpt";
-          partitions = {
-            zfs = {
-              size = "100%";
-              content = {
-                type = "zfs";
-                pool = "zpool0";
-              };
-            };
-          };
+          type = "zfs";
+          pool = "zpool0";
         };
       };
       hitachi = {
         type = "disk";
         device = "/dev/sdc";
         content = {
-          type = "gpt";
-          partitions = {
-            zfs = {
-              size = "100%";
-              content = {
-                type = "zfs";
-                pool = "zpool0";
-              };
-            }; 
-          };
+          type = "zfs";
+          pool = "zpool0";
         };
-      };
+      }; 
       segate = {
         type = "disk";
         device = "/dev/sdb";
         content = {
-          type = "gpt";
-          partitions = {
-            zfs = {
-              size = "100%";
-              content = {
-                type = "zfs";
-                pool = "zpool0";
-              };
-            }; 
-          };
+          type = "zfs";
+          pool = "zpool0";
         };
       }; 
       wd1 = {
         type = "disk";
         device = "/dev/sda";
         content = {
-          type = "gpt";
-          partitions = {
-            zfs = {
-              size = "100%";
-              content = {
-                type = "zfs";
-                pool = "zpool1";
-              };
-            }; 
-          };
+          type = "zfs";
+          pool = "zpool1";
         };
       }; 
       wd2 = {
         type = "disk";
         device = "/dev/sdd";
         content = {
-          type = "gpt";
-          partitions = {
-            zfs = {
-              size = "100%";
-              content = {
-                type = "zfs";
-                pool = "zpool1";
-              };
-            }; 
-          };
+          type = "zfs";
+          pool = "zpool1";
         };
       }; 
     };
@@ -136,10 +96,13 @@
         datasets = {
           zfs_fs0 = {
             type = "zfs_fs";
+            options.mountpoint = "none";
+          };
+          "zfs_fs0/zfs_fs" = {
+            type = "zfs_fs";
             mountpoint = "/mnt/zfs_fs0";
             options = {
               "com.sun:auto-snapshot" = "true";
-              mountpoint = "legacy";
             };
           };
         };
@@ -155,10 +118,13 @@
         datasets = {
           zfs_fs1 = {
             type = "zfs_fs";
+            options.mountpoint = "none";
+          };
+          "zfs_fs1/zfs_fs" = {
+            type = "zfs_fs";
             mountpoint = "/mnt/zfs_fs1";
             options = {
               "com.sun:auto-snapshot" = "true";
-              mountpoint = "legacy";
             };
           };
         };
