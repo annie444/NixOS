@@ -1,5 +1,9 @@
 { pkgs, ... }: {
+
+  sops.age. keyFile = "/Users/annieehler/.config/sops/age/keys.txt";
+
   programs.fish.enable = true;
+
   users.users = {
     annie = {
       initialPassword = "correcthorsebatterystaple";
