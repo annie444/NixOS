@@ -15,6 +15,8 @@
     outputs.homeManagerModules.tmux
     outputs.homeManagerModules.nvim
 
+    inputs.sops-nix.homeManagerModules.sops
+
     # You can also split up your configuration and import pieces of it here:
     ./pkgs.nix
     # ./fish.nix
@@ -43,6 +45,25 @@
     homeDirectory = "/home/annie";
   };
 
+  sops = {
+    age = {
+      sshKeyPaths = [ "/home/annie/.ssh/jpeg_id25519" ];
+      generateKey = true;
+    };
+    defaultSopsFile = ./annie/secrets.yaml;
+    defaultSopsFormat = "yaml";
+    validateSopsFiles = true;
+    secrets.privatekey = {
+      format = "binary";
+      sopsFile = "secrets/annie/privatekey.gpg.enc";
+    };
+  };
+
+  # Enable the k9s program
+  programs.k9s.enable = true;
+
+  # Enable my custom profiles
+  # NOTE: Make sure each module is imported in the imports section
   profiles.fish.enable = true;
   profiles.tmux.enable = true;
   profiles.nvim.enable = true;
@@ -52,6 +73,7 @@
 
   # Nicely reload system units when changing configs
   systemd.user.startServices = "sd-switch";
+  systemd.user.services.sd-switch.Unit.After = [ "sops-nix.service" ];
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   home.stateVersion = "23.11";

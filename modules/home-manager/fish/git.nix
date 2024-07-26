@@ -57,6 +57,12 @@ in
         signByDefault = true;
       };
       lfs.enable = true;
+      extraConfig = {
+        init.defaultBranch = "main";
+        pull.rebase = true;
+        push.autoSetupRemote = true;
+        merge.conflictStyle = "diff3";
+      };
       delta = {
         enable = true;
         options = {
