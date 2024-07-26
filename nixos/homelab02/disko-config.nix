@@ -1,14 +1,14 @@
 {
   disko.devices = {
     disk = {
-      nvme1 = {
+      ssd1 = {
         type = "disk";
-        device = "/dev/nvme0n1";
+        device = "/dev/sda";
         content = {
           type = "gpt";
           partitions = {
 	          boot = {
-              size = "3G";
+              size = "1G";
               type = "ef02"; # for grub MBR
 	            content = {
 	              type = "filesystem";
@@ -17,7 +17,7 @@
 	            };
             };
             ESP = {
-              size = "3G";
+              size = "1G";
               type = "ef00";
               content = {
                 type = "filesystem";
@@ -26,7 +26,7 @@
               };
             };
             swap = {
-	            size = "36G";
+	            size = "16G";
               content = {
                 type = "swap";
 		            resumeDevice = true;
@@ -39,22 +39,6 @@
                 vg = "pool";
               };
 	          };
-          };
-        };
-      };
-      ssd1 = {
-        type = "disk";
-        device = "/dev/sda";
-        content = {
-          type = "gpt";
-          partitions = {
-            root = {
-              size = "100%";
-              content = {
-                type = "lvm_pv";
-                vg = "pool";
-              };
-            }; 
           };
         };
       };

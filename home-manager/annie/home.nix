@@ -15,9 +15,6 @@
     outputs.homeManagerModules.tmux
     outputs.homeManagerModules.nvim
 
-    # Or modules exported from other flakes (such as nix-colors):
-    inputs._1password-shell-plugins.hmModules.default
-
     # You can also split up your configuration and import pieces of it here:
     ./pkgs.nix
     # ./fish.nix
@@ -33,13 +30,6 @@
 
       # You can also add overlays exported from other flakes:
       inputs.neovim-nightly-overlay.overlays.default
-
-      # Or define it inline, for example:
-      # (final: prev: {
-      #   hi = final.hello.overrideAttrs (oldAttrs: {
-      #     patches = [ ./change-hello-to-hi.patch ];
-      #   });
-      # })
     ];
     # Configure your nixpkgs instance
     config = {
@@ -51,14 +41,6 @@
   home = {
     username = "annie";
     homeDirectory = "/home/annie";
-  };
-
-  programs._1password-shell-plugins = {
-    # enable 1Password shell plugins for bash, zsh, and fish shell
-    enable = true;
-    # the specified packages as well as 1Password CLI will be
-    # automatically installed and configured to use shell plugins
-    plugins = with pkgs; [ gh ];
   };
 
   profiles.fish.enable = true;

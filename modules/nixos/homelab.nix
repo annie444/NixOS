@@ -1,10 +1,14 @@
-{ config, lib, pkgs, meta, ... }:
+{ config, inputs, lib, pkgs, meta, ... }:
 
 with lib;
 
 let
   cfg = config.roles.homelab;
 in {
+  imports = [
+    inputs.sops-nix.nixosModules.sops
+  ];
+
   options.roles.homelab = {
     enable = mkEnableOption "Enable homelab services";
     hostname = mkOption {
@@ -20,10 +24,12 @@ in {
     ];
     virtualisation.docker.logDriver = "json-file";
 
+    sops.secrets."k3s/token" = {};
+
     services.k3s = {
       enable = true;
       role = "server";
-      token = "mysecrettoken";
+      tokenFile = sops.secrets."k3s/token".path;
       extraFlags = toString ([
 	      "--write-kubeconfig-mode \"0644\""
 	      "--cluster-init"
