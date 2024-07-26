@@ -21,8 +21,8 @@ in
 
         add_newline = true;
         continuation_prompt = "❯";
-        format = "[╭─](dimmed white) $os$shell$directory$vcsh$fossil_branch$git_branch$git_commit$git_state$git_metrics$git_status$hg_branch$dotnet$golang$java$nodejs$php$rust$conda $fill $cmd_duration$sudo$jobs$status$shlvl$singularity$kubernetes$pijul_channel$docker_context$package$c$cmake$cobol$daml$dart$deno$elixir$elm$erlang$fennel$guix_shell$haskell$haxe$helm$julia$kotlin$gradle$lua$nim$ocaml$opa$perl$pulumi$purescript$python$raku$rlang$red$ruby$scala$solidity$swift$terraform$vlang$vagrant$zig$buf$nix_shell$meson$spack$aws$gcloud$openstack$azure$env_var$crystal$container$shell$time [─╮](dimmed white)\n[╰─](dimmed white) $character";
-        right_format = "$username$hostname$localip$battery$memory_usage [─╯](dimmed white)";
+        format = "[╭─](dimmed white) $os$username$hostname$shell$directory$vcsh$fossil_branch$git_branch$git_commit$git_state$git_metrics$git_status$hg_branch$dotnet$golang$java$nodejs$php$rust$conda $fill $cmd_duration$sudo$jobs$status$shlvl$singularity$kubernetes$pijul_channel$docker_context$package$c$cmake$cobol$daml$dart$deno$elixir$elm$erlang$fennel$guix_shell$haskell$haxe$helm$julia$kotlin$gradle$lua$nim$ocaml$opa$perl$pulumi$purescript$python$raku$rlang$red$ruby$scala$solidity$swift$terraform$vlang$vagrant$zig$buf$nix_shell$meson$spack$aws$gcloud$openstack$azure$env_var$crystal$container$shell$time [─╮](dimmed white)\n[╰─](dimmed white) $character";
+        right_format = "$localip$battery$memory_usage [─╯](dimmed white)";
         scan_timeout = 300;
         command_timeout = 2000;
 

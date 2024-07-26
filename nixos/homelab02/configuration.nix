@@ -46,7 +46,7 @@
   roles.homelab = {
     enable = true;
     hostname = "homelab02";
-    tokenFile = sops.secrets."k3s/token".path;
+    tokenFile = config.sops.secrets."k3s/token".path;
   };
 
   services.pipewire = {
