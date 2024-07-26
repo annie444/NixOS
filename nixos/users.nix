@@ -1,4 +1,4 @@
-{ pkgs, inputs, sops, ... }: {
+{ pkgs, inputs, ... }: {
 
   sops.secrets."annie/password".neededForUsers = true;
 
