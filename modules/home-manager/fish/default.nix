@@ -63,8 +63,6 @@ in
       abbreviation-tips
       dracula
     ]) ++ (with pkgs.fishPlugins; [
-      fzf-fish
-      z
       done
       autopair
       puffer
@@ -103,12 +101,6 @@ in
           gd = "delta";
           bathelp = "bat --plain --language=help $argv";
           note = "nvim -c ':ObsidianToday<CR>' $argv";
-          trm = "trash-rm";
-          tre = "trash-empty";
-          trl = "trash-list";
-          trc = "trash-clear";
-          trr = "trash-restore";
-          trp = "trash-put";
           ":q" = "exit";
         };
 
@@ -118,8 +110,7 @@ in
           ls = "eza -1GghmMoXr --color=always --icons=always -s created --group-directories-first --time-style long-iso --git --git-repos -w 10";
           la = "eza -1GghmMoXrla --color=always --icons=always -s created --group-directories-first --time-style long-iso --git --git-repos -w 100";
           cat = "bat";
-          cd = "z";
-          ".." = "z ..";
+          ".." = "cd ..";
         };
 
         shellInit = ''
