@@ -1,8 +1,4 @@
-{ pkgs, inputs, ... }: {
-
-  imports = [
-    inputs.sops-nix.nixosModules.sops
-  ];
+{ pkgs, inputs, sops, ... }: {
 
   sops.secrets."annie/password".neededForUsers = true;
 
