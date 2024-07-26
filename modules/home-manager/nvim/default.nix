@@ -71,7 +71,8 @@ in
       coc.enable = false;
 
       extraPython3Packages = pyPkgs: with pyPkgs; [
-        python-language-server
+        python-lsp-server
+        python-lsp-ruff
         pynvim
       ];
 
