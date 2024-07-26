@@ -1,7 +1,7 @@
 {
   disko.devices = {
     disk = {
-      nvme1 = {
+      nvme0 = {
         type = "disk";
         device = "/dev/nvme0n1";
         content = {
@@ -35,26 +35,27 @@
             root = {
               size = "100%";
               content = {
-                type = "lvm_pv";
-                vg = "pool";
-              };
+                type = "filesystem";
+                format = "ext4";
+                mountpoint = "/";
+              }; 
 	          };
           };
         };
       };
-      nvme2 = {
+      nvme1 = {
         type = "disk";
         device = "/dev/nvme1n1";
         content = {
           type = "gpt";
           partitions = {
-            root = {
+            zfs = {
               size = "100%";
               content = {
-                type = "lvm_pv";
-                vg = "pool";
+                type = "zfs";
+                pool = "zpool0";
               };
-            }; 
+            };
           };
         };
       };
@@ -64,11 +65,11 @@
         content = {
           type = "gpt";
           partitions = {
-            mdadm = {
+            zfs = {
               size = "100%";
               content = {
-                type = "mdraid";
-                name = "raid1";
+                type = "zfs";
+                pool = "zpool0";
               };
             }; 
           };
@@ -76,15 +77,15 @@
       };
       segate = {
         type = "disk";
-        device = "/dev/sdd";
+        device = "/dev/sdb";
         content = {
           type = "gpt";
           partitions = {
-            mdadm = {
+            zfs = {
               size = "100%";
               content = {
-                type = "mdraid";
-                name = "raid1";
+                type = "zfs";
+                pool = "zpool0";
               };
             }; 
           };
@@ -96,11 +97,11 @@
         content = {
           type = "gpt";
           partitions = {
-            mdadm = {
+            zfs = {
               size = "100%";
               content = {
-                type = "mdraid";
-                name = "raid2";
+                type = "zfs";
+                pool = "zpool1";
               };
             }; 
           };
@@ -108,69 +109,51 @@
       }; 
       wd2 = {
         type = "disk";
-        device = "/dev/sdb";
+        device = "/dev/sdd";
         content = {
           type = "gpt";
           partitions = {
-            mdadm = {
+            zfs = {
               size = "100%";
               content = {
-                type = "mdraid";
-                name = "raid2";
+                type = "zfs";
+                pool = "zpool1";
               };
             }; 
           };
         };
       }; 
     };
-    mdadm = {
-      raid1 = {
-        type = "mdadm";
-        level = 1;
-        content = {
-          type = "gpt";
-          partitions = {
-            primary = {
-              size = "100%";
-              content = {
-                type = "lvm_pv";
-                vg = "pool";
-              };
-            };
+    zpool = {
+      zpool0 = {
+        type = "zpool";
+        mode = "raidz";
+        rootFsOptions = {
+          compression = "zstd";
+          "com.sun:auto-snapshot" = "false";
+        };
+        postCreateHook = "zfs list -t snapshot -H -o name | grep -E '^zpool0@blank$' || zfs snapshot zpool0@blank";
+        datasets = {
+          zfs_fs0 = {
+            type = "zfs_fs";
+            mountpoint = "/mnt/zfs_fs0";
+            options."com.sun:auto-snapshot" = "true";
           };
         };
       };
-      raid2 = {
-        type = "mdadm";
-        level = 1;
-        content = {
-          type = "gpt";
-          partitions = {
-            primary = {
-              size = "100%";
-              content = {
-                type = "lvm_pv";
-                vg = "pool";
-              };
-            };
-          };
+      zpool1 = {
+        type = "zpool";
+        mode = "raidz";
+        rootFsOptions = {
+          compression = "zstd";
+          "com.sun:auto-snapshot" = "false";
         };
-      };
-    };
-    lvm_vg = {
-      pool = {
-        type = "lvm_vg";
-        lvs = {
-          root = {
-            size = "100%FREE";
-            content = {
-              type = "filesystem";
-              format = "ext4";
-              mountpoint = "/";
-              mountOptions = [
-                "defaults"
-              ];
-            };
+        postCreateHook = "zfs list -t snapshot -H -o name | grep -E '^zpool1@blank$' || zfs snapshot zpool1@blank";
+        datasets = {
+          zfs_fs1 = {
+            type = "zfs_fs";
+            mountpoint = "/mnt/zfs_fs1";
+            options."com.sun:auto-snapshot" = "true";
           };
         };
       };
