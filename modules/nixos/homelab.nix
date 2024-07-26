@@ -50,6 +50,7 @@ in {
        k3s
        cifs-utils
        nfs-utils
+       kubeshark
     ];
   };
 

@@ -20,6 +20,7 @@
 
     # You can also split up your configuration and import pieces of it here:
     ./users.nix
+    ./pkgs.nix
 
     # Import your generated (nixos-generate-config) hardware configuration
     ./hardware-configuration.nix
