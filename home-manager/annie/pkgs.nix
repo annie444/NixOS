@@ -31,6 +31,11 @@
     kubernetes-helm
     kustomize
     helmfile
+    
+    # security stuff
+    sops
+    age
+    ssh-to-age
 
     # Memory leak detection
     valgrind
