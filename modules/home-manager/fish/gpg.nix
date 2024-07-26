@@ -20,7 +20,7 @@ in
       publicKeys."annie.ehler.4@gmail.com" = {
         source = config.sops.secrets.publicKeys.path;
         trust = "ultimate";
-      }
+      };
     };
   };
 }
