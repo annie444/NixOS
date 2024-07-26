@@ -44,6 +44,8 @@ in {
       clusterInit = (cfg.hostname == "homelab01");
     };
 
+    systemd.services.k3s.after = [ "sops-nix.service" ];
+
     # List packages installed in system profile. To search, run:
     # $ nix search wget
     environment.systemPackages = with pkgs; [
