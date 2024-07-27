@@ -48,6 +48,12 @@ in {
       clusterInit = (cfg.hostname == "homelab01");
     };
 
+    services.openiscsi = {
+      enable = true;
+      name = "iqn.2016-04.com.open-iscsi:${cfg.hostname}";
+    };
+
+
     systemd.services.k3s.after = [ "sops-nix.service" ];
 
     # List packages installed in system profile. To search, run:
