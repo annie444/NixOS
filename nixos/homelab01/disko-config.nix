@@ -99,7 +99,6 @@
             mountpoint = "/mnt/zfs_fs0";
             options = {
               "com.sun:auto-snapshot" = "true";
-              mountpoint = "none";
             };
           };
         };
@@ -118,7 +117,6 @@
             mountpoint = "/mnt/zfs_fs1";
             options = {
               "com.sun:auto-snapshot" = "true";
-              mountpoint = "none";
             };
           };
         };

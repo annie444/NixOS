@@ -47,7 +47,7 @@
   };
 
   sops = {
-    age.keyFile = "${config.xdg.configHome}/sops/age/keys.txt";
+    age.keyFile = "/home/annie/.config/sops/age/keys.txt";
     defaultSopsFile = ../../secrets/annie/secrets.yaml;
     defaultSopsFormat = "yaml";
     validateSopsFiles = true;
