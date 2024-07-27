@@ -96,13 +96,10 @@
         datasets = {
           zfs_fs0 = {
             type = "zfs_fs";
-            options.mountpoint = "none";
-          };
-          "zfs_fs0/zfs_fs" = {
-            type = "zfs_fs";
             mountpoint = "/mnt/zfs_fs0";
             options = {
               "com.sun:auto-snapshot" = "true";
+              mountpoint = "none";
             };
           };
         };
@@ -118,13 +115,10 @@
         datasets = {
           zfs_fs1 = {
             type = "zfs_fs";
-            options.mountpoint = "none";
-          };
-          "zfs_fs1/zfs_fs" = {
-            type = "zfs_fs";
             mountpoint = "/mnt/zfs_fs1";
             options = {
               "com.sun:auto-snapshot" = "true";
+              mountpoint = "none";
             };
           };
         };
