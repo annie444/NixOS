@@ -3,7 +3,7 @@
     disk = {
       nvme0 = {
         type = "disk";
-        device = "/dev/nvme0n1";
+        device = "/dev/disk/by-id/nvme-Samsung_SSD_980_PRO_2TB_S6B0NL0TC04770P";
         content = {
           type = "gpt";
           partitions = {
@@ -22,7 +22,7 @@
               content = {
                 type = "filesystem";
                 format = "vfat";
-                mountpoint = "/boot/EFI";
+                mountpoint = "/boot/efi";
               };
             };
             swap = {
@@ -45,82 +45,89 @@
       };
       nvme1 = {
         type = "disk";
-        device = "/dev/nvme1n1";
+        device = "/dev/disk/by-id/nvme-Samsung_SSD_980_PRO_2TB_S6B0NL0TC34395K";
         content = {
-          type = "zfs";
-          pool = "zpool0";
+          type = "gpt";
+          partitions = {
+	          primary = {
+              size = "100%";
+	            content = {
+	              type = "filesystem";
+		            format = "ext4";
+		            mountpoint = "/mnt/nvme1";
+	            };
+            }; 
+          };
         };
       };
       hitachi = {
         type = "disk";
-        device = "/dev/sdc";
+        device = "/dev/disk/by-id/ata-Hitachi_HUA722020ALA330_JK11B1B9K2KBRF";
         content = {
-          type = "zfs";
-          pool = "zpool0";
+          type = "gpt";
+          partitions = {
+            primary = {
+              size = "100%";
+	            content = {
+	              type = "filesystem";
+		            format = "ext4";
+		            mountpoint = "/mnt/hitachi";
+	            };
+            };
+          };
         };
       }; 
       segate = {
         type = "disk";
-        device = "/dev/sdb";
+        device = "/dev/disk/by-id/ata-ST2000LM007-1R8174_WDZ13WRE";
         content = {
-          type = "zfs";
-          pool = "zpool0";
+          type = "gpt";
+          partitions = {
+            primary = {
+              size = "100%";
+	            content = {
+	              type = "filesystem";
+		            format = "ext4";
+		            mountpoint = "/mnt/segate";
+	            };
+            };
+          }; 
         };
       }; 
       wd1 = {
         type = "disk";
-        device = "/dev/sda";
+        device = "/dev/disk/by-id/ata-WDC_WD40EFAX-68JH4N1_WD-WX62D22EKCAT";
         content = {
-          type = "zfs";
-          pool = "zpool1";
+          type = "gpt";
+          partitions = {
+            primary = {
+              size = "100%";
+	            content = {
+	              type = "filesystem";
+		            format = "ext4";
+		            mountpoint = "/mnt/wd1";
+	            };
+            };
+          };
         };
       }; 
       wd2 = {
         type = "disk";
-        device = "/dev/sdd";
+        device = "/dev/disk/by-id/ata-WDC_WD40EFAX-68JH4N1_WD-WX62D22LYL41";
         content = {
-          type = "zfs";
-          pool = "zpool1";
+          type = "gpt";
+          partitions = {
+            primary = {
+              size = "100%";
+	            content = {
+	              type = "filesystem";
+		            format = "ext4";
+		            mountpoint = "/mnt/wd2";
+	            };
+            };
+          };
         };
       }; 
-    };
-    zpool = {
-      zpool0 = {
-        type = "zpool";
-        mode = "raidz";
-        rootFsOptions = {
-          compression = "zstd";
-          "com.sun:auto-snapshot" = "false";
-        };
-        postCreateHook = "zfs list -t snapshot -H -o name | grep -E '^zpool0@blank$' || zfs snapshot zpool0@blank";
-        datasets = {
-          zfs_fs0 = {
-            type = "zfs_fs";
-            mountpoint = "/mnt/zfs_fs0";
-            options = {
-              "com.sun:auto-snapshot" = "true";
-            };
-          };
-        };
-      };
-      zpool1 = {
-        type = "zpool";
-        mode = "raidz";
-        rootFsOptions = {
-          compression = "zstd";
-          "com.sun:auto-snapshot" = "false";
-        };
-        postCreateHook = "zfs list -t snapshot -H -o name | grep -E '^zpool1@blank$' || zfs snapshot zpool1@blank";
-        datasets = {
-          zfs_fs1 = {
-            type = "zfs_fs";
-            mountpoint = "/mnt/zfs_fs1";
-            options = {
-              "com.sun:auto-snapshot" = "true";
-            };
-          };
-        };
-      };
     };
   };
 }
