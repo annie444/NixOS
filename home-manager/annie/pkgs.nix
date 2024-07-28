@@ -36,6 +36,7 @@
     sops
     age
     ssh-to-age
+    openssl
 
     # Memory leak detection
     valgrind
