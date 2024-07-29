@@ -61,7 +61,9 @@ in {
       nvidiaContainerdSupport 
     ] else []);
 
-    sops.secrets."k3s/token" = {};
+    sops.secrets."k3s/token" = {
+      restartUnits = [ "k3s.service" ];
+    };
 
     services.k3s = {
       enable = false;
@@ -83,7 +85,6 @@ in {
       enable = true;
       name = "iqn.2016-04.com.open-iscsi:${cfg.hostname}";
     };
-
 
     systemd.services.k3s.after = [ "sops-nix.service" ];
 
