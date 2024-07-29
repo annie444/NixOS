@@ -7,9 +7,13 @@
   # You can change versions, add patches, set compilation flags, anything really.
   # https://nixos.wiki/wiki/Overlays
   modifications = final: prev: {
-    # example = prev.example.overrideAttrs (oldAttrs: rec {
-    # ...
-    # });
+    kubernetes-helm-wrapped = prev.wrapHelm prev.kubernetes-helm {
+      plugins = with prev.kubernetes-helmPlugins; [
+        helm-diff
+        helm-secrets
+        helm-s3
+      ];
+    };
   };
 
   # When applied, the unstable nixpkgs set (declared in the flake inputs) will

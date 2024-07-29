@@ -30,7 +30,7 @@
     kubectl
     kubernetes-helm
     kustomize
-    helmfile
+    helmfile-wrapped
     
     # security stuff
     sops
