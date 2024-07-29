@@ -54,13 +54,6 @@ in {
       enableNvidia = true; 
     };
 
-    environment.systemPackages = with pkgs; [ 
-      docker
-      runc 
-    ] ++ (if cfg.nvidia then [ 
-      nvidiaContainerdSupport 
-    ] else []);
-
     sops.secrets."k3s/token" = {
       restartUnits = [ "k3s.service" ];
     };
@@ -91,11 +84,14 @@ in {
     # List packages installed in system profile. To search, run:
     # $ nix search wget
     environment.systemPackages = with pkgs; [
-       k3s
-       cifs-utils
-       nfs-utils
-       kubeshark
-    ];
+      k3s
+      cifs-utils
+      nfs-utils
+      kubeshark
+      docker
+      runc 
+    ] ++ (if cfg.nvidia then [ 
+      nvidiaContainerdSupport 
+    ] else []); 
   };
-
 }
