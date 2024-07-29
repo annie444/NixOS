@@ -66,8 +66,6 @@ in {
       name = "iqn.2016-04.com.open-iscsi:${cfg.hostname}";
     };
 
-    systemd.services.k3s.after = [ "sops-nix.service" ];
-
     # List packages installed in system profile. To search, run:
     # $ nix search wget
     environment.systemPackages = with pkgs; [
