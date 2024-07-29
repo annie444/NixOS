@@ -46,7 +46,7 @@ in {
     };
 
     services.k3s = {
-      enable = false;
+      enable = true;
       role = "server";
       tokenFile = cfg.tokenFile;
       extraFlags = toString ([
