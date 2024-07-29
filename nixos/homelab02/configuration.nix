@@ -13,7 +13,7 @@
   # You can import other NixOS modules here
   imports = [
     # If you want to use modules your own flake exports (from modules/nixos):
-    outputs.nixosModules.homelab
+    # outputs.nixosModules.homelab
 
     # Or modules from other flakes (such as nixos-hardware):
     inputs.nixos-hardware.nixosModules.common-cpu-intel
@@ -41,12 +41,14 @@
   networking.hostName = "homelab02";
   networking.hostId = "10fe182f";
 
-  roles.homelab = {
-    enable = true;
-    hostname = "homelab02";
-    tokenFile = config.sops.secrets."k3s/token".path;
-    ipaddr = "192.168.1.40";
-  };
+  # roles.homelab = {
+  #   enable = true;
+  #   hostname = "homelab02";
+  #   tokenFile = config.sops.secrets."k3s/token".path;
+  #   ipaddr = "192.168.1.40";
+  # };
+
+  services.k3s.enable = false;
 
   services.pipewire = {
     enable = true;
