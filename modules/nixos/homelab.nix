@@ -4,19 +4,6 @@ with lib;
 
 let
   cfg = config.roles.homelab;
-  nvidiaContainerdSupport = pkgs.writeTextFile {
-    name = "nvidia-containerd-config-template";
-    destination = "/var/lib/rancher/k3s/agent/etc/containerd/config.toml.tmpl";
-    text = ''
-      {{ template "base" . }}
-
-      [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.nvidia]
-        privileged_without_host_devices = false
-        runtime_engine = ""
-        runtime_root = ""
-        runtime_type = "io.containerd.runc.v2"
-    '';
-  };
 in {
 
   options.roles.homelab = {
@@ -50,9 +37,9 @@ in {
     virtualisation.docker = {
       enable = true;
       logDriver = "json-file";
-    } // optionalAttrs cfg.nvidia { 
-      enableNvidia = true; 
     };
+
+    hardware.nvidia-container-toolkit.enable = cfg.nvidia;
 
     sops.secrets."k3s/token" = {
       restartUnits = [ "k3s.service" ];
@@ -90,8 +77,6 @@ in {
       kubeshark
       docker
       runc 
-    ] ++ (if cfg.nvidia then [ 
-      nvidiaContainerdSupport 
-    ] else []); 
+    ]; 
   };
 }
