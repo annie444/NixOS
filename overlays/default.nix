@@ -12,6 +12,7 @@
         helm-diff
         helm-secrets
         helm-s3
+        helm-git
       ];
     };
   };
