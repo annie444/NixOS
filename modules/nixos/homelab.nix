@@ -1,9 +1,22 @@
-{ config, inputs, lib, pkgs, meta, ... }:
+{ config, inputs, lib, pkgs, ... }:
 
 with lib;
 
 let
   cfg = config.roles.homelab;
+  nvidiaContainerdSupport = pkgs.writeTextFile {
+    name = "nvidia-containerd-config-template";
+    destination = "/var/lib/rancher/k3s/agent/etc/containerd/config.toml.tmpl";
+    text = ''
+      {{ template "base" . }}
+
+      [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.nvidia]
+        privileged_without_host_devices = false
+        runtime_engine = ""
+        runtime_root = ""
+        runtime_type = "io.containerd.runc.v2"
+    '';
+  };
 in {
 
   options.roles.homelab = {
@@ -22,18 +35,36 @@ in {
       type = types.str;
       description = "Hostname of the server";
     };
+    nvidia = mkOption {
+      type = types.bool;
+      default = false;
+      description = "Whether nvidia GPU support should be setup";
+    };
   };
   config = mkIf cfg.enable {
     # Fixes for longhorn
     systemd.tmpfiles.rules = [
       "L+ /usr/local/bin - - - - /run/current-system/sw/bin/"
     ];
-    virtualisation.docker.logDriver = "json-file";
+
+    virtualisation.docker = {
+      enable = true;
+      logDriver = "json-file";
+    } // optionalAttrs cfg.nvidia { 
+      enableNvidia = true; 
+    };
+
+    environment.systemPackages = with pkgs; [ 
+      docker
+      runc 
+    ] ++ (if cfg.nvidia then [ 
+      nvidiaContainerdSupport 
+    ] else []);
 
     sops.secrets."k3s/token" = {};
 
     services.k3s = {
-      enable = true;
+      enable = false;
       role = "server";
       tokenFile = cfg.tokenFile;
       extraFlags = toString ([
