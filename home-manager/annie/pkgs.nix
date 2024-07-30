@@ -28,11 +28,7 @@
 
     # Kubernetes integration
     kubectl
-    kubernetes-helm
-    kubernetes-helmPlugins.helm-secrets
-    kubernetes-helmPlugins.helm-s3
-    kubernetes-helmPlugins.helm-git
-    kubernetes-helmPlugins.helm-diff
+    kubernetes-helm-wrapped
     kustomize
     helmfile-wrapped
     
