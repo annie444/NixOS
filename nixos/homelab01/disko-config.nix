@@ -46,27 +46,22 @@
       nvme1 = {
         type = "disk";
         device = "/dev/disk/by-id/nvme-Samsung_SSD_980_PRO_2TB_S6B0NL0TC34395K";
-        content = {};
       };
       hitachi = {
         type = "disk";
         device = "/dev/disk/by-id/ata-Hitachi_HUA722020ALA330_JK11B1B9K2KBRF";
-        content = {};
       }; 
       segate = {
         type = "disk";
         device = "/dev/disk/by-id/ata-ST2000LM007-1R8174_WDZ13WRE";
-        content = {};
       }; 
       wd1 = {
         type = "disk";
         device = "/dev/disk/by-id/ata-WDC_WD40EFAX-68JH4N1_WD-WX62D22EKCAT";
-        content = {};
       }; 
       wd2 = {
         type = "disk";
         device = "/dev/disk/by-id/ata-WDC_WD40EFAX-68JH4N1_WD-WX62D22LYL41";
-        content = {};
       }; 
     };
   };
