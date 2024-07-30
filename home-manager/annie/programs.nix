@@ -29,20 +29,8 @@
     k9s.enable = true;
     home-manager.enable = true;
     git.enable = true;
-    bcc.enable = true;
-    benchexec = {
-      enable = true;
-      users = [ "annie" ];
-    };
-    cpu-energy-meter.enable = true;
-    ecryptfs.enable = true;
     htop.enable = true;
-    iftop.enable = true;
-    iotopt.enable = true;
     lazygit.enable = true;
     less.enable = true;
-    npm.enable = true;
-    rust-motd.enable = true;
-    traceroute.enable = true;
-  }
+  };
 }
