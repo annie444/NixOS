@@ -6,6 +6,8 @@ let
   treesitterWithGrammars = (pkgs.vimPlugins.nvim-treesitter.withPlugins (p: [
     p.bash
     p.comment
+    p.c
+    p.cpp
     p.css
     p.dockerfile
     p.fish
@@ -15,6 +17,8 @@ let
     p.gomod
     p.gowork
     p.hcl
+    p.html
+    p.java
     p.javascript
     p.jq
     p.json5
@@ -22,14 +26,25 @@ let
     p.lua
     p.make
     p.markdown
+    p.markdown_inline
     p.nix
+    p.php
     p.python
+    p.regex
     p.rust
+    p.scss
+    p.svelte
     p.toml
+    p.terraform
+    p.tsx
     p.typescript
+    p.vim
     p.vue
     p.yaml
   ]));
+
+
+
 
   treesitter-parsers = pkgs.symlinkJoin {
     name = "treesitter-parsers";
@@ -44,7 +59,7 @@ in
 
   config = mkIf cfg.enable {
 
-    home.packages = with pkgs; [
+    home.packages = (with pkgs; [
       lua-language-server
       rust-analyzer-unwrapped
       black
@@ -52,11 +67,36 @@ in
       nodejs_22
       python3
       perl
-    ];
+      efm-langserver
+      clang-tools
+      pyright
+      elixir-ls
+      terraform-ls
+      jdt-language-server
+      yaml-language-server
+      gopls
+      lemminx
+      cmake
+      powershell
+      rust-analyzer-unwrapped
+      tailwindcss
+      buf-language-server
+    ]) ++ (with pkgs.nodePackages_latest; [
+      intelephense
+      csslint
+      typescript-language-server
+      svelte-language-server
+      svelte-check
+      tailwindcss
+    ]) ++ (with pkgs.vimPlugins; [
+      omnisharp-extended-lsp-nvim
+      nvim-jdtls
+    ]) ++ (with pkgs.luajitPackages; [
+      lua-lsp
+    ]);
 
     programs.neovim = {
       enable = true;
-
       defaultEditor = true;
 
       viAlias = true;

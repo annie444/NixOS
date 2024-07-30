@@ -20,7 +20,7 @@
 
     # You can also split up your configuration and import pieces of it here:
     ./pkgs.nix
-    # ./fish.nix
+    ./programs.nix
   ];
 
   nixpkgs = {
@@ -81,9 +81,6 @@
     };
   };
 
-  # Enable the k9s program
-  programs.k9s.enable = true;
-
   # Enable my custom profiles
   # NOTE: Make sure each module is imported in the imports section
   profiles.fish.enable = true;
@@ -97,9 +94,6 @@
     ipacKeyPath = config.sops.secrets."ssh/ipac/private".path;
     githubKeyPath = config.sops.secrets."ssh/github/private".path;
   };
-
-  # Enable home-manager and git
-  programs.home-manager.enable = true;
 
   # Nicely reload system units when changing configs
   systemd.user.startServices = "sd-switch";
