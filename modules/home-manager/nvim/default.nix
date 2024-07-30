@@ -43,9 +43,6 @@ let
     p.yaml
   ]));
 
-
-
-
   treesitter-parsers = pkgs.symlinkJoin {
     name = "treesitter-parsers";
     paths = treesitterWithGrammars.dependencies;
@@ -79,7 +76,6 @@ in
       cmake
       powershell
       rust-analyzer-unwrapped
-      tailwindcss
       buf-language-server
     ]) ++ (with pkgs.nodePackages_latest; [
       intelephense
@@ -90,7 +86,6 @@ in
       tailwindcss
     ]) ++ (with pkgs.vimPlugins; [
       omnisharp-extended-lsp-nvim
-      nvim-jdtls
     ]) ++ (with pkgs.luajitPackages; [
       lua-lsp
     ]);
