@@ -55,6 +55,7 @@
     nmap
     vim
     nano
+    gptfdisk
     inetutils
     gnutls
     busybox
