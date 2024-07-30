@@ -32,6 +32,7 @@
     kustomize
     helmfile-wrapped
     krew
+    kubectl-tree
     
     # security stuff
     sops
