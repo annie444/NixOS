@@ -133,9 +133,10 @@ in
             $argv --help 2>&1 | bathelp
           end
 
-          if test -d $HOME/.krew
-            set -q KREW_ROOT
-            set -gx PATH $PATH $KREW_ROOT/.krew/bin
+          if set -q KREW_ROOT
+            set $PATH $KREW_ROOT/.krew/bin
+          else if test -d $HOME/.krew
+            set $PATH $HOME/.krew/bin
           end
         
           set -Ux MANPAGER "sh -c 'col -bx | bat -l man -p'"
