@@ -63,5 +63,34 @@
     enable = true;
     pulse.enable = true;
   };
+
+  sops.secrets."ddns/api_key" = {};
+
+  sops.templates."1948-password.conf" = {
+    content = ''
+      password = "${config.sops.placeholder."ddns/api_key"}"
+    '';
+    owner = "inadyn";
+    group = "inadyn";
+  };
+
+  services.inadyn = {
+    enable = true;
+    user = "inadyn";
+    group = "inadyn";
+    settings = {
+      custom = {
+        "onenineeightfour" = {
+          ssl = true;
+          ddns-server = "api.1984.is";
+          ddns-path = "/1.0/freedns/?apikey=%p&domain=%h&ip=%i";
+          include = config.sops.templates."1948-password.conf".path;
+          hostname = "jpeg.gay";
+        };
+      };
+      allow-ipv6 = false;
+      forced-update = 86400;
+    };
+  };
 }
 
