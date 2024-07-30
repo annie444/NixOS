@@ -132,6 +132,11 @@ in
           function help
             $argv --help 2>&1 | bathelp
           end
+
+          if test -d $HOME/.krew
+            set -q KREW_ROOT
+            set -gx PATH $PATH $KREW_ROOT/.krew/bin
+          end
         
           set -Ux MANPAGER "sh -c 'col -bx | bat -l man -p'"
           set -Ux MANROFFOPT "-c"
