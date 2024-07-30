@@ -31,8 +31,6 @@ in
   };
   config = mkIf cfg.enable {
 
-    
-
     nixpkgs = {
       # You can add overlays here
       overlays = [
@@ -102,6 +100,7 @@ in
           bathelp = "bat --plain --language=help $argv";
           note = "nvim -c ':ObsidianToday<CR>' $argv";
           ":q" = "exit";
+          k = "kubectl";
         };
 
         shellAliases = {
