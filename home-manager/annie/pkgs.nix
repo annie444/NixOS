@@ -31,6 +31,7 @@
     kubernetes-helm-wrapped
     kustomize
     helmfile-wrapped
+    krew
     
     # security stuff
     sops
