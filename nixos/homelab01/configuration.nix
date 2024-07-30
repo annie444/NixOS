@@ -78,6 +78,7 @@
     enable = true;
     user = "inadyn";
     group = "inadyn";
+    logLevel = "notice";
     settings = {
       custom = {
         "onenineeightfour" = {
