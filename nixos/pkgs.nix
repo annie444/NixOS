@@ -2,6 +2,7 @@
   lib,
   config,
   pkgs,
+  inputs,
   outputs,
   ...
 }: {
@@ -32,9 +33,15 @@
   };
 
   environment.systemPackages = with pkgs; [
+    # Secrets encryption
     sops
     age
     ssh-to-age
+
+    # home-manager 
+    inputs.home-manager.packages.${pkgs.system}.default
+
+    # Utilities
     git
     coreutils-full
     curlFull
