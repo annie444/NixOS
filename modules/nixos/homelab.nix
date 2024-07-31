@@ -55,6 +55,11 @@ in {
 	      "--disable servicelb"
 	      "--disable traefik"
 	      "--disable local-storage"
+        "--kube-controller-manager-arg bind-address=0.0.0.0" 
+        "--kube-proxy-arg metrics-bind-address=0.0.0.0" 
+        "--kube-scheduler-arg bind-address=0.0.0.0" 
+        "--etcd-expose-metrics true" 
+        "--kubelet-arg containerd=/run/k3s/containerd/containerd.sock"
       ] ++ (if cfg.hostname == "homelab01" then [] else [
 	        "--server https://${cfg.ipaddr}:6443"
       ]));
