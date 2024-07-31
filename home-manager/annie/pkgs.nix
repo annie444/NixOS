@@ -39,6 +39,7 @@
     age
     ssh-to-age
     openssl
+    easyrsa
 
     # Memory leak detection
     valgrind
