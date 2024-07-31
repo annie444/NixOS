@@ -40,8 +40,14 @@
     ssh-to-age
     openssl
     easyrsa
-    python311Full
-    python311Packages.signedjson
+    (python3.withPackages (python-pkgs: [
+      python-pkgs.signedjson
+      python-pkgs.pandas
+      python-pkgs.requests
+      python-pkgs.numpy
+      python-pkgs.scipy
+      python-pkgs.types-dataclasses
+    ]))
 
     # Memory leak detection
     valgrind
