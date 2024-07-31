@@ -62,7 +62,6 @@ in
       black
       ruby
       nodejs_22
-      python3
       perl
       efm-langserver
       clang-tools
@@ -184,7 +183,7 @@ in
         magma_cell_highlight_group = "CursorLine",
         magma_save_path = vim.fn.stdpath("data") .. "/magma",
         vim_svelte_plugin_load_full_syntax = 1,
-        python3_host_prog = "${pkgs.python3}/bin/python",
+        python3_host_prog = "${pkgs.python311Full}/bin/python",
         ruby_host_prog = "${pkgs.ruby}/bin/ruby",
         node_host_prog = "${pkgs.nodejs_22}/bin/node",
         perl_host_prog = "${pkgs.perl}/bin/perl",
