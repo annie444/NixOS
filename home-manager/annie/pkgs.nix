@@ -40,8 +40,8 @@
     ssh-to-age
     openssl
     easyrsa
-    python312Full
-    python312Packages.signedjson
+    python311Full
+    python311Packages.signedjson
 
     # Memory leak detection
     valgrind
