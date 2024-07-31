@@ -41,6 +41,13 @@ in {
 
     hardware.nvidia-container-toolkit.enable = cfg.nvidia;
 
+    boot.kernel.sysctl = {
+      "fs.inotify.max_user_instances" = 2147483647;
+      "fs.inotify.max_user_instances" = 1048576;
+      "fs.inotify.max_user_watches" = 1048576;
+      "fs.inotify.max_queued_events" = 1048576;
+    };
+
     sops.secrets."k3s/token" = {
       restartUnits = [ "k3s.service" ];
     };
