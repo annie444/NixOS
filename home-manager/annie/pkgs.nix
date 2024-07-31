@@ -40,6 +40,7 @@
     ssh-to-age
     openssl
     easyrsa
+    python312Full
     python312Packages.signedjson
 
     # Memory leak detection
