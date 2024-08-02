@@ -40,13 +40,71 @@
     ssh-to-age
     openssl
     easyrsa
-    (python3.withPackages (python-pkgs: [
-      python-pkgs.signedjson
-      python-pkgs.pandas
-      python-pkgs.requests
-      python-pkgs.numpy
-      python-pkgs.scipy
-      python-pkgs.types-dataclasses
+    (python3.withPackages (p: [
+      p.signedjson
+      p.pandas
+      p.requests
+      p.numpy
+      p.scipy
+      p.types-dataclasses
+    ]))
+    (terraform.withPlugins (p: [
+      p.acme
+      p.age
+      p.archive
+      p.artifactory
+      p.cloudflare
+      p.cloudinit
+      p.dns
+      p.dnsimple
+      p.docker
+      p.elasticsearch
+      p.external
+      p.gandi
+      p.github
+      p.gitlab
+      p.google
+      p.google-beta
+      p.grafana
+      p.helm
+      p.hetznerdns
+      p.htpasswd
+      p.http
+      p.kafka
+      p.kafka-connect
+      p.keycloak
+      p.kubectl
+      p.kubernetes
+      p.libvirt
+      p.linuxbox
+      p.local
+      p.lxd
+      p.mailgun
+      p.metal
+      p.minio
+      p.namecheap
+      p.oci
+      p.onepassword
+      p.pass
+      p.porkbun
+      p.postgresql
+      p.project
+      p.proxmox
+      p.rabbitmq
+      p.rancher2
+      p.random
+      p.remote
+      p.secret
+      p.shell
+      p.slack
+      p.sops
+      p.ssh
+      p.tailscale
+      p.talos
+      p.time
+      p.tls
+      p.utils
+      p.vault
     ]))
 
     # Memory leak detection
