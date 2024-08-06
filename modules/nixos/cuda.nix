@@ -10,7 +10,7 @@ let
     (lib.getBin glibc) # for ldconfig in preStart
     (lib.getBin unpatched-nvidia-driver)
     nvidia-k3s
-    cudaPackages.fabricmanager
+    
   ];
 
   runtime-config = pkgs.runCommandNoCC "config.toml" {
@@ -30,49 +30,43 @@ in
   options.roles.cuda.enable = lib.mkEnableOption "Enable NVIDIA CUDA support";
 
   config = lib.mkIf cfg.enable {
-     
-    environment.systemPackages = with pkgs; [ nvidia-k3s ];
-    environment.etc = {
-      "nvidia-container-runtime/config.toml" = {
-        source = runtime-config;
-        mode = "0600";
+    environment.systemPackages = (with pkgs; [
+      autoAddDriverRunpath
+    ]) ++ (with pkgs.cudaPackages; [
+      setupCudaHook
+      nvidia_fs
+      libnvjpeg
+      libnpp
+      libcusolver
+      libcurand
+      libcufile
+      libcufft
+      libcublas
+      fabricmanager
+      cutensor
+      cudnn
+      cuda_opencl
+      cuda_nvprune
+      cuda_nvprof
+      cuda_nvml_dev
+      cuda_gdb
+    ]); 
+    hardware.nvidia = {
+      package = config.boot.kernelPackages.nvidiaPackages.stable;
+      nvidiaPersistenced = true;
+      modesetting.enable = true;
+      powerManagement.enable = false;
+      powerManagement.finegrained = false;
+      open = true;
+      nvidiaSettings = true;
+    };
+    services.xserver = {
+      enable = true;
+      videoDrivers = [ "nvidia" ];
+      xkb = {
+        layout = "us";
+        variant = "";
       };
     };
-
-    # This installs the nvidia driver
-    # It seems that this service installs a mix of packages, both necessary and unnecessary.
-    # The root nvidia-linux driver is here:
-    # https://github.com/NixOS/nixpkgs/blob/nixos-22.11/pkgs/os-specific/linux/nvidia-x11/generic.nix#L125
-    # We can test later if we can avoid installing X11 stuff along with the driver.
-    services.xserver.videoDrivers = [ "nvidia" ];
-    # This is required for some apps to see the driver
-    hardware.opengl = {
-      enable = true;
-      driSupport32Bit = true;
-      setLdLibraryPath = true;
-    };
-
-    # Required to keep GPU awake for runtime
-    hardware.nvidia.nvidiaPersistenced = true;
-
-    # add nvidia pkgs to k3s PATH
-    systemd.services.k3s.path = nvidia-pkgs;
-
-    # here we can initialize the ld cache that nvidia requires
-    # https://discourse.nixos.org/t/using-nvidia-container-runtime-with-containerd-on-nixos/27865/6
-    systemd.services.k3s.preStart = ''
-      rm -rf /tmp/nvidia-libs
-      mkdir -p /tmp/nvidia-libs
-
-      for LIB in {${unpatched-nvidia-driver}/lib/*,${pkgs.libtirpc}/lib/*,${pkgs.cudaPackages.cuda_nvml_dev}/lib/stubs/*}; do
-        ln -s -f $(readlink -f $LIB) /tmp/nvidia-libs/$(basename $LIB)
-      done
-
-      echo "initializing nvidia ld cache"
-      ldconfig -C /tmp/ld.so.cache /tmp/nvidia-libs
-
-      echo "nvidia ld cache contents"
-      ldconfig -C /tmp/ld.so.cache --print-cache
-    '';
   };
 }

@@ -1,7 +1,3 @@
-# Edit this configuration file to define what should be installed on
-# your system. Help is available in the configuration.nix(5) man page, on
-# https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
-
 {
   inputs,
   outputs,
@@ -31,7 +27,6 @@
   nixpkgs = {
     # You can add overlays here
     overlays = [
-      outputs.overlays.nvidia-overlay
     ];
     # Configure your nixpkgs instance
     config = {

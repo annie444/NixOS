@@ -56,7 +56,8 @@
   in {
     settings = {
       # Enable flakes and new 'nix' command
-      experimental-features = "nix-command flakes";
+      experimental-features = "nix-command flakes repl-flake";
+      auto-optimise-store = true; 
       # Opinionated: disable global registry
       flake-registry = "";
       # Workaround for https://github.com/NixOS/nix/issues/9574
@@ -64,6 +65,14 @@
     };
     # Opinionated: disable channels
     channel.enable = false;
+
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "-d";
+      persistent = true;
+    };
+    package = pkgs.nixFlakes;
 
     # Opinionated: make flake registry and nix path match flake inputs
     registry = lib.mapAttrs (_: flake: {inherit flake;}) flakeInputs;
@@ -82,6 +91,19 @@
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
+
+  i18n.extraLocaleSettings = {
+    LC_ADDRESS = "en_US.UTF-8";
+    LC_IDENTIFICATION = "en_US.UTF-8";
+    LC_MEASUREMENT = "en_US.UTF-8";
+    LC_MONETARY = "en_US.UTF-8";
+    LC_NAME = "en_US.UTF-8";
+    LC_NUMERIC = "en_US.UTF-8";
+    LC_PAPER = "en_US.UTF-8";
+    LC_TELEPHONE = "en_US.UTF-8";
+    LC_TIME = "en_US.UTF-8";
+  };
+
   console = {
     font = "Lat2-Terminus16";
     keyMap = "us";
@@ -101,6 +123,14 @@
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   networking.firewall.enable = false;
+
+  security.polkit.enable = true;
+
+  system.autoUpgrade = {
+    enable = true;
+    channel = "https://nixos.org/channels/nixos-23.11"; 
+  };
+
 
   # This setups a SSH server. Very important if you're setting up a headless system.
   # Feel free to remove if you don't need it.
