@@ -14,7 +14,7 @@ let
   ];
 
   runtime-config = pkgs.runCommandNoCC "config.toml" {
-    src = ../overlays/config.toml;
+    src = ../../overlays/config.toml;
   } ''
     cp $src $out
     substituteInPlace $out \
