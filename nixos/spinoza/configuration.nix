@@ -44,6 +44,7 @@
   networking.hostName = "spinoza";
   networking.hostId = "4c0902ca";
 
+  roles.cuda.enable = true;
   roles.gui.enable = true;
 
   services.pipewire = {
