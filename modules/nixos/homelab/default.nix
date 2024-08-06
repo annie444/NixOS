@@ -8,7 +8,7 @@ in {
 
   imports = [
     ./base.nix
-  ]
+  ];
 
   options.roles.homelab = {
     enable = mkEnableOption "Enable homelab services";
