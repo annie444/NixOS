@@ -4,4 +4,5 @@
   # List your module files here
   homelab = import ./homelab;
   gui = import ./gui.nix;
+  cuda = import ./cuda.nix;
 }
