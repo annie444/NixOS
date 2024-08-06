@@ -6,6 +6,10 @@ let
   cfg = config.roles.homelab;
 in {
 
+  imports = [
+    ./base.nix
+  ]
+
   options.roles.homelab = {
     enable = mkEnableOption "Enable homelab services";
     hostname = mkOption {
@@ -33,11 +37,6 @@ in {
     systemd.tmpfiles.rules = [
       "L+ /usr/local/bin - - - - /run/current-system/sw/bin/"
     ];
-
-    virtualisation.docker = {
-      enable = true;
-      logDriver = "json-file";
-    };
 
     hardware.nvidia-container-toolkit.enable = cfg.nvidia;
 
