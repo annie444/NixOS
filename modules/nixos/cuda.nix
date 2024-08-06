@@ -68,5 +68,41 @@ in
         variant = "";
       };
     };
+
+    # This installs the nvidia driver
+    # It seems that this service installs a mix of packages, both necessary and unnecessary.
+    # The root nvidia-linux driver is here:
+    # https://github.com/NixOS/nixpkgs/blob/nixos-22.11/pkgs/os-specific/linux/nvidia-x11/generic.nix#L125
+    # We can test later if we can avoid installing X11 stuff along with the driver.
+    services.xserver.videoDrivers = [ "nvidia" ];
+    # This is required for some apps to see the driver
+    hardware.opengl = {
+      enable = true;
+      driSupport32Bit = true;
+      setLdLibraryPath = true;
+    };
+
+    # Required to keep GPU awake for runtime
+    hardware.nvidia.nvidiaPersistenced = true;
+
+    # add nvidia pkgs to k3s PATH
+    systemd.services.k3s.path = nvidia-pkgs;
+
+    # here we can initialize the ld cache that nvidia requires
+    # https://discourse.nixos.org/t/using-nvidia-container-runtime-with-containerd-on-nixos/27865/6
+    systemd.services.k3s.preStart = ''
+      rm -rf /tmp/nvidia-libs
+      mkdir -p /tmp/nvidia-libs
+
+      for LIB in {${unpatched-nvidia-driver}/lib/*,${pkgs.libtirpc}/lib/*,${pkgs.cudaPackages.cuda_nvml_dev}/lib/stubs/*}; do
+        ln -s -f $(readlink -f $LIB) /tmp/nvidia-libs/$(basename $LIB)
+      done
+
+      echo "initializing nvidia ld cache"
+      ldconfig -C /tmp/ld.so.cache /tmp/nvidia-libs
+
+      echo "nvidia ld cache contents"
+      ldconfig -C /tmp/ld.so.cache --print-cache
+    '';
   };
 }

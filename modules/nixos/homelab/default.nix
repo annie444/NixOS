@@ -4,11 +4,11 @@ with lib;
 
 let
   cfg = config.roles.homelab;
+  containerdTemplate = pkgs.writeText "config.toml.tmpl"
+    (builtins.replaceStrings ["@nvidia-container-runtime@"] ["${pkgs.nvidia-k3s}/bin/nvidia-container-runtime"]
+      (readFile ./config.toml.tmpl)
+    );
 in {
-
-  imports = [
-    ./base.nix
-  ];
 
   options.roles.homelab = {
     enable = mkEnableOption "Enable homelab services";
@@ -39,6 +39,11 @@ in {
     ];
 
     hardware.nvidia-container-toolkit.enable = cfg.nvidia;
+
+    virtualisation = {
+      libvirtd.enable = true;
+      lxc.enable = true;
+    };
 
     boot.kernel.sysctl = {
       "fs.inotify.max_user_instances" = 2147483647;
@@ -85,6 +90,12 @@ in {
       kubeshark
       docker
       runc 
-    ]; 
+    ];
+
+   # The tmpl needs the full path to the container-shim
+    # https://github.com/k3s-io/k3s/issues/6518
+    system.activationScripts.writeContainerdConfigTemplate = mkIf cfg.nvidia (stringAfter [ "var" ] ''
+      cp ${containerdTemplate} /var/lib/rancher/k3s/agent/etc/containerd/config.toml.tmpl
+    '');
   };
 }

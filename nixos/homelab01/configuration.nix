@@ -30,7 +30,7 @@
   nixpkgs = {
     # You can add overlays here
     overlays = [
-      outputs.overlays.nvidia-overlay 
+      outputs.overlays.nvidia-overlay
     ];
     # Configure your nixpkgs instance
     config = {
