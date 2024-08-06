@@ -42,6 +42,12 @@
     inputs.home-manager.packages.${pkgs.system}.default
 
     # Utilities
+    clinfo
+    glxinfo
+    inxi
+    tmux-cssh
+    nixos-icons
+    xdg-utils
     git
     coreutils-full
     curlFull

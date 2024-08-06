@@ -25,6 +25,7 @@
 
     # Import your generated (nixos-generate-config) hardware configuration
     ./hardware-configuration.nix
+    ./pkgs.nix
   ];
 
   nixpkgs = {
@@ -47,10 +48,19 @@
   roles.cuda.enable = true;
   roles.gui.enable = true;
 
-  services.pipewire = {
-    enable = true;
-    pulse.enable = true;
+  services = {
+    printing.enable = true;
+
+    pipewire = {
+      enable = true;
+      pulse.enable = true;
+      alsa = {
+        enable = true;
+        support32Bit = true;
+      };
+    };
   };
+  sound.enable = true;
 
 }
 

@@ -108,6 +108,7 @@
         extraSpecialArgs = {inherit inputs outputs;};
         modules = [
           # > Our main home-manager configuration file <
+          inputs.sops-nix.homeManagerModules.sops
           ./home-manager/annie/home.nix
         ];
       };

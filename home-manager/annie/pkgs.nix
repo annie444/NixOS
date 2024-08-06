@@ -40,6 +40,8 @@
     ssh-to-age
     openssl
     easyrsa
+
+    # python packages
     (python3.withPackages (p: [
       p.signedjson
       p.pandas
@@ -48,6 +50,15 @@
       p.scipy
       p.types-dataclasses
     ]))
+    (poetry.withPlugins (p: [
+      p.poetry-plugin-up
+      p.poetry-audit-plugin
+      p.poetry-plugin-export
+      p.poetry-plugin-poeblix
+    ]))
+    poetry2conda
+
+    #  Terraform with plugins
     (terraform.withPlugins (p: [
       p.acme
       p.age
@@ -84,7 +95,6 @@
       p.minio
       p.namecheap
       p.oci
-      p.onepassword
       p.pass
       p.porkbun
       p.postgresql
