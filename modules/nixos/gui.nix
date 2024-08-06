@@ -5,27 +5,40 @@ with lib;
 let
   cfg = config.roles.gui;
 in {
-  imports = [
-    inputs._1password-shell-plugins.hmModules.default
-  ];
 
   options.roles.gui.enable = mkEnableOption "Enable gui services";
 
   config = mkIf cfg.enable {
     # Setup the GUI here
-
-    environment.systemPackages = with pkgs; [
-      # 1Password
-      _1password
-      _1password-gui
-    ];
-
-    programs._1password-shell-plugins = {
-      # enable 1Password shell plugins for bash, zsh, and fish shell
+    services.displayManager = {
+      defaultSession = "plasma";
+      sddm = {
+        enable = true;
+        enableHidpi = true;
+        autoNumlock = true;
+        wayland = {
+          enable = true;
+        };
+      };
+    };
+    services.desktopManager.plasma6.enable = true;
+    environment.sessionVariables.NIXOS_OZONE_WL = "1";
+    
+    qt = {
       enable = true;
-      # the specified packages as well as 1Password CLI will be
-      # automatically installed and configured to use shell plugins
-      plugins = with pkgs; [ gh ];
+      platformTheme = "qtct";
+      style.name = "kvantum";
+    };
+
+    xdg.configFile = {
+      "Kvantum/ArcDark".source = "${pkgs.arc-kde-theme}/share/Kvantum/ArcDark";
+      "Kvantum/kvantum.kvconfig".text = "[General]\ntheme=ArcDark";
+    };
+
+    programs.dconf.enable = true;
+
+    environment.sessionVariables = {
+      NIX_PROFILES = "${pkgs.lib.concatStringsSep " " (pkgs.lib.reverseList config.environment.profiles)}";
     };
     
   };
