@@ -10,9 +10,7 @@ let cfg = config.profiles.kitty; in {
 
   config = mkIf cfg.enable {
 
-    fonts.fonts = with pkgs; [
-      (nerdfonts.override { fonts = [ "FiraCode" "JetBrainsMono" ]; })
-    ];
+    
 
     programs.kitty = {
 
@@ -25,7 +23,7 @@ let cfg = config.profiles.kitty; in {
 
       font = {
         name = "FiraCode";
-        package = (nerdfonts.override { fonts = [ "FiraCode" ]; });
+        package = (pkgs.nerdfonts.override { fonts = [ "FiraCode" ]; });
         size = 12;
       };
 
@@ -64,11 +62,11 @@ let cfg = config.profiles.kitty; in {
         "opt+right" = "resize_window wider";
         "opt+up" = "resize_window taller";
         "opt+down" = "resize_window shorter 3";
-        "opt+r" = "resize_window reset"
+        "opt+r" = "resize_window reset";
       };
 
       settings = {
-        background_opacity = 0.9;
+        background_opacity = 9;
         dynamic_background_opacity = "yes";
         background_blur = 20;
         window_padding_width = 4;
@@ -79,13 +77,12 @@ let cfg = config.profiles.kitty; in {
         listen_on_unix = "/tmp/mykitty";
         tab_bar_edge = "top";
         tab_bar_style = "separator";
-        tab_title_template = "Tab: {index}: {title}";
         tab_separator = "|";
         tab_title_template = "{fmt.fg._bd93f9}{index}:{fmt.fg.tab}{title.split()[0]}";
         active_tab_title_template = "";
         active_tab_font_style = "bold-italic";
         inactive_tab_font_style = "normal";
-        tab_bar_margin_width = 0.5;
+        tab_bar_margin_width = "0.5";
         tab_bar_margin_height = "1.0 0.5";
         font_features = "+liga +calt +dlig +frac +ordn +subs +sups";
         kitty_mod = "ctrl+shift";

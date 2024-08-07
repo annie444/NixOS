@@ -17,17 +17,17 @@
     };
   };
 
-  nvidia-overlay = (self: super:
+  nvidia-overlay = (final: prev:
   let
-    inherit (super.pkgs) callPackage;
-    virtualization = super.pkgs.path + "/pkgs/applications/virtualization";
-    unpatched-nvidia-driver = (super.pkgs.linuxKernel.packages.linux_5_15.nvidia_x11_production.overrideAttrs (oldAttrs: {
+    inherit (prev.pkgs) callPackage;
+    virtualization = prev.pkgs.path + "/pkgs/applications/virtualization";
+    unpatched-nvidia-driver = (prev.pkgs.linuxKernel.packages.linux_5_15.nvidia_x11_production.overrideAttrs (oldAttrs: {
       builder = ../overlays/nvidia-builder.sh;
     }));
   in
   {
-    # cudaPackages = super.cudaPackages // {
-    #   fabricmanager = super.cudaPackages.fabricmanager.overrideAttrs (oldAttrs: {
+    # cudaPackages = prev.cudaPackages // {
+    #   fabricmanager = prev.cudaPackages.fabricmanager.overrideAttrs (oldAttrs: {
     #     version = "525.85.12";
     #     linux-x86_64 = {
     #       relative_path = "fabricmanager/linux-x86_64/fabricmanager-linux-x86_64-525.85.12-archive.tar.xz";
@@ -37,18 +37,18 @@
     # };
 
     libnvidia-container = import ./libnvidia-container.nix {
-      inherit (self) stdenv lib;
-      inherit (self.pkgs)
+      inherit (final) stdenv lib;
+      inherit (final.pkgs)
         addOpenGLRunpath fetchFromGitHub glibc pkg-config
         libelf libcap libseccomp libtirpc rpcsvc-proto
         makeWrapper substituteAll removeReferencesTo go;
-      inherit (self.pkgs.cudaPackages) fabricmanager;
+      inherit (final.pkgs.cudaPackages) fabricmanager;
       inherit unpatched-nvidia-driver;
     };
 
     nvidia-container-toolkit = import ./nvidia-container-toolkit.nix {
-      inherit (self) lib;
-      inherit (self.pkgs)
+      inherit (final) lib;
+      inherit (final.pkgs)
         addOpenGLRunpath
         glibc fetchFromGitLab makeWrapper buildGoPackage
         linkFarm writeShellScript
@@ -59,11 +59,11 @@
       configTemplate = ./config.toml;
     };
 
-    nvidia-k3s = self.pkgs.symlinkJoin {
+    nvidia-k3s = final.pkgs.symlinkJoin {
       name = "nvidia-k3s";
       paths = [
-        self.libnvidia-container
-        self.nvidia-container-toolkit
+        final.libnvidia-container
+        final.nvidia-container-toolkit
       ];
     };
   });

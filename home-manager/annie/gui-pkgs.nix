@@ -17,10 +17,7 @@
     firefox
     thunderbird
     slack
-    slack-cli
     _1password
     _1password-gui
-    neovim-qt
-    neovim-remote
   ];
 }

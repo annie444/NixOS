@@ -10,6 +10,11 @@ in {
 
   config = mkIf cfg.enable {
     # Setup the GUI here
+
+    fonts.packages = with pkgs; [
+      (nerdfonts.override { fonts = [ "FiraCode" "JetBrainsMono" ]; })
+    ];
+
     services = {
       displayManager = {
         defaultSession = "plasma";
