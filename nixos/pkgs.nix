@@ -41,14 +41,40 @@
     # home-manager 
     inputs.home-manager.packages.${pkgs.system}.default
 
+    # Compilers
+    autoconf
+    gnumake
+    m4
+    gcc
+    gperf
+    libGLU
+    libGL
+    xorg.libXi
+    xorg.libXmu 
+    xorg.libXext 
+    xorg.libX11 
+    xorg.libXv 
+    xorg.libXrandr 
+    zlib
+    freeglut
+    ncurses5
+    stdenv.cc
+    binutils
+
+
     # Utilities
     clinfo
+    procps
+    unzip
+    gnutar
+    xz
     glxinfo
     inxi
     tmux-cssh
     nixos-icons
     xdg-utils
     git
+    gitRepo
     coreutils-full
     curlFull
     sysstat

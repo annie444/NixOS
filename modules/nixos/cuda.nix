@@ -33,8 +33,7 @@ in
     environment.systemPackages = (with pkgs; [
       autoAddDriverRunpath
       cudatoolkit
-      gnumake
-      gcc
+      linuxPackages.nvidia_x11
       pciutils
       file
     ]) ++ (with pkgs.cudaPackages; [
