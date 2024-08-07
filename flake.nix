@@ -118,7 +118,7 @@
         modules = [
           # > Our main home-manager configuration file <
           ./home-manager/annie/home.nix
-          ./home-manager/annie/gui-pkgs.nix
+          ./home-manager/annie/gui.nix
         ];
       };
     };

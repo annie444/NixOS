@@ -40,6 +40,39 @@
     # home-manager
     inputs.home-manager.packages.${pkgs.system}.default
 
+    # Some networking tools.
+    fuse
+    fuse3
+    sshfs-fuse
+    socat
+    screen
+    tcpdump
+
+    # Hardware-related tools.
+    sdparm
+    hdparm
+    smartmontools # for diagnosing hard disks
+    pciutils
+    usbutils
+    nvme-cli
+
+    # Some compression/archiver tools.
+    unzip
+    zip
+    gnutar
+    xz
+
+    w3m # needed for the manual
+    testdisk # useful for repairing boot problems
+    ms-sys # for writing Microsoft boot sectors / MBRs
+    efibootmgr
+    efivar
+    parted
+    gptfdisk
+    ddrescue
+    ccrypt
+    cryptsetup
+
     # Compilers
     autoconf
     gnumake
@@ -63,10 +96,6 @@
     # Utilities
     clinfo
     procps
-    unzip
-    gnutar
-    xz
-    glxinfo
     inxi
     tmux-cssh
     nixos-icons

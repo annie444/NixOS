@@ -58,6 +58,11 @@ in {
         cuda_nvml_dev
         cuda_gdb
       ]);
+    hardware.opengl = {
+      enable = true;
+      driSupport32Bit = true;
+      setLdLibraryPath = true;
+    };
     hardware.nvidia = {
       package = config.boot.kernelPackages.nvidiaPackages.stable;
       nvidiaPersistenced = true;

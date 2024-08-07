@@ -58,6 +58,7 @@ in {
         tre-command
         delta
         gitnow
+        bfs
         spark
         abbreviation-tips
         dracula
