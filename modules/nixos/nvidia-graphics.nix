@@ -8,7 +8,6 @@ in
   options.roles.nvidia-graphics.enable = lib.mkEnableOption "Enable NVIDIA graphics support";
 
   config = lib.mkIf cfg.enable {
-
     services.xserver = {
       enable = true;
       videoDrivers = [ "nvidia" ];
@@ -17,6 +16,5 @@ in
         variant = "";
       };
     };
-
   };
 }
