@@ -10,7 +10,7 @@ let cfg = config.profiles.kitty; in {
 
   config = mkIf cfg.enable {
 
-    
+    fonts.fontconfig.enable = true;
 
     programs.kitty = {
 
@@ -22,8 +22,8 @@ let cfg = config.profiles.kitty; in {
       };
 
       font = {
-        name = "FiraCode";
-        package = (pkgs.nerdfonts.override { fonts = [ "FiraCode" ]; });
+        name = "JetBrainsMono Nerd Font Mono";
+        package = (pkgs.nerdfonts.override { fonts = [ "JetBrainsMono" ]; });
         size = 12;
       };
 
@@ -66,7 +66,7 @@ let cfg = config.profiles.kitty; in {
       };
 
       settings = {
-        background_opacity = 9;
+        background_opacity = "0.9";
         dynamic_background_opacity = "yes";
         background_blur = 20;
         window_padding_width = 4;

@@ -19,5 +19,6 @@
     slack
     _1password
     _1password-gui
+    ocs-url
   ];
 }
