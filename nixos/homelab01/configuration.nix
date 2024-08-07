@@ -14,6 +14,7 @@
   imports = [
     # If you want to use modules your own flake exports (from modules/nixos):
     outputs.nixosModules.homelab
+    outputs.nixosModules.cuda
     outputs.nixosModules.k3s-cuda
 
     # Or modules from other flakes (such as nixos-hardware):
@@ -45,7 +46,7 @@
   networking.hostId = "d58b8d19";
 
   roles.k3s-cuda.enable = true;
-
+  roles.cuda.enable = true;
   roles.homelab = {
     enable = true;
     hostname = "homelab01";

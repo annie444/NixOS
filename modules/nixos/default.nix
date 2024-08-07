@@ -6,4 +6,5 @@
   gui = import ./gui.nix;
   k3s-cuda = import ./k3s-cuda.nix;
   cuda = import ./cuda.nix;
+  nvidia-graphics = import ./nvidia-graphics.nix;
 }

@@ -11,6 +11,7 @@
     # If you want to use modules your own flake exports (from modules/nixos):
     outputs.nixosModules.gui
     outputs.nixosModules.cuda
+    outputs.nixosModules.nvidia-graphics
 
     # Or modules from other flakes (such as nixos-hardware):
     inputs.nixos-hardware.nixosModules.common-cpu-amd
@@ -40,6 +41,7 @@
   networking.hostName = "spinoza";
   networking.hostId = "4c0902ca";
 
+  roles.nvidia-graphics.enable = true;
   roles.cuda.enable = true;
   roles.gui.enable = true;
 
