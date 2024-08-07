@@ -32,6 +32,11 @@ in
   config = lib.mkIf cfg.enable {
     environment.systemPackages = (with pkgs; [
       autoAddDriverRunpath
+      cudatoolkit
+      gnumake
+      gcc
+      pciutils
+      file
     ]) ++ (with pkgs.cudaPackages; [
       setupCudaHook
       nvidia_fs
