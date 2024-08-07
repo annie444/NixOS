@@ -1,0 +1,18 @@
+# .sops.yaml
+keys:
+  - &annie age1vzktrphual65cu0htt6sy2klt5k7t52nuvqum4envkda5v8xdvfsgn8tvh
+  - &homelab01 age1y3tp20acg4v26evmmc3r22tl2aqq9r8wdp8kgz6d0ymn5lptgvksh27k45
+  - &homelab02 age1hrctpn2rtshvtq4868g2vh4lmsngqre3u0sgsve7zlvufchndd0qtz4ntu
+creation_rules: 
+  - path_regex: secrets/[^/]+\.(yaml|json|env|ini)$
+    key_groups:
+      - age:
+        - *annie
+        - *homelab01
+        - *homelab02
+  - path_regex: secrets/annie/[^/]+\.(yaml|json|env|ini|gpg|enc)$
+    key_groups:
+      - age:
+        - *annie
+        - *homelab01
+        - *homelab02
