@@ -16,7 +16,7 @@
     outputs.homeManagerModules.nvim
     outputs.homeManagerModules.ssh
 
-    
+    inputs.sops-nix.homeManagerModules.sops    
 
     # You can also split up your configuration and import pieces of it here:
     ./pkgs.nix

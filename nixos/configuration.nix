@@ -17,6 +17,7 @@
     # inputs.hardware.nixosModules.common-cpu-amd
     # inputs.hardware.nixosModules.common-ssd
     inputs.sops-nix.nixosModules.sops
+    inputs.home-manager.nixosModules.home-manager
 
     # You can also split up your configuration and import pieces of it here:
     ./users.nix
@@ -128,7 +129,7 @@
 
   system.autoUpgrade = {
     enable = true;
-    channel = "https://nixos.org/channels/nixos-23.11"; 
+    channel = "https://nixos.org/channels/nixos-24.05"; 
   };
 
 
@@ -146,6 +147,7 @@
   };
 
   programs.mosh.enable = true;
+
 
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.

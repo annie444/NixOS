@@ -103,13 +103,21 @@
     # Standalone home-manager configuration entrypoint
     # Available through 'home-manager --flake .#your-username@your-hostname'
     homeConfigurations = {
-      annie = home-manager.lib.homeManagerConfiguration {
+      "annie-no-gui" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-        extraSpecialArgs = {inherit inputs outputs;};
+        extraSpecialArgs = { inherit inputs outputs; };
         modules = [
           # > Our main home-manager configuration file <
-          inputs.sops-nix.homeManagerModules.sops
           ./home-manager/annie/home.nix
+        ];
+      };
+      "annie-gui" = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
+        extraSpecialArgs = { inherit inputs outputs; };
+        modules = [
+          # > Our main home-manager configuration file <
+          ./home-manager/annie/home.nix
+          ./home-manager/annie/gui-pkgs.nix
         ];
       };
     };

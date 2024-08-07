@@ -6,4 +6,5 @@
   tmux = import ./tmux;
   nvim = import ./nvim;
   ssh = import ./ssh.nix;
+  kitty = import ./kitty.nix;
 }
