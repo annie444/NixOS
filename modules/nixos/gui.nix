@@ -53,7 +53,7 @@ in {
       style = "kvantum";
     };
 
-    environment.systemPackages = with pkgs; [ glxinfo firefox ];
+    environment.systemPackages = with pkgs; [glxinfo firefox];
 
     programs.dconf.enable = true;
 
@@ -62,10 +62,9 @@ in {
       enable = true;
       # Certain features, including CLI integration and system authentication support,
       # require enabling PolKit integration on some desktop environments (e.g. Plasma).
-      polkitPolicyOwners = [ "annie" ];
+      polkitPolicyOwners = ["annie"];
     };
 
     systemd.defaultUnit = "graphical.target";
   };
-
 }

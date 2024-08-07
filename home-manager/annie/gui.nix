@@ -38,10 +38,10 @@
   };
 
   services.kdeconnect.enable = true;
-  
+
   programs.firefox = {
     enable = true;
-    package = (pkgs.firefox.override {
+    package = pkgs.firefox.override {
       nativeMessagingHosts = [
         pkgs.kdePackages.plasma-browser-integration
         pkgs._1password-gui
@@ -57,6 +57,6 @@
         smartcardSupport = true;
         speechSynthesisSupport = true;
       };
-    });
+    };
   };
 }
