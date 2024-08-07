@@ -1,11 +1,13 @@
-{ config, outputs, pkgs, lib, ... }:
-
-with lib;
-
-let
-  cfg = config.profiles.gh;
-in 
 {
+  config,
+  outputs,
+  pkgs,
+  lib,
+  ...
+}:
+with lib; let
+  cfg = config.profiles.gh;
+in {
   options.profiles.gh = {
     enable = mkEnableOption "enable gh profile";
   };

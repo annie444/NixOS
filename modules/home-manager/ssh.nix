@@ -1,45 +1,45 @@
-{ config, outputs, pkgs, lib, ... }:
-
-with lib;
-
-let
-  cfg = config.profiles.ssh;
-in
 {
-  
+  config,
+  outputs,
+  pkgs,
+  lib,
+  ...
+}:
+with lib; let
+  cfg = config.profiles.ssh;
+in {
   options.profiles.ssh = {
     enable = mkEnableOption "enable ssh profile";
     mayfirstKeyPath = mkOption {
       type = types.path;
       default = "~/.ssh/mayfirst_id_ed25519";
       description = ''
-      Path to the ssh key for mayfirst.
+        Path to the ssh key for mayfirst.
       '';
     };
     homelabKeyPath = mkOption {
       type = types.path;
       default = "~/.ssh/jpec_id_ed25519";
       description = ''
-      Path to the ssh key for the homelab.
+        Path to the ssh key for the homelab.
       '';
     };
     ipacKeyPath = mkOption {
       type = types.path;
       default = "~/.ssh/ipac_id_ed25519";
       description = ''
-      Path to the ssh key for IPAC.
+        Path to the ssh key for IPAC.
       '';
     };
     githubKeyPath = mkOption {
       type = types.path;
       default = "~/.ssh/github_id_ed25519";
       description = ''
-      Path to the ssh key for GitHub.
+        Path to the ssh key for GitHub.
       '';
     };
   };
   config = mkIf cfg.enable {
-
     nixpkgs = {
       # You can add overlays here
       overlays = [
@@ -63,7 +63,6 @@ in
     };
 
     programs.ssh = {
-
       enable = true;
       forwardAgent = false;
       compression = false;
@@ -86,14 +85,14 @@ in
           host = "homelab01";
           hostname = "192.168.4.72";
           user = "annie";
-          port =  22;
+          port = 22;
           identityFile = cfg.homelabKeyPath;
         };
         homelab02 = {
           host = "homelab02";
           hostname = "192.168.4.75";
           user = "annie";
-          port =  22;
+          port = 22;
           identityFile = cfg.homelabKeyPath;
         };
         ipac = {

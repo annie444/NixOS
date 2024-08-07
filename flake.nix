@@ -48,7 +48,6 @@
     # This is a function that generates an attribute by calling a function you
     # pass to it, with each system as an argument
     forAllSystems = nixpkgs.lib.genAttrs systems;
-    
   in {
     # Your custom packages
     # Accessible through 'nix build', 'nix shell', etc
@@ -74,7 +73,7 @@
         specialArgs = {inherit inputs outputs;};
         modules = [
           # > Our main nixos configuration file <
-	        disko.nixosModules.disko
+          disko.nixosModules.disko
           ./nixos/configuration.nix
           ./nixos/homelab01/configuration.nix
           ./nixos/homelab01/disko-config.nix
@@ -84,7 +83,7 @@
         specialArgs = {inherit inputs outputs;};
         modules = [
           # > Our main nixos configuration file <
-	        disko.nixosModules.disko
+          disko.nixosModules.disko
           ./nixos/configuration.nix
           ./nixos/homelab02/configuration.nix
           ./nixos/homelab02/disko-config.nix
@@ -94,7 +93,7 @@
         specialArgs = {inherit inputs outputs;};
         modules = [
           # > Our main nixos configuration file <
-	        disko.nixosModules.disko
+          disko.nixosModules.disko
           ./nixos/configuration.nix
           ./nixos/spinoza/configuration.nix
           ./nixos/spinoza/disko-config.nix
@@ -107,7 +106,7 @@
     homeConfigurations = {
       "annie-no-gui" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-        extraSpecialArgs = { inherit inputs outputs; };
+        extraSpecialArgs = {inherit inputs outputs;};
         modules = [
           # > Our main home-manager configuration file <
           ./home-manager/annie/home.nix
@@ -115,7 +114,7 @@
       };
       "annie-gui" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-        extraSpecialArgs = { inherit inputs outputs; };
+        extraSpecialArgs = {inherit inputs outputs;};
         modules = [
           # > Our main home-manager configuration file <
           ./home-manager/annie/home.nix

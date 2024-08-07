@@ -1,8 +1,8 @@
 # This is just an example, you should generate yours with nixos-generate-config and put it in here.
-{ lib, ... }: {
+{lib, ...}: {
   boot.crashDump.enable = true;
   boot.enableContainers = true;
-  boot.supportedFilesystems = [ "zfs" ];
+  boot.supportedFilesystems = ["zfs"];
 
   boot.loader.grub.enable = true;
   boot.loader.grub.device = "nodev";
@@ -10,9 +10,9 @@
   boot.loader.grub.efiSupport = true;
   boot.loader.grub.memtest86.enable = true;
   boot.loader.grub.copyKernels = true;
-  
+
   boot.tmp.cleanOnBoot = true;
-  
+
   networking.useDHCP = lib.mkDefault true;
 
   # Set your system kind (needed for flakes)

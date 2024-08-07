@@ -1,11 +1,13 @@
-{ config, outputs, pkgs, lib, ... }:
-
-with lib;
-
-let
-  cfg = config.profiles.direnv;
-in 
 {
+  config,
+  outputs,
+  pkgs,
+  lib,
+  ...
+}:
+with lib; let
+  cfg = config.profiles.direnv;
+in {
   options.profiles.direnv = {
     enable = mkEnableOption "enable direnv profile";
   };

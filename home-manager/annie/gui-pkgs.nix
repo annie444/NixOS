@@ -6,7 +6,6 @@
   lib,
   ...
 }: {
-
   imports = [
     outputs.homeManagerModules.kitty
   ];

@@ -2,7 +2,8 @@
   lib,
   pkgs,
   fetchFromGitHub,
-}: pkgs.fishPlugins.buildFishPlugin rec {
+}:
+pkgs.fishPlugins.buildFishPlugin rec {
   pname = "dracula";
   version = "06-23-2023";
 
@@ -17,11 +18,13 @@
     description = "A dark theme for friendly interactive shell (fish)";
     homepage = "https://github.com/dracula/fish";
     license = licenses.mit;
-    maintainers = [ {
-      email = "annie.ehler.4@gmail.com";
-      name = "Annie Ehler";
-      github = "annie444";
-      githubId = 6550634;
-    } ];
+    maintainers = [
+      {
+        email = "annie.ehler.4@gmail.com";
+        name = "Annie Ehler";
+        github = "annie444";
+        githubId = 6550634;
+      }
+    ];
   };
 }

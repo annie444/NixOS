@@ -1,11 +1,13 @@
-{ config, outputs, pkgs, lib, ... }:
-
-with lib;
-
-let
-  cfg = config.profiles.git;
-in 
 {
+  config,
+  outputs,
+  pkgs,
+  lib,
+  ...
+}:
+with lib; let
+  cfg = config.profiles.git;
+in {
   options.profiles.git = {
     enable = mkEnableOption "enable git profile";
   };

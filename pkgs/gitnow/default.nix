@@ -18,11 +18,13 @@ pkgs.fishPlugins.buildFishPlugin rec {
     description = "Speed up your Git workflow. 🐠";
     homepage = "https://github.com/joseluisq/gitnow";
     license = licenses.mit;
-    maintainers = [ {
-      email = "annie.ehler.4@gmail.com";
-      name = "Annie Ehler";
-      github = "annie444";
-      githubId = 6550634;
-    } ];
+    maintainers = [
+      {
+        email = "annie.ehler.4@gmail.com";
+        name = "Annie Ehler";
+        github = "annie444";
+        githubId = 6550634;
+      }
+    ];
   };
 }

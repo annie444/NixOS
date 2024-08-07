@@ -1,11 +1,13 @@
-{ config, outputs, pkgs, lib, ... }:
-
-with lib;
-
-let
-  cfg = config.profiles.eza;
-in 
 {
+  config,
+  outputs,
+  pkgs,
+  lib,
+  ...
+}:
+with lib; let
+  cfg = config.profiles.eza;
+in {
   options.profiles.eza = {
     enable = mkEnableOption "enable eza profile";
   };
@@ -27,8 +29,8 @@ in
         "-r"
         "--color=always"
         "-s"
-        "created" 
-        "--group-directories-first" 
+        "created"
+        "--group-directories-first"
         "--time-style"
         "long-iso"
         "-w"

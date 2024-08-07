@@ -1,11 +1,13 @@
-{ config, outputs, pkgs, lib, ... }:
-
-with lib;
-
-let
-  cfg = config.profiles.dircolors;
-in 
 {
+  config,
+  outputs,
+  pkgs,
+  lib,
+  ...
+}:
+with lib; let
+  cfg = config.profiles.dircolors;
+in {
   options.profiles.dircolors = {
     enable = mkEnableOption "enable dircolors profile";
   };

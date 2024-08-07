@@ -17,15 +17,13 @@
     };
   };
 
-  nvidia-overlay = (final: prev:
-  let
+  nvidia-overlay = final: prev: let
     inherit (prev.pkgs) callPackage;
     virtualization = prev.pkgs.path + "/pkgs/applications/virtualization";
-    unpatched-nvidia-driver = (prev.pkgs.linuxKernel.packages.linux_5_15.nvidia_x11_production.overrideAttrs (oldAttrs: {
+    unpatched-nvidia-driver = prev.pkgs.linuxKernel.packages.linux_5_15.nvidia_x11_production.overrideAttrs (oldAttrs: {
       builder = ../overlays/nvidia-builder.sh;
-    }));
-  in
-  {
+    });
+  in {
     # cudaPackages = prev.cudaPackages // {
     #   fabricmanager = prev.cudaPackages.fabricmanager.overrideAttrs (oldAttrs: {
     #     version = "525.85.12";
@@ -38,21 +36,39 @@
 
     libnvidia-container = import ./libnvidia-container.nix {
       inherit (final) stdenv lib;
-      inherit (final.pkgs)
-        addOpenGLRunpath fetchFromGitHub glibc pkg-config
-        libelf libcap libseccomp libtirpc rpcsvc-proto
-        makeWrapper substituteAll removeReferencesTo go;
+      inherit
+        (final.pkgs)
+        addOpenGLRunpath
+        fetchFromGitHub
+        glibc
+        pkg-config
+        libelf
+        libcap
+        libseccomp
+        libtirpc
+        rpcsvc-proto
+        makeWrapper
+        substituteAll
+        removeReferencesTo
+        go
+        ;
       inherit (final.pkgs.cudaPackages) fabricmanager;
       inherit unpatched-nvidia-driver;
     };
 
     nvidia-container-toolkit = import ./nvidia-container-toolkit.nix {
       inherit (final) lib;
-      inherit (final.pkgs)
+      inherit
+        (final.pkgs)
         addOpenGLRunpath
-        glibc fetchFromGitLab makeWrapper buildGoPackage
-        linkFarm writeShellScript
-        libnvidia-container;
+        glibc
+        fetchFromGitLab
+        makeWrapper
+        buildGoPackage
+        linkFarm
+        writeShellScript
+        libnvidia-container
+        ;
       inherit unpatched-nvidia-driver;
 
       containerRuntimePath = "runc";
@@ -66,7 +82,7 @@
         final.nvidia-container-toolkit
       ];
     };
-  });
+  };
 
   # When applied, the unstable nixpkgs set (declared in the flake inputs) will
   # be accessible through 'pkgs.unstable'

@@ -16,7 +16,7 @@
     outputs.homeManagerModules.nvim
     outputs.homeManagerModules.ssh
 
-    inputs.sops-nix.homeManagerModules.sops    
+    inputs.sops-nix.homeManagerModules.sops
 
     # You can also split up your configuration and import pieces of it here:
     ./pkgs.nix
@@ -97,8 +97,8 @@
 
   # Nicely reload system units when changing configs
   systemd.user.startServices = "sd-switch";
-  systemd.user.services.sd-switch.Unit.After = [ "sops-nix.service" ];
-  systemd.user.services.mbsync.Unit.After = [ "sops-nix.service" ];
+  systemd.user.services.sd-switch.Unit.After = ["sops-nix.service"];
+  systemd.user.services.mbsync.Unit.After = ["sops-nix.service"];
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   home.stateVersion = "23.11";

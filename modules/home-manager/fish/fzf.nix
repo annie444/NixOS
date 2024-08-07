@@ -1,11 +1,13 @@
-{ config, outputs, pkgs, lib, ... }:
-
-with lib;
-
-let
-  cfg = config.profiles.fzf;
-in 
 {
+  config,
+  outputs,
+  pkgs,
+  lib,
+  ...
+}:
+with lib; let
+  cfg = config.profiles.fzf;
+in {
   options.profiles.fzf = {
     enable = mkEnableOption "enable fzf profile";
   };
@@ -17,11 +19,11 @@ in
       enable = true;
       defaultCommand = "bfs . -type f";
       fileWidgetCommand = "bfs . -type f";
-      fileWidgetOptions = [ "--preview 'bat {}'" ];
+      fileWidgetOptions = ["--preview 'bat {}'"];
       changeDirWidgetCommand = "bfs . -type d";
-      changeDirWidgetOptions = [ "--preview 'tre -C {} | bat -n 200'" ];
-      historyWidgetOptions = [ 
-        "--sort" 
+      changeDirWidgetOptions = ["--preview 'tre -C {} | bat -n 200'"];
+      historyWidgetOptions = [
+        "--sort"
         "--exact"
         "--preview 'bat -n 20 {}'"
       ];

@@ -7,14 +7,14 @@
         content = {
           type = "gpt";
           partitions = {
-	          boot = {
+            boot = {
               size = "3G";
               type = "ef02"; # for grub MBR
-	            content = {
-	              type = "filesystem";
-		            format = "vfat";
-		            mountpoint = "/boot";
-	            };
+              content = {
+                type = "filesystem";
+                format = "vfat";
+                mountpoint = "/boot";
+              };
             };
             ESP = {
               size = "3G";
@@ -26,10 +26,10 @@
               };
             };
             swap = {
-	            size = "68G";
+              size = "68G";
               content = {
                 type = "swap";
-		            resumeDevice = true;
+                resumeDevice = true;
               };
             };
             zfs = {
@@ -54,7 +54,7 @@
                 type = "zfs";
                 pool = "zroot";
               };
-            }; 
+            };
           };
         };
       };
@@ -70,7 +70,7 @@
                 type = "zfs";
                 pool = "zroot";
               };
-            }; 
+            };
           };
         };
       };
@@ -86,10 +86,10 @@
                 type = "zfs";
                 pool = "zroot";
               };
-            }; 
+            };
           };
         };
-      }; 
+      };
     };
     zpool = {
       zroot = {

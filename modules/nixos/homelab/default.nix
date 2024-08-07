@@ -1,15 +1,19 @@
-{ config, inputs, lib, pkgs, ... }:
-
-with lib;
-
-let
+{
+  config,
+  inputs,
+  lib,
+  pkgs,
+  ...
+}:
+with lib; let
   cfg = config.roles.homelab;
-  containerdTemplate = pkgs.writeText "config.toml.tmpl"
-    (builtins.replaceStrings ["@nvidia-container-runtime@"] ["${pkgs.nvidia-k3s}/bin/nvidia-container-runtime"]
+  containerdTemplate =
+    pkgs.writeText "config.toml.tmpl"
+    (
+      builtins.replaceStrings ["@nvidia-container-runtime@"] ["${pkgs.nvidia-k3s}/bin/nvidia-container-runtime"]
       (readFile ./config.toml.tmpl)
     );
 in {
-
   options.roles.homelab = {
     enable = mkEnableOption "Enable homelab services";
     hostname = mkOption {
@@ -52,7 +56,7 @@ in {
     };
 
     sops.secrets."k3s/token" = {
-      restartUnits = [ "k3s.service" ];
+      restartUnits = ["k3s.service"];
     };
 
     services.k3s = {
@@ -60,20 +64,25 @@ in {
       role = "server";
       tokenFile = cfg.tokenFile;
       extraFlags = toString ([
-	      "--write-kubeconfig-mode \"0644\""
-	      "--cluster-init"
-	      "--disable servicelb"
-	      "--disable traefik"
-	      "--disable local-storage"
-        "--kube-controller-manager-arg bind-address=0.0.0.0" 
-        "--kube-proxy-arg metrics-bind-address=0.0.0.0" 
-        "--kube-scheduler-arg bind-address=0.0.0.0" 
-        "--etcd-expose-metrics true" 
-        "--kubelet-arg containerd=/run/k3s/containerd/containerd.sock"
-      ] ++ (if cfg.hostname == "homelab01" then [] else [
-	        "--server https://${cfg.ipaddr}:6443"
-      ]));
-      clusterInit = (cfg.hostname == "homelab01");
+          "--write-kubeconfig-mode \"0644\""
+          "--cluster-init"
+          "--disable servicelb"
+          "--disable traefik"
+          "--disable local-storage"
+          "--kube-controller-manager-arg bind-address=0.0.0.0"
+          "--kube-proxy-arg metrics-bind-address=0.0.0.0"
+          "--kube-scheduler-arg bind-address=0.0.0.0"
+          "--etcd-expose-metrics true"
+          "--kubelet-arg containerd=/run/k3s/containerd/containerd.sock"
+        ]
+        ++ (
+          if cfg.hostname == "homelab01"
+          then []
+          else [
+            "--server https://${cfg.ipaddr}:6443"
+          ]
+        ));
+      clusterInit = cfg.hostname == "homelab01";
     };
 
     services.openiscsi = {
@@ -89,12 +98,12 @@ in {
       nfs-utils
       kubeshark
       docker
-      runc 
+      runc
     ];
 
-   # The tmpl needs the full path to the container-shim
+    # The tmpl needs the full path to the container-shim
     # https://github.com/k3s-io/k3s/issues/6518
-    system.activationScripts.writeContainerdConfigTemplate = mkIf cfg.nvidia (stringAfter [ "var" ] ''
+    system.activationScripts.writeContainerdConfigTemplate = mkIf cfg.nvidia (stringAfter ["var"] ''
       cp ${containerdTemplate} /var/lib/rancher/k3s/agent/etc/containerd/config.toml.tmpl
     '');
   };

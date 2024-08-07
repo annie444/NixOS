@@ -1,4 +1,8 @@
-{ config, pkgs, ... }: {
+{
+  config,
+  pkgs,
+  ...
+}: {
   environment.systemPackages = with pkgs; [
     kdePackages.kdeconnect-kde
     kdePackages.plasma-browser-integration
@@ -9,4 +13,4 @@
     wayland-utils
     xwaylandvideobridge
   ];
-} 
+}

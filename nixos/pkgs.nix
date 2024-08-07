@@ -6,7 +6,6 @@
   outputs,
   ...
 }: {
-
   nixpkgs = {
     # You can add overlays here
     overlays = [
@@ -38,7 +37,7 @@
     age
     ssh-to-age
 
-    # home-manager 
+    # home-manager
     inputs.home-manager.packages.${pkgs.system}.default
 
     # Compilers
@@ -50,17 +49,16 @@
     libGLU
     libGL
     xorg.libXi
-    xorg.libXmu 
-    xorg.libXext 
-    xorg.libX11 
-    xorg.libXv 
-    xorg.libXrandr 
+    xorg.libXmu
+    xorg.libXext
+    xorg.libX11
+    xorg.libXv
+    xorg.libXrandr
     zlib
     freeglut
     ncurses5
     stdenv.cc
     binutils
-
 
     # Utilities
     clinfo

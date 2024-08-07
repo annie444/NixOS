@@ -1,8 +1,12 @@
-{ config, pkgs, lib, ... }:
-
-with lib;
-
-let cfg = config.profiles.tmux; in {
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
+with lib; let
+  cfg = config.profiles.tmux;
+in {
   options.profiles.tmux.enable = mkEnableOption "tmux profile";
 
   config = mkIf cfg.enable {
@@ -61,8 +65,8 @@ let cfg = config.profiles.tmux; in {
 
             # Display options
             set -g @dracula-show-powerline true
-            set -g @dracula-show-left-sep  
-            set -g @dracula-show-right-sep  
+            set -g @dracula-show-left-sep 
+            set -g @dracula-show-right-sep 
             set -g @dracula-show-flags true
             set -g @dracula-show-empty-plugins false
             set -g @dracula-show-left-icon shortname

@@ -1,19 +1,20 @@
-{ config, pkgs, lib, ... }:
-
-with lib;
-
-let cfg = config.profiles.kitty; in {
-
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
+with lib; let
+  cfg = config.profiles.kitty;
+in {
   imports = [];
 
   options.profiles.kitty.enable = mkEnableOption "Enable kitty shell";
 
   config = mkIf cfg.enable {
-
     fonts.fontconfig.enable = true;
 
     programs.kitty = {
-
       enable = true;
 
       shellIntegration = {
@@ -23,7 +24,7 @@ let cfg = config.profiles.kitty; in {
 
       font = {
         name = "JetBrainsMono Nerd Font Mono";
-        package = (pkgs.nerdfonts.override { fonts = [ "JetBrainsMono" ]; });
+        package = pkgs.nerdfonts.override {fonts = ["JetBrainsMono"];};
         size = 12;
       };
 
@@ -90,6 +91,5 @@ let cfg = config.profiles.kitty; in {
 
       theme = "Dracula";
     };
-
   };
 }

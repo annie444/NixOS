@@ -7,14 +7,14 @@
         content = {
           type = "gpt";
           partitions = {
-	          boot = {
+            boot = {
               size = "1G";
               type = "ef02"; # for grub MBR
-	            content = {
-	              type = "filesystem";
-		            format = "vfat";
-		            mountpoint = "/boot";
-	            };
+              content = {
+                type = "filesystem";
+                format = "vfat";
+                mountpoint = "/boot";
+              };
             };
             ESP = {
               size = "1G";
@@ -26,10 +26,10 @@
               };
             };
             swap = {
-	            size = "16G";
+              size = "16G";
               content = {
                 type = "swap";
-		            resumeDevice = true;
+                resumeDevice = true;
               };
             };
             root = {
@@ -38,7 +38,7 @@
                 type = "lvm_pv";
                 vg = "pool";
               };
-	          };
+            };
           };
         };
       };

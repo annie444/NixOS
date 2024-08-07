@@ -1,10 +1,13 @@
-{ config, pkgs, lib, ... }:
-
-let
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}: let
   cfg = config.roles.k3s-cuda;
-  unpatched-nvidia-driver = (config.hardware.nvidia.package.overrideAttrs (oldAttrs: {
+  unpatched-nvidia-driver = config.hardware.nvidia.package.overrideAttrs (oldAttrs: {
     builder = ../../overlays/nvidia-builder.sh;
-  }));
+  });
 
   nvidia-pkgs = with pkgs; [
     (lib.getBin glibc) # for ldconfig in preStart
@@ -13,25 +16,23 @@ let
     cudaPackages.fabricmanager
   ];
 
-  runtime-config = pkgs.runCommandNoCC "config.toml" {
-    src = ../../overlays/config.toml;
-  } ''
-    cp $src $out
-    substituteInPlace $out \
-      --subst-var-by glibcbin ${lib.getBin pkgs.glibc}
-    # substituteInPlace $out \
-    #   --subst-var-by nvidia-drivers ${lib.getBin unpatched-nvidia-driver}
-    substituteInPlace $out \
-      --subst-var-by container-cli-path "PATH=${lib.makeBinPath nvidia-pkgs}"
-  '';
-in
-{
-
+  runtime-config =
+    pkgs.runCommandNoCC "config.toml" {
+      src = ../../overlays/config.toml;
+    } ''
+      cp $src $out
+      substituteInPlace $out \
+        --subst-var-by glibcbin ${lib.getBin pkgs.glibc}
+      # substituteInPlace $out \
+      #   --subst-var-by nvidia-drivers ${lib.getBin unpatched-nvidia-driver}
+      substituteInPlace $out \
+        --subst-var-by container-cli-path "PATH=${lib.makeBinPath nvidia-pkgs}"
+    '';
+in {
   options.roles.k3s-cuda.enable = lib.mkEnableOption "Enable NVIDIA CUDA support";
 
   config = lib.mkIf cfg.enable {
-     
-    environment.systemPackages = with pkgs; [ nvidia-k3s ];
+    environment.systemPackages = with pkgs; [nvidia-k3s];
     environment.etc = {
       "nvidia-container-runtime/config.toml" = {
         source = runtime-config;
@@ -44,7 +45,7 @@ in
     # The root nvidia-linux driver is here:
     # https://github.com/NixOS/nixpkgs/blob/nixos-22.11/pkgs/os-specific/linux/nvidia-x11/generic.nix#L125
     # We can test later if we can avoid installing X11 stuff along with the driver.
-    services.xserver.videoDrivers = [ "nvidia" ];
+    services.xserver.videoDrivers = ["nvidia"];
     # This is required for some apps to see the driver
     hardware.opengl = {
       enable = true;

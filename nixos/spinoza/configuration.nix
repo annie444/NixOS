@@ -58,6 +58,4 @@
     };
   };
   sound.enable = true;
-
 }
-

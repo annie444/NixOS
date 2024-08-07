@@ -1,18 +1,21 @@
-{ config, inputs, lib, pkgs, meta, ... }:
-
-with lib;
-
-let
+{
+  config,
+  inputs,
+  lib,
+  pkgs,
+  meta,
+  ...
+}:
+with lib; let
   cfg = config.roles.gui;
 in {
-
   options.roles.gui.enable = mkEnableOption "Enable gui services";
 
   config = mkIf cfg.enable {
     # Setup the GUI here
 
     fonts.packages = with pkgs; [
-      (nerdfonts.override { fonts = [ "FiraCode" "JetBrainsMono" ]; })
+      (nerdfonts.override {fonts = ["FiraCode" "JetBrainsMono"];})
     ];
 
     services = {
@@ -35,7 +38,7 @@ in {
       menus.enable = true;
       mime.enable = true;
     };
-    
+
     qt = {
       enable = true;
       platformTheme = "kde";
@@ -49,7 +52,5 @@ in {
     };
 
     systemd.defaultUnit = "graphical.target";
-    
   };
-
 }

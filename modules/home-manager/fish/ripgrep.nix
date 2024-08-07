@@ -1,11 +1,13 @@
-{ config, outputs, pkgs, lib, ... }:
-
-with lib;
-
-let
-  cfg = config.profiles.ripgrep;
-in 
 {
+  config,
+  outputs,
+  pkgs,
+  lib,
+  ...
+}:
+with lib; let
+  cfg = config.profiles.ripgrep;
+in {
   options.profiles.ripgrep = {
     enable = mkEnableOption "enable ripgrep profile";
   };

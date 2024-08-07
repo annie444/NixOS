@@ -1,11 +1,13 @@
-{ config, outputs, pkgs, lib, ... }:
-
-with lib;
-
-let
-  cfg = config.profiles.btop;
-in 
 {
+  config,
+  outputs,
+  pkgs,
+  lib,
+  ...
+}:
+with lib; let
+  cfg = config.profiles.btop;
+in {
   options.profiles.btop = {
     enable = mkEnableOption "enable btop profile";
   };
@@ -86,4 +88,3 @@ in
     };
   };
 }
-

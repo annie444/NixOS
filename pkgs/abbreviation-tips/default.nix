@@ -18,11 +18,13 @@ pkgs.fishPlugins.buildFishPlugin rec {
     description = "It helps you remember abbreviations and aliases by displaying tips when you can use them.";
     homepage = "https://github.com/gazorby/fish-abbreviation-tips";
     license = licenses.mit;
-    maintainers = [ {
-      email = "annie.ehler.4@gmail.com";
-      name = "Annie Ehler";
-      github = "annie444";
-      githubId = 6550634;
-    } ];
+    maintainers = [
+      {
+        email = "annie.ehler.4@gmail.com";
+        name = "Annie Ehler";
+        github = "annie444";
+        githubId = 6550634;
+      }
+    ];
   };
 }

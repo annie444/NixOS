@@ -33,7 +33,7 @@
     helmfile-wrapped
     krew
     kubectl-tree
-    
+
     # security stuff
     sops
     age
@@ -143,6 +143,5 @@
     # libs
     gpp # c++ module?, decrypt
     gecode # c++ module
-
   ];
 }

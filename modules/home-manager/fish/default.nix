@@ -1,12 +1,13 @@
-{ config, outputs, pkgs, lib, ... }:
-
-with lib;
-
-let
-  cfg = config.profiles.fish;
-in
 {
-
+  config,
+  outputs,
+  pkgs,
+  lib,
+  ...
+}:
+with lib; let
+  cfg = config.profiles.fish;
+in {
   imports = [
     ./autojump.nix
     ./bat.nix
@@ -25,12 +26,11 @@ in
     ./thefuck.nix
     ./zoxide.nix
   ];
-  
+
   options.profiles.fish = {
     enable = mkEnableOption "enable fish profile";
   };
   config = mkIf cfg.enable {
-
     nixpkgs = {
       # You can add overlays here
       overlays = [
@@ -53,19 +53,21 @@ in
       };
     };
 
-    home.packages = (with pkgs; [
-      tre-command
-      delta
-      gitnow
-      spark
-      abbreviation-tips
-      dracula
-    ]) ++ (with pkgs.fishPlugins; [
-      done
-      autopair
-      puffer
-      github-copilot-cli-fish
-    ]);
+    home.packages =
+      (with pkgs; [
+        tre-command
+        delta
+        gitnow
+        spark
+        abbreviation-tips
+        dracula
+      ])
+      ++ (with pkgs.fishPlugins; [
+        done
+        autopair
+        puffer
+        github-copilot-cli-fish
+      ]);
 
     profiles = {
       autojump.enable = true;
@@ -114,21 +116,21 @@ in
 
         shellInit = ''
           set -U fish_term24bit 1
-          
+
           # Aliases
           fish_config theme choose "Dracula Official"
-        
+
           set -gx GPG_TTY (tty)
-        
+
           if test "$(uname)" = "Darwin"
             alias apptainer "limactl shell apptainer"
           end
-        
+
           if set -q KITTY_INSTALLATION_DIR
             source "$KITTY_INSTALLATION_DIR/shell-integration/fish/vendor_conf.d/kitty-shell-integration.fish"
             set --prepend fish_complete_path "$KITTY_INSTALLATION_DIR/shell-integration/fish/vendor_completions.d"
           end
-        
+
           function help
             $argv --help 2>&1 | bathelp
           end
@@ -138,24 +140,23 @@ in
           else if test -d $HOME/.krew
             set -gx PATH $PATH $HOME/.krew/bin
           end
-        
+
           set -Ux MANPAGER "sh -c 'col -bx | bat -l man -p'"
           set -Ux MANROFFOPT "-c"
           set -Ux COLORTERM "truecolor"
           set -Ux TERM "xterm-256color"
           set -Ux EDITOR "nvim"
-          
+
           if test -d "$HOME/Library/Group\ Containers/2BUA8C4S2C.com.1password/t"
             set -gx SSH_AUTH_SOCK "~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock"
           else if test -d "$HOME/.1password"
             set -gx SSH_AUTH_SOCK "~/.1password/agent.sock"
           end
-        
+
           if test -d "$HOME/.asdf"
             source ~/.asdf/asdf.fish
           end
         '';
-
       };
     };
 
@@ -163,6 +164,5 @@ in
       recursive = true;
       source = ./DraculaOfficial.theme;
     };
-
   };
 }

@@ -1,9 +1,11 @@
-{ config, pkgs, lib, ... }:
-
-with lib;
-
-let 
-  treesitterWithGrammars = (pkgs.vimPlugins.nvim-treesitter.withPlugins (p: [
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
+with lib; let
+  treesitterWithGrammars = pkgs.vimPlugins.nvim-treesitter.withPlugins (p: [
     p.bash
     p.comment
     p.c
@@ -41,53 +43,54 @@ let
     p.vim
     p.vue
     p.yaml
-  ]));
+  ]);
 
   treesitter-parsers = pkgs.symlinkJoin {
     name = "treesitter-parsers";
     paths = treesitterWithGrammars.dependencies;
   };
 
-  cfg = config.profiles.nvim; 
-in
-{
-
+  cfg = config.profiles.nvim;
+in {
   options.profiles.nvim.enable = mkEnableOption "neovim profile";
 
   config = mkIf cfg.enable {
-
-    home.packages = (with pkgs; [
-      lua-language-server
-      rust-analyzer-unwrapped
-      black
-      ruby
-      nodejs_22
-      perl
-      efm-langserver
-      clang-tools
-      pyright
-      elixir-ls
-      terraform-ls
-      jdt-language-server
-      yaml-language-server
-      gopls
-      lemminx
-      cmake
-      powershell
-      rust-analyzer-unwrapped
-      buf-language-server
-    ]) ++ (with pkgs.nodePackages_latest; [
-      intelephense
-      csslint
-      typescript-language-server
-      svelte-language-server
-      svelte-check
-      tailwindcss
-    ]) ++ (with pkgs.vimPlugins; [
-      omnisharp-extended-lsp-nvim
-    ]) ++ (with pkgs.luajitPackages; [
-      lua-lsp
-    ]);
+    home.packages =
+      (with pkgs; [
+        lua-language-server
+        rust-analyzer-unwrapped
+        black
+        ruby
+        nodejs_22
+        perl
+        efm-langserver
+        clang-tools
+        pyright
+        elixir-ls
+        terraform-ls
+        jdt-language-server
+        yaml-language-server
+        gopls
+        lemminx
+        cmake
+        powershell
+        rust-analyzer-unwrapped
+        buf-language-server
+      ])
+      ++ (with pkgs.nodePackages_latest; [
+        intelephense
+        csslint
+        typescript-language-server
+        svelte-language-server
+        svelte-check
+        tailwindcss
+      ])
+      ++ (with pkgs.vimPlugins; [
+        omnisharp-extended-lsp-nvim
+      ])
+      ++ (with pkgs.luajitPackages; [
+        lua-lsp
+      ]);
 
     programs.neovim = {
       enable = true;
