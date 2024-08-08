@@ -44,7 +44,6 @@
     package = pkgs.firefox.override {
       nativeMessagingHosts = [
         pkgs.kdePackages.plasma-browser-integration
-        pkgs._1password-gui
       ];
       cfg = {
         pipewireSupport = true;

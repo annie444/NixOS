@@ -31,7 +31,7 @@ in {
       libinput.enable = true;
     };
 
-    hardware.pulseaudio.enable = true;
+    hardware.pulseaudio.enable = false;
     environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
     xdg = {
