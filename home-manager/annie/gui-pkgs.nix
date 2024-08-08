@@ -14,7 +14,7 @@
 
   home.packages = with pkgs; [
     thunderbird
-    slack
+    unstable.slack
     _1password
     _1password-gui
     ocs-url

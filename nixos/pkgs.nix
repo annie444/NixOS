@@ -75,9 +75,36 @@
 
     # Compilers
     autoconf
+    automake
+    autobuild
     gnumake
+    bison
+    bisoncpp
+    flex
+    pkgconf
+    strace
+    strace-analyzer
+    asciidoc-full-with-plugins
+    byacc
+    diffstat
+    intltool
+    jna
+    ltrace
+    patchutils
+    pesign
+    sourceHighlight
+    pkg-config
+    rpm
+    rpmextract
+    dnf5
+    libextractor
     m4
+    cmake
     gcc
+    gccgo
+    gfortran
+    libtool
+    libedit
     gperf
     libGLU
     libGL
@@ -88,7 +115,6 @@
     xorg.libXv
     xorg.libXrandr
     zlib
-    freeglut
     ncurses5
     stdenv.cc
     binutils
@@ -117,6 +143,5 @@
     gptfdisk
     inetutils
     gnutls
-    busybox
   ];
 }

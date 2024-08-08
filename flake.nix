@@ -8,6 +8,7 @@
     # at the same time. Here's an working example:
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     # Also see the 'unstable-packages' overlay at 'overlays/default.nix'.
+    nur.url = "github:nix-community/NUR";
 
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
 
@@ -45,6 +46,12 @@
       "x86_64-darwin"
     ];
 
+    baseSystem = [
+      inputs.nur.nixosModules.nur
+      disko.nixosModules.disko
+      ./nixos/configuration.nix
+    ];
+
     # This is a function that generates an attribute by calling a function you
     # pass to it, with each system as an argument
     forAllSystems = nixpkgs.lib.genAttrs systems;
@@ -73,31 +80,25 @@
         specialArgs = {inherit inputs outputs;};
         modules = [
           # > Our main nixos configuration file <
-          disko.nixosModules.disko
-          ./nixos/configuration.nix
           ./nixos/homelab01/configuration.nix
           ./nixos/homelab01/disko-config.nix
-        ];
+        ] ++ baseSystem;
       };
       homelab02 = nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs outputs;};
         modules = [
           # > Our main nixos configuration file <
-          disko.nixosModules.disko
-          ./nixos/configuration.nix
           ./nixos/homelab02/configuration.nix
           ./nixos/homelab02/disko-config.nix
-        ];
+        ] ++ baseSystem;
       };
       spinoza = nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs outputs;};
         modules = [
           # > Our main nixos configuration file <
-          disko.nixosModules.disko
-          ./nixos/configuration.nix
           ./nixos/spinoza/configuration.nix
           ./nixos/spinoza/disko-config.nix
-        ];
+        ] ++ baseSystem;
       };
     };
 
@@ -109,6 +110,7 @@
         extraSpecialArgs = {inherit inputs outputs;};
         modules = [
           # > Our main home-manager configuration file <
+          
           ./home-manager/annie/home.nix
         ];
       };

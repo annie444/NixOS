@@ -39,6 +39,8 @@
 
   services.kdeconnect.enable = true;
 
+  home.sessionVariables.NIXOS_OZONE_WL = "1";
+
   programs.firefox = {
     enable = true;
     package = pkgs.firefox.override {
