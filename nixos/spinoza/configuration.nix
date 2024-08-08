@@ -36,6 +36,8 @@
     };
   };
 
+  fonts.enableDefaultPackages = true;
+
   time.timeZone = "Americas/Los_Angeles";
 
   networking.hostName = "spinoza";

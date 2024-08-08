@@ -56,6 +56,18 @@
     usbutils
     nvme-cli
 
+    # Application networking tools
+    bpftop
+    bpfmon
+    bpftune
+    bpftrace
+    bpftools
+    bpf-linker
+    netop
+    sockdump
+    pcapc
+    ngrep
+
     # Some compression/archiver tools.
     unzip
     zip
