@@ -14,6 +14,7 @@ in {
   config = mkIf cfg.enable {
     home.packages = with pkgs; [
       direnv
+      nix-direnv
     ];
     programs.direnv = {
       enable = true;
