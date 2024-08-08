@@ -12,10 +12,10 @@
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
 
-  hardware={
+  hardware = {
     opengl.enable = true;
     cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-    bluetooth= {
+    bluetooth = {
       enable = true;
       powerOnBoot = true;
     };

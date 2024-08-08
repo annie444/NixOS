@@ -78,27 +78,33 @@
       # FIXME replace with your hostname
       homelab01 = nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs outputs;};
-        modules = [
-          # > Our main nixos configuration file <
-          ./nixos/homelab01/configuration.nix
-          ./nixos/homelab01/disko-config.nix
-        ] ++ baseSystem;
+        modules =
+          [
+            # > Our main nixos configuration file <
+            ./nixos/homelab01/configuration.nix
+            ./nixos/homelab01/disko-config.nix
+          ]
+          ++ baseSystem;
       };
       homelab02 = nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs outputs;};
-        modules = [
-          # > Our main nixos configuration file <
-          ./nixos/homelab02/configuration.nix
-          ./nixos/homelab02/disko-config.nix
-        ] ++ baseSystem;
+        modules =
+          [
+            # > Our main nixos configuration file <
+            ./nixos/homelab02/configuration.nix
+            ./nixos/homelab02/disko-config.nix
+          ]
+          ++ baseSystem;
       };
       spinoza = nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs outputs;};
-        modules = [
-          # > Our main nixos configuration file <
-          ./nixos/spinoza/configuration.nix
-          ./nixos/spinoza/disko-config.nix
-        ] ++ baseSystem;
+        modules =
+          [
+            # > Our main nixos configuration file <
+            ./nixos/spinoza/configuration.nix
+            ./nixos/spinoza/disko-config.nix
+          ]
+          ++ baseSystem;
       };
     };
 
@@ -110,7 +116,7 @@
         extraSpecialArgs = {inherit inputs outputs;};
         modules = [
           # > Our main home-manager configuration file <
-          
+
           ./home-manager/annie/home.nix
         ];
       };
