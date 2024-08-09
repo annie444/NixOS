@@ -57,11 +57,7 @@ in {
       (with pkgs; [
         tre-command
         delta
-        gitnow
         bfs
-        spark
-        abbreviation-tips
-        dracula
       ])
       ++ (with pkgs.fishPlugins; [
         done
@@ -93,6 +89,52 @@ in {
       fish = {
         enable = true;
 
+        plugins = 
+          (with pkgs.fishPlugins; [
+            done
+            autopair
+            puffer
+            github-copilot-cli-fish
+          ])
+          ++ (with pkgs; [
+            {
+              name = "abbreviation-tips";
+              src = fetchFromGitHub {
+                owner = "gazorby";
+                repo = "fish-abbreviation-tips";
+                rev = "0.7.0";
+                hash = "sha256-F1t81VliD+v6WEWqj1c1ehFBXzqLyumx5vV46s/FZRU=";
+              };
+            }
+            {
+              name = "dracula";
+              src = fetchFromGitHub {
+                owner = "dracula";
+                repo = "fish";
+                rev = "269cd7d76d5104fdc2721db7b8848f6224bdf554";
+                hash = "sha256-Hyq4EfSmWmxwCYhp3O8agr7VWFAflcUe8BUKh50fNfY=";
+              };
+            }
+            {
+              name = "gitnow";
+              src = fetchFromGitHub {
+                owner = "joseluisq";
+                repo = "gitnow";
+                rev = "2.12.0";
+                hash = "sha256-PuorwmaZAeG6aNWX4sUTBIE+NMdn1iWeea3rJ2RhqRQ=";
+              };
+            }
+            {
+              name = "spark";
+              src = fetchFromGitHub {
+                owner = "jorgebucaran";
+                repo = "spark.fish";
+                rev = "1.2.0";
+                hash = "sha256-AIFj7lz+QnqXGMBCfLucVwoBR3dcT0sLNPrQxA5qTuU=";
+              };
+            }
+          ]);
+
         shellAbbrs = {
           du = "dust";
           g = "git";
@@ -104,32 +146,43 @@ in {
           note = "nvim -c ':ObsidianToday<CR>' $argv";
           ":q" = "exit";
           k = "kubectl";
+          cat = "bat";
+          tp = "trash-put";
+          te = "trash-empty";
+          tl = "trash-list";
+          tre = "trash-restore";
+          trm = "trash-rm";
+          grep = "batgrep";
+          watch = "batwatch";
+          cat = "bat";
+          find = "bfs";
+          diff = "batdiff";
         };
 
         shellAliases = {
-          find = "bfs";
-          diff = "nvim -d";
           ls = "eza -1GghmMoXr --color=always --icons=always -s created --group-directories-first --time-style long-iso --git --git-repos -w 10";
           la = "eza -1GghmMoXrla --color=always --icons=always -s created --group-directories-first --time-style long-iso --git --git-repos -w 100";
-          cat = "bat";
           ".." = "cd ..";
         };
 
-        shellInit = ''
-          set -U fish_term24bit 1
+        interactiveShellInit = ''
+          set -gx fish_greeting ""
+        '';
 
-          # Aliases
+        shellInit = ''
+          # Theming
+          set -U fish_term24bit 1
           fish_config theme choose "Dracula Official"
+          set -gx COLORTERM "truecolor"
+          set -gx TERM "xterm-256color"
+
+          batman --export-env | source
+          eval (batpipe)
 
           set -gx GPG_TTY (tty)
 
           if test "$(uname)" = "Darwin"
             alias apptainer "limactl shell apptainer"
-          end
-
-          if set -q KITTY_INSTALLATION_DIR
-            source "$KITTY_INSTALLATION_DIR/shell-integration/fish/vendor_conf.d/kitty-shell-integration.fish"
-            set --prepend fish_complete_path "$KITTY_INSTALLATION_DIR/shell-integration/fish/vendor_completions.d"
           end
 
           function help
@@ -141,12 +194,13 @@ in {
           else if test -d $HOME/.krew
             set -gx PATH $PATH $HOME/.krew/bin
           end
-
-          set -Ux MANPAGER "sh -c 'col -bx | bat -l man -p'"
-          set -Ux MANROFFOPT "-c"
-          set -Ux COLORTERM "truecolor"
-          set -Ux TERM "xterm-256color"
-          set -Ux EDITOR "nvim"
+         
+          set -gx COLORTERM "truecolor"
+          set -gx TERM "xterm-256color"
+          set -gx EDITOR "nvim"
+          set -gx PAGER "less"
+          set -gx BATPIPE "color"
+          set -gx BATDIFF_USE_DELTA true"
 
           if test -d "$HOME/Library/Group\ Containers/2BUA8C4S2C.com.1password/t"
             set -gx SSH_AUTH_SOCK "~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock"
@@ -154,9 +208,11 @@ in {
             set -gx SSH_AUTH_SOCK "~/.1password/agent.sock"
           end
 
-          if test -d "$HOME/.asdf"
-            source ~/.asdf/asdf.fish
-          end
+          # Set up fzf
+          set -gx fzf_preview_dir eza --all --color=always
+          set -gx fzf_preview_file bat
+          set -gx fzf_fd_opts --hidden
+          set -gx fzf_diff_highlighter batdiff
         '';
       };
     };

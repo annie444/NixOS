@@ -18,14 +18,14 @@ in {
     programs.fzf = {
       enable = true;
       defaultCommand = "bfs . -type f";
-      fileWidgetCommand = "bfs . -type f";
-      fileWidgetOptions = ["--preview 'bat {}'"];
+      fileWidgetCommand = "bfs . -type f -name ";
+      fileWidgetOptions = ["--preview 'bat --color=always --style=numbers --line-range=:500s {}'"];
       changeDirWidgetCommand = "bfs . -type d";
-      changeDirWidgetOptions = ["--preview 'tre -C {} | bat -n 200'"];
+      changeDirWidgetOptions = ["--preview 'tre -C {} | head -n 200'"];
       historyWidgetOptions = [
         "--sort"
         "--exact"
-        "--preview 'bat -n 20 {}'"
+        "--preview 'bat -n 200 {}'"
       ];
       colors = {
         fg = "-1";
