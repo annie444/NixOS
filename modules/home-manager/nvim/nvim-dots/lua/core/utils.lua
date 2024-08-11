@@ -175,7 +175,6 @@ function _G.which_key_add(mappings, mode)
     win = {
       border = "none",          -- none, single, double, shadow
       padding = { 2, 0, 2, 0 }, -- extra window padding [top, right, bottom, left]
-      winblend = 0,
     },
     layout = {
       height = { min = 4, max = 25 }, -- min and max height of the columns
