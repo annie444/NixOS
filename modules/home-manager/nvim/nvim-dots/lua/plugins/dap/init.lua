@@ -28,15 +28,13 @@ return {
     require "plugins.dap.delve"
     require "plugins.dap.js-debug"
     local mappings = {
-      d = {
-        name = "Dap",
-        c = { ":lua require'dap'.continue()<cr>", "Continue" },
-        o = { ":lua require'dap'.step_over()<cr>", "Step Over" },
-        i = { ":lua require'dap'.step_into()<cr>", "Step Into" },
-        u = { ":lua require'dap'.step_out()<cr>", "Step Out" },
-        b = { ":lua require'dap'.toggle_breakpoint()<cr>", "Breakpoint" },
-        d = { ":lua require'dapui'.toggle()<cr>", "Dap UI" },
-      },
+      { "<leader>d",  group = "Dap",                               nowait = true,      remap = false },
+      { "<leader>dc", ":lua require'dap'.continue()<cr>",          desc = "Continue",  nowait = true, remap = false },
+      { "<leader>do", ":lua require'dap'.step_over()<cr>",         desc = "Step Over" },
+      { "<leader>di", ":lua require'dap'.step_into()<cr>",         desc = "Step Into" },
+      { "<leader>du", ":lua require'dap'.step_out()<cr>",          desc = "Step Out" },
+      { "<leader>db", ":lua require'dap'.toggle_breakpoint()<cr>", desc = "Breakpoint" },
+      { "<leader>dd", ":lua require'dapui'.toggle()<cr>",          desc = "Dap UI" },
     }
     which_key_add(mappings, "n")
   end,

@@ -9,7 +9,7 @@ return {
     end
 
     which_key_add({
-      ["a"] = { toggle_alpha, "Alpha" },
+      { "<leader>a", toggle_alpha, desc = "Alpha", nowait = true, remap = false }
     }, "n")
   end,
 }

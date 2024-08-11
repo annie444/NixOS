@@ -41,7 +41,7 @@ end
 
 local keymaps = {
   normal_mode = {
-    ["<leader>P"] = { cmd = ":lua VimtexPDFToggle()<cr>" },
+    ["<leader>Pv"] = { cmd = ":lua VimtexPDFToggle()<cr>" },
     ['gau'] = { cmd = function() require('textcase').current_word('to_upper_case') end },
     ['gal'] = { cmd = function() require('textcase').current_word('to_lower_case') end },
     ['gas'] = { cmd = function() require('textcase').current_word('to_snake_case') end },

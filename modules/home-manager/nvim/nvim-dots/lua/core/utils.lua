@@ -42,17 +42,10 @@ function _G.format_code()
   }
 end
 
----@alias keymap-opts { buffer: boolean, silent: boolean, expr: boolean, noremap: boolean, nowait: boolean , unique: boolean }
-
----@alias keymap { cmd: string | function, opt: keymap-opts }
-
----comment
----@param keymaps table<string, keymap>
----@param mode string
 function _G.set_keymaps(keymaps, mode)
   for keymap, value in pairs(keymaps) do
     if value.opt ~= nil then
-      vim.keymap.set(mode, keymap, value.cmd, value.opt)
+      vim.keymap.set(mode, keymap, value.cmd, value.opt, { desc = value.desc or "" })
     else
       local opt = { silent = true }
 
@@ -60,7 +53,7 @@ function _G.set_keymaps(keymaps, mode)
         opt = { expr = true }
       end
 
-      vim.keymap.set(mode, keymap, value.cmd, opt)
+      vim.keymap.set(mode, keymap, value.cmd, opt, { desc = value.desc or "" })
     end
   end
 end
@@ -130,12 +123,8 @@ command("LuaSnipEdit", function()
   require("luasnip.loaders").edit_snippet_files()
 end, { nargs = "*", desc = "Edit the available snippets in the filetype" })
 
-
----comment
----@param mappings table<string, (string | function)[]>
----@param mode any
 function _G.which_key_add(mappings, mode)
-  local which_key = require "which-key"
+  local which_key = require("which-key")
 
   local setup = {
     plugins = {
@@ -160,13 +149,31 @@ function _G.which_key_add(mappings, mode)
     -- add operators that will trigger motion and text object completion
     -- to enable all native operators, set the preset / operators plugin above
     -- operators = { gc = "Comments" },
+    replace = {
+      key = {
+        function(key)
+          return require("which-key.view").format(key)
+        end,
+        { "<Space>", "SPC" },
+      },
+      desc = {
+        { "<Plug>%(?(.*)%)?", "%1" },
+        { "^%+",              "" },
+        { "<[cC]md>",         "" },
+        { "<[cC][rR]>",       "" },
+        { "<[sS]ilent>",      "" },
+        { "^lua%s+",          "" },
+        { "^call%s+",         "" },
+        { "^:%s*",            "" },
+      },
+    },
     icons = {
       breadcrumb = "»", -- symbol used in the command line area that shows your active key combo
       separator = "➜", -- symbol used between a key and it's label
       group = "+", -- symbol prepended to a group
     },
     win = {
-      margin = { 1, 0, 1, 0 },  -- extra window margin [top, right, bottom, left]
+      border = "none",          -- none, single, double, shadow
       padding = { 2, 0, 2, 0 }, -- extra window padding [top, right, bottom, left]
       winblend = 0,
     },
@@ -177,20 +184,20 @@ function _G.which_key_add(mappings, mode)
       align = "left",                 -- align columns left, center or right
     },
     show_help = true,                 -- show help message on the command line when the popup is visible
-    triggers = { "<auto>", mode = "nixsotc" },
+    triggers = {
+      { "<auto>", mode = "nxsot" },   -- automatically setup triggers
+    }
   }
 
   local opts = {
-    mode = mode,    -- NORMAL mode
-    prefix = "<leader>",
-    buffer = nil,   -- Global mappings. Specify a buffer number for buffer local mappings
-    silent = true,  -- use `silent` when creating keymaps
-    noremap = true, -- use `noremap` when creating keymaps
-    nowait = true,  -- use `nowait` when creating keymaps
+    mode = mode,   -- NORMAL mode
+    silent = true, -- use `silent` when creating keymaps
+    remap = false, -- use `noremap` when creating keymaps
+    nowait = true, -- use `nowait` when creating keymaps
   }
 
   which_key.setup(setup)
-  which_key.register(mappings, opts)
+  which_key.add(mappings, opts)
 end
 
 -- HUUUUUUUUUUUUUUUUUUUUUUUGE kudos and thanks to
