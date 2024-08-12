@@ -9,9 +9,7 @@
   # You can import other NixOS modules here
   imports = [
     # If you want to use modules your own flake exports (from modules/nixos):
-    outputs.nixosModules.gui
-    outputs.nixosModules.cuda
-    outputs.nixosModules.nvidia-graphics
+    outputs.nixosModules.templates
 
     # Or modules from other flakes (such as nixos-hardware):
     inputs.nixos-hardware.nixosModules.common-cpu-amd
@@ -25,39 +23,34 @@
     ./pkgs.nix
   ];
 
-  nixpkgs = {
-    # You can add overlays here
-    overlays = [
-    ];
-    # Configure your nixpkgs instance
-    config = {
-      # Disable if you don't want unfree packages
-      allowUnfree = true;
-    };
-  };
-
   fonts.enableDefaultPackages = true;
-
-  time.timeZone = "Americas/Los_Angeles";
 
   networking.hostName = "spinoza";
   networking.hostId = "4c0902ca";
 
-  roles.nvidia-graphics.enable = true;
-  roles.cuda.enable = true;
-  roles.gui.enable = true;
-
-  services = {
-    printing.enable = true;
-
-    pipewire = {
+  templates = {
+    apps = {
+      modernUnix.enable = true;
+      monitoring = true;
+    };
+    hardware.nvidia.enable = true;
+    services = {
+      docker.enable = true;
+      nvidia-docker.enable = true;
+      podman.enable = true;
+      printer.enable = true;
+      smartdWebui.enable = true;
+    };
+    system.desktop = {
       enable = true;
-      pulse.enable = true;
-      alsa = {
-        enable = true;
-        support32Bit = true;
-      };
+      waydroid.enable = true;
+      sddm.enable = true;
+      portals = [ 
+        pkgs.xdg-desktop-portal-wlr
+        pkgs.xdg-desktop-portal-gtk
+        pkgs.kdePackages.xdg-desktop-portal-kde
+      ];
+      users = [ "annie" ];
     };
   };
-  sound.enable = true;
 }

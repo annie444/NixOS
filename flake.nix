@@ -34,6 +34,7 @@
     home-manager,
     sops-nix,
     disko,
+    nur,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -47,35 +48,36 @@
     ];
 
     baseSystem = [
-      inputs.nur.nixosModules.nur
+      nur.nixosModules.nur
       disko.nixosModules.disko
       ./nixos/configuration.nix
     ];
+
+    nixpkgs = {
+      overlays = import ./overlays {inherit inputs;};
+      config = {
+        allowUnfree = true;
+      };
+    };
 
     # This is a function that generates an attribute by calling a function you
     # pass to it, with each system as an argument
     forAllSystems = nixpkgs.lib.genAttrs systems;
   in {
-    # Your custom packages
-    # Accessible through 'nix build', 'nix shell', etc
     packages = forAllSystems (system: import ./pkgs nixpkgs.legacyPackages.${system});
-    # Formatter for your nix files, available through 'nix fmt'
-    # Other options beside 'alejandra' include 'nixpkgs-fmt'
     formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
 
-    # Your custom packages and modifications, exported as overlays
-    overlays = import ./overlays {inherit inputs;};
-    # Reusable nixos modules you might want to export
-    # These are usually stuff you would upstream into nixpkgs
     nixosModules = import ./modules/nixos;
-    # Reusable home-manager modules you might want to export
-    # These are usually stuff you would upstream into home-manager
     homeManagerModules = import ./modules/home-manager;
 
-    # NixOS configuration entrypoint
-    # Available through 'nixos-rebuild --flake .#your-hostname'
+    nixpkgs = {
+      overlays = import ./overlays {inherit inputs;};
+      config = {
+        allowUnfree = true;
+      };
+    };
+
     nixosConfigurations = {
-      # FIXME replace with your hostname
       homelab01 = nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs outputs;};
         modules =
@@ -108,22 +110,18 @@
       };
     };
 
-    # Standalone home-manager configuration entrypoint
-    # Available through 'home-manager --flake .#your-username@your-hostname'
     homeConfigurations = {
       "annie-no-gui" = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
+        pkgs = nixpkgs.legacyPackages.x86_64-linux;
         extraSpecialArgs = {inherit inputs outputs;};
         modules = [
-          # > Our main home-manager configuration file <
           ./home-manager/annie/home.nix
         ];
       };
       "annie-gui" = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
+        pkgs = nixpkgs.legacyPackages.x86_64-linux;
         extraSpecialArgs = {inherit inputs outputs;};
         modules = [
-          # > Our main home-manager configuration file <
           ./home-manager/annie/home.nix
           ./home-manager/annie/gui.nix
         ];

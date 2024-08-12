@@ -1,13 +1,10 @@
-# This is just an example, you should generate yours with nixos-generate-config and put it in here.
 {
-  lib,
-  config,
-  ...
-}: {
   boot = {
     crashDump.enable = true;
     enableContainers = true;
+
     supportedFilesystems = ["zfs"];
+
     extraModulePackages = with config.boot.kernelPackages; [opensnitch-ebpf];
     kernelParams = [
       "quiet"
@@ -22,11 +19,14 @@
       memtest86.enable = true;
       copyKernels = true;
     };
-    tmp.cleanOnBoot = true;
+
+    tmp = {
+      cleanOnBoot = true;
+
+      # NOTE Large Nix builds can fail if the mounted tmpfs is not large enough.
+      # Yes everything below 64GB of RAM is not enugth here for larger systems!
+      useTmpfs = true;
+      tmpfsSize = "50%"; 
+    }; 
   };
-
-  networking.useDHCP = lib.mkDefault true;
-
-  # Set your system kind (needed for flakes)
-  nixpkgs.hostPlatform = "x86_64-linux";
 }

@@ -1,0 +1,27 @@
+# .sops.yaml
+keys:
+  - &annie age1vzktrphual65cu0htt6sy2klt5k7t52nuvqum4envkda5v8xdvfsgn8tvh
+  - &homelab01 age1y3tp20acg4v26evmmc3r22tl2aqq9r8wdp8kgz6d0ymn5lptgvksh27k45
+  - &homelab02 age1hrctpn2rtshvtq4868g2vh4lmsngqre3u0sgsve7zlvufchndd0qtz4ntu
+  - &spinoza age1a6zwyyc4dya2g94yr49qr378mak9420srarnmuv08zw3jcd4tvaq8v0g98
+  - &flux age1ytrqecjj2kvak35zl7m8wyn3cqgtd8f64548fc9uzfl9q0js43csn8ul7k
+creation_rules: 
+  - path_regex: secrets/[^/]+\.(yaml|json|env|ini|enc)$
+    key_groups:
+      - age:
+        - *annie
+        - *homelab01
+        - *homelab02
+        - *spinoza
+  - path_regex: secrets/annie/[^/]+\.(yaml|json|env|ini|gpg|enc)$
+    key_groups:
+      - age:
+        - *annie
+        - *homelab01
+        - *homelab02
+        - *spinoza
+  - path_regex: secrets/k3s/[^/]+\.(yaml|json|env|ini|gpg|enc)$
+    key_groups:
+      - age:
+        - *homelab01
+        - *homelab02

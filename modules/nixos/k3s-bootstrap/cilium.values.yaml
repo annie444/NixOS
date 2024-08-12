@@ -1,0 +1,8 @@
+---
+routingMode: native
+ipv4NativeRoutingCIDR: "10.42.0.0/16"
+autoDirectNodeRoutes: true
+ipam:
+  mode: "kubernetes"
+  operator:
+    clusterPoolIPv4PodCIDRList: ["10.42.0.0/16"]

@@ -7,7 +7,6 @@
     # kde packages
     kdePackages.kdeconnect-kde
     kdePackages.plasma-browser-integration
-    kdePackages.xdg-desktop-portal-kde
 
     # Wayland compatibility
     lutris
@@ -16,7 +15,6 @@
     vulkan-tools
     wayland-utils
     xwaylandvideobridge
-    xdg-desktop-portal
 
     # personal apps
     (
