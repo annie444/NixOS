@@ -208,7 +208,7 @@ in {
           set -gx EDITOR "nvim"
           set -gx PAGER "less"
           set -gx BATPIPE "color"
-          set -gx BATDIFF_USE_DELTA true"
+          set -gx BATDIFF_USE_DELTA "true"
 
           if test -d "$HOME/Library/Group\ Containers/2BUA8C4S2C.com.1password/t"
             set -gx SSH_AUTH_SOCK "~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock"
