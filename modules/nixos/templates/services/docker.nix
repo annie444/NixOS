@@ -1,9 +1,11 @@
-{ config, lib, pkgs, ... }:
-
-let
-  cfg = config.templates.services.docker;
-in
 {
+  config,
+  lib,
+  pkgs,
+  ...
+}: let
+  cfg = config.templates.services.docker;
+in {
   options.templates.services.docker = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -12,11 +14,12 @@ in
     };
     dns = lib.mkOption {
       type = lib.types.str;
+      default = "1.1.1.1";
       description = "dns ip";
     };
     user = lib.mkOption {
       type = lib.types.str;
-      default = "nix";
+      default = "annie";
       description = "username";
     };
   };
@@ -45,9 +48,12 @@ in
         # storageDriver = "btrfs";
         # check file with systemctl status docker and get the path of `Drop-In` and check the file content
         daemon.settings = {
-          dns =  ["${cfg.dns}" "8.8.8.8"];
-          default-address-pools =  [
-            {base="172.16.0.0/12"; size=24;}
+          dns = ["${cfg.dns}" "8.8.8.8"];
+          default-address-pools = [
+            {
+              base = "172.16.0.0/12";
+              size = 24;
+            }
           ];
         };
       };

@@ -1,9 +1,11 @@
-{ config, lib, pkgs, ... }:
-
-let
-  cfg = config.templates.hardware.nvidia;
-in
 {
+  config,
+  lib,
+  pkgs,
+  ...
+}: let
+  cfg = config.templates.hardware.nvidia;
+in {
   options.templates.hardware.nvidia = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -43,33 +45,33 @@ in
       ];
 
     services.xserver.videoDrivers = ["nvidia"];
-    boot.initrd.kernelModules = [ "nvidia" ];
-    boot.extraModulePackages = [ config.boot.kernelPackages.nvidia_x11 ];
+    boot.initrd.kernelModules = ["nvidia"];
+    boot.extraModulePackages = [config.boot.kernelPackages.nvidia_x11];
 
     nixpkgs.config.cudaSupport = true;
 
     environment = {
-        systemPackages = with pkgs; [
-            cudatoolkit
-            libGLU
-            libGL
-            ncurses5
-            linuxPackages.nvidia_x11
-            glibc
-            pkg-config
-            libelf
-            libcap
-            libseccomp
-            libtirpc
-            rpcsvc-proto
-            go
-            cudaPackages.fabricmanager
-        ];
+      systemPackages = with pkgs; [
+        cudatoolkit
+        libGLU
+        libGL
+        ncurses5
+        linuxPackages.nvidia_x11
+        glibc
+        pkg-config
+        libelf
+        libcap
+        libseccomp
+        libtirpc
+        rpcsvc-proto
+        go
+        cudaPackages.fabricmanager
+      ];
 
-        sessionVariables = {
-            LD_LIBRARY_PATH = ["${config.hardware.nvidia.package}/lib"];
-            CUDA_PATH = "${pkgs.cudatoolkit}";
-        };
+      sessionVariables = {
+        LD_LIBRARY_PATH = ["${config.hardware.nvidia.package}/lib"];
+        CUDA_PATH = "${pkgs.cudatoolkit}";
+      };
     };
   };
 }

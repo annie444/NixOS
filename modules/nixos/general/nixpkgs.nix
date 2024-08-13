@@ -1,8 +1,12 @@
-{ lib, config, pkgs, ... }:
 {
+  lib,
+  config,
+  pkgs,
+  ...
+}: {
   nixpkgs.config = {
     allowUnfree = true;
-    allowUnfreePredicate = (_: true);
+    allowUnfreePredicate = _: true;
   };
 
   environment = {
@@ -18,11 +22,10 @@
     ];
   };
 
-  environment.etc."current-system-packages".text =
-    let
-      packages = builtins.map (p: "${p.name}") (config.environment.systemPackages);
-      sortedUnique = builtins.sort builtins.lessThan (lib.unique packages);
-      formatted = builtins.concatStringsSep "\n" sortedUnique;
-    in
+  environment.etc."current-system-packages".text = let
+    packages = builtins.map (p: "${p.name}") (config.environment.systemPackages);
+    sortedUnique = builtins.sort builtins.lessThan (lib.unique packages);
+    formatted = builtins.concatStringsSep "\n" sortedUnique;
+  in
     formatted;
 }

@@ -1,9 +1,11 @@
-{ config, lib, pkgs, ... }:
-
-let
-  cfg = config.templates.services.nvidiaDocker;
-in
 {
+  config,
+  lib,
+  pkgs,
+  ...
+}: let
+  cfg = config.templates.services.nvidiaDocker;
+in {
   options.templates.services.nvidiaDocker = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -16,8 +18,6 @@ in
 
     environment.systemPackages = with pkgs; [
       docker
-      nvidia-docker
-      replicate-cog
       glibc
       pkg-config
       libelf
@@ -29,15 +29,6 @@ in
       cudaPackages.fabricmanager
     ];
 
-    virtualisation = {
-      docker = {
-        enable = true;
-        enableNvidia = true;
-        autoPrune = {
-          enable = true;
-          dates = "weekly";
-        };
-      };
-    };
+    hardware.nvidia-container-toolkit.enable = true;
   };
 }

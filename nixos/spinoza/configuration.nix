@@ -31,13 +31,16 @@
   templates = {
     apps = {
       modernUnix.enable = true;
-      monitoring = true;
+      monitoring.enable = true;
     };
     hardware.nvidia.enable = true;
     services = {
       docker.enable = true;
-      nvidia-docker.enable = true;
-      podman.enable = true;
+      nvidiaDocker.enable = true;
+      podman = {
+        enable = true;
+        user = "annie";
+      };
       printer.enable = true;
       smartdWebui.enable = true;
     };
@@ -45,12 +48,12 @@
       enable = true;
       waydroid.enable = true;
       sddm.enable = true;
-      portals = [ 
+      portals = [
         pkgs.xdg-desktop-portal-wlr
         pkgs.xdg-desktop-portal-gtk
         pkgs.kdePackages.xdg-desktop-portal-kde
       ];
-      users = [ "annie" ];
+      users = ["annie"];
     };
   };
 }

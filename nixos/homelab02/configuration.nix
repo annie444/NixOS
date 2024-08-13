@@ -41,7 +41,7 @@
     "k3s/token" = {};
     "tailscale/auto_key" = {
       mode = "0770";
-    }; 
+    };
   };
 
   templates.services = {
@@ -62,13 +62,12 @@
     git-ssh-host = "git@github.com";
     git-repo = "annie444/k3s-cluster";
     head = {
-      self = true;
-      ip-address = "192.168.1.40";
+      self = false;
+      ipAddress = "192.168.1.40";
     };
     k3s-token = config.sops.secrets."k3s/token".path;
-    flux-git-auth = config.sops.secrets."flux/git-auth".path;
-    flux-sops-age = config.sops.secrets.flux-sops-age.path;
+    flux-git-auth = config.sops.secrets.flux-git-auth.path;
+    flux-sops-age = config.sops.secrets.flux-age-key.path;
     minio-credentials = config.sops.secrets.minio-creds.path;
   };
-
 }

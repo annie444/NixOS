@@ -1,9 +1,11 @@
-{ config, lib, pkgs, ... }:
-
-let
-  cfg = config.templates.services.samba;
-in
 {
+  config,
+  lib,
+  pkgs,
+  ...
+}: let
+  cfg = config.templates.services.samba;
+in {
   options.templates.services.samba = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -28,7 +30,7 @@ in
           };
         };
       });
-      default = [ ];
+      default = [];
       description = "Samba shares";
     };
   };
@@ -50,7 +52,8 @@ in
         load printers = no
         printcap name = /dev/null
       '';
-      shares = builtins.listToAttrs (map
+      shares = builtins.listToAttrs (
+        map
         (volume: {
           name = "${volume.name}";
           value = {
@@ -69,8 +72,8 @@ in
     };
 
     networking.firewall = {
-      allowedTCPPorts = [ 445 139 ];
-      allowedUDPPorts = [ 137 138 ];
+      allowedTCPPorts = [445 139];
+      allowedUDPPorts = [137 138];
     };
 
     environment = {

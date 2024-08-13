@@ -10,7 +10,6 @@
 }: {
   # You can import other NixOS modules here
   imports = [
-    outputs.nixosModules.general
     outputs.nixosModules.templates
 
     ./users.nix

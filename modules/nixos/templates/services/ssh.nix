@@ -1,9 +1,11 @@
-{ config, lib, pkgs, ... }:
-
-let
-  cfg = config.templates.services.ssh;
-in
 {
+  config,
+  lib,
+  pkgs,
+  ...
+}: let
+  cfg = config.templates.services.ssh;
+in {
   options.templates.services.ssh = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -13,7 +15,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    networking.firewall.allowedTCPPorts = [ 22 ];
+    networking.firewall.allowedTCPPorts = [22];
 
     programs.gnupg.agent = {
       enable = true;

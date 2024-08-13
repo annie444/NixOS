@@ -89,7 +89,7 @@ in {
       fish = {
         enable = true;
 
-        plugins = 
+        plugins =
           (with pkgs.fishPlugins; [
             done
             autopair
@@ -194,7 +194,7 @@ in {
           else if test -d $HOME/.krew
             set -gx PATH $PATH $HOME/.krew/bin
           end
-         
+
           set -gx COLORTERM "truecolor"
           set -gx TERM "xterm-256color"
           set -gx EDITOR "nvim"

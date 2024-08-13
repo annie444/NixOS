@@ -1,9 +1,11 @@
-{ config, lib, pkgs, ... }:
-
-let
-  cfg = config.templates.services.smartdWebui;
-in
 {
+  config,
+  lib,
+  pkgs,
+  ...
+}: let
+  cfg = config.templates.services.smartdWebui;
+in {
   options.templates.services.smartdWebui = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -15,7 +17,7 @@ in
   config = lib.mkIf cfg.enable {
     virtualisation.oci-containers.containers.scrutiny = {
       image = "ghcr.io/analogj/scrutiny:v0.7.1-omnibus";
-      ports = [ "0.0.0.0:8080:8080" ];
+      ports = ["0.0.0.0:8080:8080"];
       volumes = [
         "/dev:/dev"
         "/run/udev:/run/udev"

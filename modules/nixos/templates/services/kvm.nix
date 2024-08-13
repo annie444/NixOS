@@ -1,9 +1,13 @@
-{ config, lib, pkgs, nixpkgs-unstable, ... }:
-with lib;
-let
-  cfg = config.templates.services.kvm;
-in
 {
+  config,
+  lib,
+  pkgs,
+  nixpkgs-unstable,
+  ...
+}:
+with lib; let
+  cfg = config.templates.services.kvm;
+in {
   options.templates.services.kvm = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -14,25 +18,25 @@ in
       type = lib.types.bool;
       default = false;
       description = "Enable GUI.";
-    };  
+    };
     vfioIds = lib.mkOption {
       type = lib.types.listOf lib.types.str;
-      default = [ ];
+      default = [];
       description = "The hardware IDs to pass through to a virtual machine.";
     };
     platform = lib.mkOption {
-      type = lib.types.enum [ "amd" "intel" ];
+      type = lib.types.enum ["amd" "intel"];
       default = "amd";
       description = "CPU platform.";
     };
     machineUnits = lib.mkOption {
       type = lib.types.listOf lib.types.str;
-      default = [ ];
+      default = [];
       description = "The systemd *.scope units to wait for before starting Scream.";
     };
     user = lib.mkOption {
       type = lib.types.str;
-      default = "nix";
+      default = "annie";
       description = "username";
     };
   };
@@ -56,7 +60,8 @@ in
         "${cfg.platform}_iommu=pt"
         "kvm.ignore_msrs=1"
       ];
-      extraModprobeConfig = optionalString (length cfg.vfioIds > 0)
+      extraModprobeConfig =
+        optionalString (length cfg.vfioIds > 0)
         "options vfio-pci ids=${concatStringsSep "," cfg.vfioIds}";
     };
 
@@ -67,8 +72,8 @@ in
     ];
 
     systemd.services."libvirt-default-pool" = {
-      wantedBy = [ "multi-user.target" ];
-      requires = [  "libvirtd.service" ];
+      wantedBy = ["multi-user.target"];
+      requires = ["libvirtd.service"];
       script = ''
         ${pkgs.coreutils}/bin/sleep 30
         ${pkgs.libvirt}/bin/virsh --connect qemu:///system pool-define-as default dir --target /var/lib/libvirt/images >/dev/null 2>&1 || true
@@ -83,39 +88,31 @@ in
       };
     };
 
-    environment.systemPackages = with pkgs; lib.mkMerge [ 
-      [
-        libvirt
-        swtpm
-        cdrtools
-        bridge-utils
-        dnsmasq
-        ebtables
-        dmidecode
-        terraform
-        packer
-        virt-manager
-        libosinfo
-        osinfo-db
-        libxslt
-        quickemu
-        nixos-generators
-        virtnbdbackup
-      ]
-      (lib.mkIf cfg.gui.enable [
-        looking-glass-client
-        virt-viewer
-      ])
-    ];
-
-    home-manager.users."${cfg.user}" = {
-      dconf.settings = {
-        "org/virt-manager/virt-manager/connections" = {
-          autoconnect = [ "qemu:///system" ];
-          uris = [ "qemu:///system" ];
-        };
-      };
-    };
+    environment.systemPackages = with pkgs;
+      lib.mkMerge [
+        [
+          libvirt
+          swtpm
+          cdrtools
+          bridge-utils
+          dnsmasq
+          ebtables
+          dmidecode
+          terraform
+          packer
+          virt-manager
+          libosinfo
+          osinfo-db
+          libxslt
+          quickemu
+          nixos-generators
+          virtnbdbackup
+        ]
+        (lib.mkIf cfg.gui.enable [
+          looking-glass-client
+          virt-viewer
+        ])
+      ];
 
     virtualisation = {
       spiceUSBRedirection.enable = true;
@@ -160,7 +157,7 @@ in
         ExecStart = "${pkgs.scream}/bin/scream -n scream -o pulse -m /dev/shm/scream";
         Restart = "always";
       };
-      wantedBy = [ "multi-user.target" ];
+      wantedBy = ["multi-user.target"];
       requires = [
         "libvirtd.service"
         "pipewire-pulse.service"

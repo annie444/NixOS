@@ -1,9 +1,11 @@
-{ config, lib, pkgs, ... }:
-
-let
-  cfg = config.templates.apps.monitoring;
-in
 {
+  config,
+  lib,
+  pkgs,
+  ...
+}: let
+  cfg = config.templates.apps.monitoring;
+in {
   options.templates.apps.monitoring = {
     enable = lib.mkOption {
       type = lib.types.bool;

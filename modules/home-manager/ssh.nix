@@ -81,24 +81,26 @@ in {
       userKnownHostsFile = "~/.ssh/known_hosts";
       controlMaster = "no";
       controlPath = "~/.ssh/%C";
-      extraConfig = if cfg.gui 
-      then ''
-        Host *
-          CanonicalizeHostname yes
-          CanonicalDomains ipac.caltech.edu caltech.edu
-          CanonicalizeMaxDots 2
-          CanonicalizeFallbackLocal yes
-          CanonicalizePermittedCNAMEs *.ipac.caltech.edu:ipac.caltech.edu
-          IdentityAgent ${onePassPath}
-      '' else ''
-        Host *
-          CanonicalizeHostname yes
-          CanonicalDomains ipac.caltech.edu caltech.edu
-          CanonicalizeMaxDots 2
-          CanonicalizeFallbackLocal yes
-          CanonicalizePermittedCNAMEs *.ipac.caltech.edu:ipac.caltech.edu
-      '';
-       
+      extraConfig =
+        if cfg.gui
+        then ''
+          Host *
+            CanonicalizeHostname yes
+            CanonicalDomains ipac.caltech.edu caltech.edu
+            CanonicalizeMaxDots 2
+            CanonicalizeFallbackLocal yes
+            CanonicalizePermittedCNAMEs *.ipac.caltech.edu:ipac.caltech.edu
+            IdentityAgent ${onePassPath}
+        ''
+        else ''
+          Host *
+            CanonicalizeHostname yes
+            CanonicalDomains ipac.caltech.edu caltech.edu
+            CanonicalizeMaxDots 2
+            CanonicalizeFallbackLocal yes
+            CanonicalizePermittedCNAMEs *.ipac.caltech.edu:ipac.caltech.edu
+        '';
+
       matchBlocks = {
         mayfirst = {
           host = "mayfirst";
@@ -132,7 +134,7 @@ in {
             "Match host neos*" = "\n    User ncmae";
           };
         };
-        spinoza = hm.dag.entryAfter [ "ipac" ] {
+        spinoza = hm.dag.entryAfter ["ipac"] {
           host = "spinoza";
           hostname = "spinoza.ipac.caltech.edu";
           port = 22;

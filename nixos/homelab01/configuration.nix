@@ -1,6 +1,3 @@
-# Edit this configuration file to define what should be installed on
-# your system. Help is available in the configuration.nix(5) man page, on
-# https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 {
   inputs,
   outputs,
@@ -9,26 +6,22 @@
   pkgs,
   ...
 }: {
-  # You can import other NixOS modules here
   imports = [
-    # If you want to use modules your own flake exports (from modules/nixos):
     outputs.nixosModules.templates
     outputs.nixosModules.k3s-bootstrap
 
-    # Or modules from other flakes (such as nixos-hardware):
     inputs.nixos-hardware.nixosModules.common-cpu-amd
     inputs.nixos-hardware.nixosModules.common-pc-ssd
     inputs.nixos-hardware.nixosModules.common-gpu-nvidia-nonprime
     inputs.nixos-hardware.nixosModules.common-hidpi
     inputs.nixos-hardware.nixosModules.common-pc
 
-    # Import your generated (nixos-generate-config) hardware configuration
     ./hardware-configuration.nix
   ];
 
   networking.hostName = "homelab01";
   networking.hostId = "d58b8d19";
-  
+
   sops.secrets = {
     flux-age-key = {
       sopsFile = ../../secrets/k3s/flux-age-key.yaml;
@@ -39,7 +32,7 @@
       format = "yaml";
     };
     minio-creds = {
-      sopsFile = ../../secrets/k3s/minio-creds.txt.enc;
+      sopsFile = ../../secrets/k3s/minio-creds.env;
       format = "dotenv";
       mode = "0770";
       owner = "minio";
@@ -49,7 +42,7 @@
     "k3s/token" = {};
     "tailscale/auto_key" = {
       mode = "0770";
-    }; 
+    };
   };
 
   templates = {
@@ -74,12 +67,12 @@
     git-ssh-host = "git@github.com";
     git-repo = "annie444/k3s-cluster";
     head = {
-      self = false;
-      ip-address = "192.168.1.40";
+      self = true;
+      ipAddress = "192.168.1.40";
     };
     k3s-token = config.sops.secrets."k3s/token".path;
-    flux-git-auth = config.sops.secrets."flux/git-auth".path;
-    flux-sops-age = config.sops.secrets.flux-sops-age.path;
+    flux-git-auth = config.sops.secrets.flux-git-auth.path;
+    flux-sops-age = config.sops.secrets.flux-age-key.path;
     minio-credentials = config.sops.secrets.minio-creds.path;
   };
 

@@ -1,9 +1,11 @@
-{ config, lib, pkgs, ... }:
-
-let
-  cfg = config.templates.services.ftp;
-in
 {
+  config,
+  lib,
+  pkgs,
+  ...
+}: let
+  cfg = config.templates.services.ftp;
+in {
   options.templates.services.ftp = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -24,7 +26,12 @@ in
       '';
     };
 
-    networking.firewall.allowedTCPPorts = [ 21 ];
-    networking.firewall.allowedTCPPortRanges = [{ from = 51000; to = 51999; }];
+    networking.firewall.allowedTCPPorts = [21];
+    networking.firewall.allowedTCPPortRanges = [
+      {
+        from = 51000;
+        to = 51999;
+      }
+    ];
   };
 }

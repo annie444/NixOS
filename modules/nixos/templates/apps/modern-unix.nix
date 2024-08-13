@@ -1,9 +1,12 @@
-{ lib, config, pkgs, nixpkgs-unstable, ... }:
-
-let
-  cfg = config.templates.apps.modernUnix;
-in
 {
+  lib,
+  config,
+  pkgs,
+  outputs,
+  ...
+}: let
+  cfg = config.templates.apps.modernUnix;
+in {
   options.templates.apps.modernUnix = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -13,9 +16,15 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
-      "unrar"
-    ];
+    nixpkgs = {
+      overlays = [
+        outputs.overlays.unstable-packages
+      ];
+      config.allowUnfreePredicate = pkg:
+        builtins.elem (lib.getName pkg) [
+          "unrar"
+        ];
+    };
     environment = {
       systemPackages = with pkgs; [
         age

@@ -1,9 +1,11 @@
-{ config, lib, pkgs, ... }:
-
-let
-  cfg = config.templates.services.printer;
-in
 {
+  config,
+  lib,
+  pkgs,
+  ...
+}: let
+  cfg = config.templates.services.printer;
+in {
   options.templates.services.printer = {
     enable = lib.mkOption {
       type = lib.types.bool;

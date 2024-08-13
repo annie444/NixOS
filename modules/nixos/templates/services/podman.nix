@@ -1,9 +1,11 @@
-{ config, lib, pkgs, ... }:
-
-let
-  cfg = config.templates.services.podman;
-in
 {
+  config,
+  lib,
+  pkgs,
+  ...
+}: let
+  cfg = config.templates.services.podman;
+in {
   options.templates.services.podman = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -12,7 +14,6 @@ in
     };
     user = lib.mkOption {
       type = lib.types.str;
-      default = "nix";
       description = "username";
     };
   };
@@ -36,7 +37,6 @@ in
     virtualisation = {
       podman = {
         enable = true;
-        dockerCompat = true;
         defaultNetwork.settings.dns_enabled = true;
       };
     };

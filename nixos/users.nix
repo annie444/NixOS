@@ -3,6 +3,7 @@
   config,
   ...
 }: {
+
   sops.secrets."annie/password".neededForUsers = true;
 
   programs.fish.enable = true;

@@ -6,7 +6,6 @@
   outputs,
   ...
 }: {
-
   environment.systemPackages = with pkgs; [
     # Secrets encryption
     sops
