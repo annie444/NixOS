@@ -23,5 +23,6 @@ creation_rules:
   - path_regex: secrets/k3s/[^/]+\.(yaml|json|env|ini|gpg|enc)$
     key_groups:
       - age:
+        - *annie
         - *homelab01
         - *homelab02
