@@ -55,6 +55,9 @@ in {
   options.profiles.nvim.enable = mkEnableOption "neovim profile";
 
   config = mkIf cfg.enable {
+
+    nixpkgs.overlays = [ inputs.neovim-nightly-overlay.overlays.default ];
+
     home.packages =
       (with pkgs; [
         lua-language-server
@@ -186,7 +189,7 @@ in {
         magma_cell_highlight_group = "CursorLine",
         magma_save_path = vim.fn.stdpath("data") .. "/magma",
         vim_svelte_plugin_load_full_syntax = 1,
-        python3_host_prog = "${pkgs.python311Full}/bin/python",
+        python3_host_prog = "${pkgs.python312Full}/bin/python",
         ruby_host_prog = "${pkgs.ruby}/bin/ruby",
         node_host_prog = "${pkgs.nodejs_22}/bin/node",
         perl_host_prog = "${pkgs.perl}/bin/perl",
