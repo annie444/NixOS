@@ -47,11 +47,11 @@
       disko.nixosModules.disko
       sops-nix.nixosModules.sops
       outputs.nixosModules.general
-      outputs.nixosModules.sops
       ./nixos/configuration.nix
     ];
 
-    pkgs = import nixpkgs { overlays = [
+    pkgs = import nixpkgs {
+      overlays = [
         outputs.overlays.additions
         outputs.overlays.modifications
         outputs.overlays.unstable-packages
@@ -73,8 +73,8 @@
       homelab01 = nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs outputs;};
         modules =
-          baseSystem ++
-          [
+          baseSystem
+          ++ [
             ./nixos/homelab01/configuration.nix
             ./nixos/homelab01/disko-config.nix
           ];
@@ -82,8 +82,8 @@
       homelab02 = nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs outputs;};
         modules =
-          baseSystem ++
-          [
+          baseSystem
+          ++ [
             ./nixos/homelab02/configuration.nix
             ./nixos/homelab02/disko-config.nix
           ];
@@ -91,8 +91,8 @@
       spinoza = nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs outputs;};
         modules =
-          baseSystem ++
-          [
+          baseSystem
+          ++ [
             ./nixos/spinoza/configuration.nix
             ./nixos/spinoza/disko-config.nix
           ];

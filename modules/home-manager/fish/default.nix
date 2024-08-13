@@ -89,51 +89,60 @@ in {
       fish = {
         enable = true;
 
-        plugins =
-          (with pkgs.fishPlugins; [
-            done
-            autopair
-            puffer
-            github-copilot-cli-fish
-          ])
-          ++ (with pkgs; [
-            {
-              name = "abbreviation-tips";
-              src = fetchFromGitHub {
-                owner = "gazorby";
-                repo = "fish-abbreviation-tips";
-                rev = "0.7.0";
-                hash = "sha256-F1t81VliD+v6WEWqj1c1ehFBXzqLyumx5vV46s/FZRU=";
-              };
-            }
-            {
-              name = "dracula";
-              src = fetchFromGitHub {
-                owner = "dracula";
-                repo = "fish";
-                rev = "269cd7d76d5104fdc2721db7b8848f6224bdf554";
-                hash = "sha256-Hyq4EfSmWmxwCYhp3O8agr7VWFAflcUe8BUKh50fNfY=";
-              };
-            }
-            {
-              name = "gitnow";
-              src = fetchFromGitHub {
-                owner = "joseluisq";
-                repo = "gitnow";
-                rev = "2.12.0";
-                hash = "sha256-PuorwmaZAeG6aNWX4sUTBIE+NMdn1iWeea3rJ2RhqRQ=";
-              };
-            }
-            {
-              name = "spark";
-              src = fetchFromGitHub {
-                owner = "jorgebucaran";
-                repo = "spark.fish";
-                rev = "1.2.0";
-                hash = "sha256-AIFj7lz+QnqXGMBCfLucVwoBR3dcT0sLNPrQxA5qTuU=";
-              };
-            }
-          ]);
+        plugins = with pkgs; [
+          {
+            name = "done";
+            src = fishPlugins.done;
+          }
+          {
+            name = "autopair";
+            src = fishPlugins.autopair;
+          }
+          {
+            name = "puffer";
+            src = fishPlugins.puffer;
+          }
+          {
+            name = "github-copilot-cli";
+            src = fishPlugins.github-copilot-cli-fish;
+          }
+          {
+            name = "abbreviation-tips";
+            src = fetchFromGitHub {
+              owner = "gazorby";
+              repo = "fish-abbreviation-tips";
+              rev = "0.7.0";
+              hash = "sha256-F1t81VliD+v6WEWqj1c1ehFBXzqLyumx5vV46s/FZRU=";
+            };
+          }
+          {
+            name = "dracula";
+            src = fetchFromGitHub {
+              owner = "dracula";
+              repo = "fish";
+              rev = "269cd7d76d5104fdc2721db7b8848f6224bdf554";
+              hash = "sha256-Hyq4EfSmWmxwCYhp3O8agr7VWFAflcUe8BUKh50fNfY=";
+            };
+          }
+          {
+            name = "gitnow";
+            src = fetchFromGitHub {
+              owner = "joseluisq";
+              repo = "gitnow";
+              rev = "2.12.0";
+              hash = "sha256-PuorwmaZAeG6aNWX4sUTBIE+NMdn1iWeea3rJ2RhqRQ=";
+            };
+          }
+          {
+            name = "spark";
+            src = fetchFromGitHub {
+              owner = "jorgebucaran";
+              repo = "spark.fish";
+              rev = "1.2.0";
+              hash = "sha256-AIFj7lz+QnqXGMBCfLucVwoBR3dcT0sLNPrQxA5qTuU=";
+            };
+          }
+        ];
 
         shellAbbrs = {
           du = "dust";
@@ -154,7 +163,6 @@ in {
           trm = "trash-rm";
           grep = "batgrep";
           watch = "batwatch";
-          cat = "bat";
           find = "bfs";
           diff = "batdiff";
         };

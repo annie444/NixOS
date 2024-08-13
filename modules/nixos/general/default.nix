@@ -11,5 +11,6 @@
     ./xdg.nix
     ./services.nix
     ./networking.nix
+    ./sops.nix
   ];
 }

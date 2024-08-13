@@ -1,4 +1,4 @@
-{config, ...}:{
+{config, ...}: {
   boot = {
     crashDump.enable = true;
     enableContainers = true;
