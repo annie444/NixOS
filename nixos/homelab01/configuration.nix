@@ -24,16 +24,16 @@
 
   sops.secrets = {
     flux-age-key = {
-      sopsFile = ../../secrets/k3s/flux-age-key.yaml;
-      format = "yaml";
+      sopsFile = ../../secrets/k3s/flux-age-key.yaml.enc;
+      format = "binary";
     };
     flux-git-auth = {
-      sopsFile = ../../secrets/k3s/flux-git-auth.yaml;
-      format = "yaml";
+      sopsFile = ../../secrets/k3s/flux-git-auth.yaml.enc;
+      format = "binary";
     };
     minio-creds = {
-      sopsFile = ../../secrets/k3s/minio-creds.env;
-      format = "dotenv";
+      sopsFile = ../../secrets/k3s/minio-creds.env.enc;
+      format = "binary";
       mode = "0770";
       owner = "minio";
       group = "minio";
