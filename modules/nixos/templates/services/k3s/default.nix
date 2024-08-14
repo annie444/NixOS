@@ -233,8 +233,7 @@ in {
       ++ lib.optionals (cfg.services.traefik == false) ["traefik"];
     k3sExtraFlags =
       [
-        "--kubelet-arg=config=/etc/rancher/k3s/kubelet.config"
-        "--node-label \"k3s-upgrade=false\""
+        "--cluster-init"
         "--kube-apiserver-arg anonymous-auth=true"
         "--kube-controller-manager-arg bind-address=0.0.0.0"
         "--kube-scheduler-arg bind-address=0.0.0.0"
@@ -321,14 +320,6 @@ in {
           ];
 
         etc = {
-          "rancher/k3s/kubelet.config" = {
-            mode = "0750";
-            text = ''
-              apiVersion: kubelet.config.k8s.io/v1beta1
-              kind: KubeletConfiguration
-              maxPods: 250
-            '';
-          };
           "rancher/k3s/k3s.service.env" = {
             mode = "0750";
             text = ''

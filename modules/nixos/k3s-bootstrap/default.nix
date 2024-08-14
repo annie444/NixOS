@@ -127,8 +127,8 @@ in {
             traefik = false;
             local-storage = false;
             metrics-server = true;
-            coredns = false;
-            flannel = false;
+            coredns = true;
+            flannel = true;
           };
           bootstrap = lib.mkIf cfg.head.self {
             helm = {
@@ -242,8 +242,6 @@ in {
       mode = "0750";
       text = ''
         repositories:
-          - name: coredns
-            url: https://coredns.github.io/helm
           - name: cilium
             url: https://helm.cilium.io
         releases:
@@ -252,12 +250,6 @@ in {
             chart: cilium/cilium
             version: 1.16.0
             values: ["${./cilium.values.yaml}"]
-            wait: true
-          - name: coredns
-            namespace: kube-system
-            chart: coredns/coredns
-            version: 1.32.0
-            values: ["${./coredns.values.yaml}"]
             wait: true
       '';
     };
