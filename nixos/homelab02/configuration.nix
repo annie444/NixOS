@@ -57,7 +57,7 @@
 
   roles.k3s-bootstrap = {
     enable = true;
-    nvidia = true;
+    nvidia = false;
     user = "annie";
     git-ssh-host = "git@github.com";
     git-repo = "annie444/k3s-cluster";
