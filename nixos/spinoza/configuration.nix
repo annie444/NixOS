@@ -48,10 +48,9 @@
       enable = true;
       waydroid.enable = true;
       sddm.enable = true;
-      portals = [
-        pkgs.xdg-desktop-portal-wlr
-        pkgs.xdg-desktop-portal-gtk
-        pkgs.kdePackages.xdg-desktop-portal-kde
+      portals = with pkgs; [
+        xdg-desktop-portal-wlr
+        kdePackages.xdg-desktop-portal-kde
       ];
       users = ["annie"];
     };

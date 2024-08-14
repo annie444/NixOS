@@ -12,9 +12,6 @@ in {
     enable = mkEnableOption "enable gpg profile";
   };
   config = mkIf cfg.enable {
-    home.packages = with pkgs; [
-      gnupg
-    ];
     programs.gpg = {
       enable = true;
       mutableKeys = true;
@@ -25,6 +22,15 @@ in {
           trust = "ultimate";
         }
       ];
+    };
+    services.gpg-agent = {
+      enable = true;
+      extraConfig = ''
+        allow-emacs-pinentry
+        allow-loopback-pinentry
+      '';
+      pinentryPackage = pkgs.pinentry-curses;
+      enableFishIntegration = true;
     };
   };
 }

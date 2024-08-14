@@ -4,6 +4,52 @@
   pkgs,
   ...
 }: let
+  extraKdePackages = with pkgs.kdePackages; [
+    breeze-icons
+    kirigami
+    plasma5support
+    qtsvg
+    qtvirtualkeyboard
+    sddm-kcm
+  ];
+
+  extraIcons = with pkgs; [
+    nixos-icons
+  ];
+
+  sddmTheme = pkgs.where-is-my-sddm-theme.override {
+    variants = ["qt6"];
+    themeConfig = {
+      General = {
+        passwordCharacters = "*";
+        passwordMask = "true";
+        passwordInputWidth = 0.5;
+        passwordInputBackground = "#282A36";
+        passwordInputRadius = 10;
+        passwordFontSize = 28;
+        passwordCursorColor = "#6272A4";
+        passwordTextColor = "#F8F8F2";
+        passwordInputCursorVisible = true;
+        passwordAllowEmpty = false;
+
+        hideCursor = false;
+        cursorBlinkAnimation = true;
+
+        background = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
+        backgroundMode = "none";
+        backgroundFill = "#44475A";
+
+        showSessionsByDefault = true;
+        sessionsFontSize = 20;
+
+        showUsersByDefault = false;
+        usersFontSize = 36;
+      };
+    };
+  };
+
+  extraPackages = [sddmTheme] ++ extraKdePackages ++ extraIcons;
+
   cfg = config.templates.system.desktop;
 in {
   options.templates.system.desktop = {
@@ -26,7 +72,6 @@ in {
       type = lib.types.listOf lib.types.package;
       default = [
         pkgs.xdg-desktop-portal-wlr
-        pkgs.xdg-desktop-portal-gtk
         pkgs.kdePackages.xdg-desktop-portal-kde
       ];
       description = "xdg destkop portals";
@@ -78,6 +123,7 @@ in {
           ];
         })
       ];
+      fontDir.enable = true;
     };
 
     # https://nixos.wiki/wiki/Appimage
@@ -123,18 +169,31 @@ in {
         jack.enable = true;
       };
       displayManager = lib.mkIf cfg.sddm.enable {
+        enable = true;
+        logToJournal = true;
         defaultSession = "plasma";
+        sessionPackages = [];
         sddm = {
           enable = true;
+          package = lib.mkForce (pkgs.kdePackages.sddm.override {
+            withWayland = true;
+            extraPackages = extraPackages;
+          });
+          enableHidpi = true;
+          autoNumlock = true;
           theme = "where_is_my_sddm_theme";
           wayland = {
             enable = true;
+            compositor = "kwin";
           };
+          extraPackages = lib.mkForce extraPackages;
         };
       };
-      desktopManager = lib.mkIf cfg.sddm.enable {
-        plasma6.enable = true;
+      desktopManager.plasma6 = lib.mkIf cfg.sddm.enable {
+        enable = true;
+        enableQt5Integration = true;
       };
+      xserver.enable = lib.mkIf cfg.sddm.enable true;
       libinput.enable = true;
     };
 
@@ -152,6 +211,18 @@ in {
         enable = true;
         polkitPolicyOwners = cfg.users;
       };
+      kdeconnect = lib.mkIf cfg.sddm.enable {
+        package = lib.mkForce pkgs.kdePackages.kdeconnect-kde;
+        enable = true;
+      };
+      kde-pim = lib.mkIf cfg.sddm.enable {
+        enable = true;
+        merkuro = true;
+        kontact = true;
+        kmail = true;
+      };
+      partition-manager.enable = lib.mkIf cfg.sddm.enable true;
+      k3b.enable = lib.mkIf cfg.sddm.enable true;
     };
 
     xdg = {
@@ -174,8 +245,6 @@ in {
       style = "kvantum";
     };
 
-    systemd.defaultUnit = "graphical.target";
-
     environment = {
       systemPackages = with pkgs;
         lib.mkMerge [
@@ -188,45 +257,23 @@ in {
             appimage-run
             libnotify
             libappindicator
+            pinentry-all
             kdePackages.qt6ct
             kdePackages.qt6gtk2
             kdePackages.plasma5support
             kdePackages.libquotient
-            libsForQt5.breeze-gtk
-            libsForQt5.breeze-qt5
-            libsForQt5.qt5ct
+            kdePackages.breeze
             flatpak-builder
             gnome.adwaita-icon-theme
             shared-mime-info
             xwaylandvideobridge
+            wl-clipboard-rs
+            dmenu-wayland
+            ydotool
           ]
           (lib.mkIf cfg.sddm.enable [
             kdePackages.sddm-kcm
-            (pkgs.where-is-my-sddm-theme.override {
-              variants = ["qt6"];
-              themeConfig = {
-                General = {
-                  passwordCharacters = "*";
-                  passwordMask = "true";
-                  passwordInputWidth = 0.5;
-                  passwordInputBackground = "#282A36";
-                  passwordInputRadius = 10;
-                  passwordFontSize = 28;
-                  cursorBlinkAnimation = true;
-                  passwordCursorColor = "#6272A4";
-                  passwordTextColor = "#F8F8F2";
-                  passwordInputCursorVisible = true;
-                  background = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
-                  backgroundMode = "none";
-                  backgroundFill = "#44475A";
-                  showSessionsByDefault = true;
-                  sessionsFontSize = 20;
-                  showUsersByDefault = false;
-                  usersFontSize = 36;
-                  basicTextColor = "#F8F8F2";
-                };
-              };
-            })
+            sddmTheme
           ])
         ];
       pathsToLink = [

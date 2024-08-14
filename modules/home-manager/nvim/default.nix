@@ -56,8 +56,7 @@ in {
   options.profiles.nvim.enable = mkEnableOption "neovim profile";
 
   config = mkIf cfg.enable {
-
-    nixpkgs.overlays = [ inputs.neovim-nightly-overlay.overlays.default ];
+    nixpkgs.overlays = [inputs.neovim-nightly-overlay.overlays.default];
 
     home.packages =
       (with pkgs; [

@@ -4,6 +4,20 @@
   pkgs,
   ...
 }: let
+  nvidia-offload = pkgs.writeShellScriptBin "nvidia-offload" ''
+    export __NV_PRIME_RENDER_OFFLOAD=1
+    export __NV_PRIME_RENDER_OFFLOAD_PROVIDER=NVIDIA-G0
+    export __GLX_VENDOR_LIBRARY_NAME=nvidia
+    export __VK_LAYER_NV_optimus=NVIDIA_only
+    exec "$@"
+  '';
+  no-offload = pkgs.writeShellScriptBin "no-offload" ''
+    export __NV_PRIME_RENDER_OFFLOAD=0
+    export __NV_PRIME_RENDER_OFFLOAD_PROVIDER=
+    export __GLX_VENDOR_LIBRARY_NAME=
+    export __VK_LAYER_NV_optimus=
+    exec "$@"
+  '';
   cfg = config.templates.hardware.nvidia;
 in {
   options.templates.hardware.nvidia = {
@@ -15,28 +29,20 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    hardware = lib.mkMerge [
-      #(lib.mkIf (lib.versionAtLeast config.system.stateVersion "24.11") {
-      #  graphics = {
-      #    enable = true;
-      #    enable32Bit = true;
-      #  };
-      #})
-      (lib.mkIf (!lib.versionAtLeast config.system.stateVersion "24.11") {
-        opengl = {
+    hardware = {
+      opengl = {
+        enable = true;
+        driSupport32Bit = true;
+      };
+      nvidia = {
+        modesetting.enable = true;
+        package = config.boot.kernelPackages.nvidiaPackages.stable;
+        powerManagement = {
           enable = true;
-          driSupport32Bit = true;
+          finegrained = false;
         };
-      })
-      {
-        nvidia = {
-          modesetting.enable = true;
-          nvidiaSettings = true;
-          open = false;
-          package = config.boot.kernelPackages.nvidiaPackages.stable;
-        };
-      }
-    ];
+      };
+    };
 
     nixpkgs.config.allowUnfreePredicate = pkg:
       builtins.elem (lib.getName pkg) [
@@ -47,6 +53,10 @@ in {
     services.xserver.videoDrivers = ["nvidia"];
     boot.initrd.kernelModules = ["nvidia"];
     boot.extraModulePackages = [config.boot.kernelPackages.nvidia_x11];
+
+    boot.kernelParams = ["module_blacklist=amdgpu"];
+
+    boot.blacklistedKernelModules = ["nouveau"];
 
     nixpkgs.config.cudaSupport = true;
 
@@ -64,6 +74,8 @@ in {
         libseccomp
         libtirpc
         rpcsvc-proto
+        nvidia-offload
+        no-offload
         go
         cudaPackages.fabricmanager
       ];
