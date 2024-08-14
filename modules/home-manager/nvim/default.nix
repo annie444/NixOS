@@ -58,45 +58,122 @@ in {
   config = mkIf cfg.enable {
     nixpkgs.overlays = [inputs.neovim-nightly-overlay.overlays.default];
 
-    home.packages =
-      (with pkgs; [
-        lua-language-server
-        rust-analyzer-unwrapped
-        black
-        ruby
-        nodejs_22
-        perl
-        efm-langserver
-        clang-tools
-        pyright
-        elixir-ls
-        terraform-ls
-        jdt-language-server
-        yaml-language-server
-        gopls
-        lemminx
-        cmake
-        powershell
-        rust-analyzer-unwrapped
-        buf-language-server
-      ])
-      ++ (with pkgs.nodePackages_latest; [
-        intelephense
-        csslint
-        typescript-language-server
-        svelte-language-server
-        svelte-check
-        tailwindcss
-      ])
-      ++ (with pkgs.vimPlugins; [
-        omnisharp-extended-lsp-nvim
-      ])
-      ++ (with pkgs.luajitPackages; [
-        lua-lsp
-      ]);
+    home.packages = 
+      let
+          php = pkgs.php.buildEnv {
+            extensions = ({ enabled, all }: enabled ++ (with all; [
+              php-codesniffer
+              composer 
+            ]));
+          };
+          vale = vale.withStyles (s: [
+            s.alex
+            s.google
+            s.joblin
+            s.proselint
+            s.readability
+            s.write-good
+          ]);
+          python = pkgs.python312.withPackages (p: [
+            p.black
+            p.python-lsp-black
+            p.flake8
+            p.flake8-polyfill
+            p.autopep8
+            p.beautysh
+            p.mdformat
+            p.yamllint
+            p.pynvim
+            p.jupyter-core
+            p.jupyter
+            p.jupyter-client
+            p.ueberzug
+            p.pillow
+            p.cairosvg
+            p.pnglatex
+            p.plotly
+            p.pip
+          ]);
+          lua = pkgs.lua.withPackages (l: [
+            l.lua-lsp
+            l.luacheck
+            l.luarocks
+            l.jsregexp
+          ]);
+        in
+          [
+            php
+            vale
+            python
+            lua
+          ]
+          ++ (with pkgs; [
+            antiprism
+            cargo
+            pnglatex
+            mono
+            uncrustify
+            cpplint
+            vim-vint
+            lua-language-server
+            black
+            hadolint
+            gitlint
+            google-java-format
+            ruby
+            nodejs_22
+            perl
+            efm-langserver
+            clang-tools
+            pyright
+            cbfmt
+            actionlint
+            yamllint
+            elixir-ls
+            terraform-ls
+            jdt-language-server
+            yaml-language-server
+            gopls
+            lemminx
+            cmake
+            powershell
+            rust-analyzer-unwrapped
+            buf-language-server
+            buf
+            alex
+            codespell
+            shellcheck
+            shfmt
+            beautysh
+            mercurial
+            prettierd
+            eslint_d
+            golangci-lint-langserver
+            golangci-lint
+            stylua
+            djlint
+            markdownlint-cli
+            mdformat
+            alejandra
+            zulu
+            julia
+            texliveFull
+          ])
+          ++ (with pkgs.nodePackages_latest; [
+            intelephense
+            csslint
+            typescript-language-server
+            svelte-language-server
+            svelte-check
+            tailwindcss
+            stylelint
+            prettier
+            eslint
+          ]);
 
     programs.neovim = {
       enable = true;
+      package = inputs.neovim-nightly-overlay.packages.${pkgs.system}.default;
       defaultEditor = true;
 
       viAlias = true;
@@ -108,6 +185,123 @@ in {
       withNodeJs = true;
 
       coc.enable = false;
+
+      extraPython3Packages = (p: [
+        p.black
+        p.python-lsp-black
+        p.flake8
+        p.flake8-polyfill
+        p.autopep8
+        p.beautysh
+        p.mdformat
+        p.yamllint
+        p.pynvim
+        p.jupyter-core
+        p.jupyter
+        p.jupyter-client
+        p.ueberzug
+        p.pillow
+        p.cairosvg
+        p.pnglatex
+        p.plotly
+        p.pip
+      ]);
+
+      extraLuaPackages = (l: [
+        l.lua-lsp
+        l.luacheck
+        l.luarocks
+        l.jsregexp
+      ]);
+
+      extraPackages = 
+        let
+          php = pkgs.php.buildEnv {
+            extensions = ({ enabled, all }: enabled ++ (with all; [
+              php-codesniffer
+              composer 
+            ]));
+          };
+          vale = vale.withStyles (s: [
+            s.alex
+            s.google
+            s.joblin
+            s.proselint
+            s.readability
+            s.write-good
+          ]);
+        in
+          [
+            php
+            vale
+          ]
+          ++ (with pkgs; [
+            antiprism
+            cargo
+            pnglatex
+            mono
+            uncrustify
+            cpplint
+            vim-vint
+            lua-language-server
+            black
+            hadolint
+            gitlint
+            google-java-format
+            ruby
+            nodejs_22
+            perl
+            efm-langserver
+            clang-tools
+            pyright
+            cbfmt
+            actionlint
+            yamllint
+            elixir-ls
+            terraform-ls
+            jdt-language-server
+            yaml-language-server
+            gopls
+            lemminx
+            cmake
+            powershell
+            rust-analyzer-unwrapped
+            buf-language-server
+            buf
+            alex
+            codespell
+            shellcheck
+            shfmt
+            beautysh
+            mercurial
+            prettierd
+            eslint_d
+            golangci-lint-langserver
+            golangci-lint
+            stylua
+            djlint
+            markdownlint-cli
+            mdformat
+            alejandra
+            zulu
+            julia
+            texliveFull
+          ])
+          ++ (with pkgs.nodePackages_latest; [
+            intelephense
+            csslint
+            typescript-language-server
+            svelte-language-server
+            svelte-check
+            tailwindcss
+            stylelint
+            prettier
+            eslint
+          ]);
+
+      plugins = (with pkgs.vimPlugins; [
+        omnisharp-extended-lsp-nvim
+      ]) ++ [ treesitterWithGrammars ];
     };
 
     home.file."./.config/nvim/" = {
