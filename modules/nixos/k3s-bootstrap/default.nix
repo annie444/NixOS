@@ -118,7 +118,7 @@ in {
       services = {
         k3s = {
           enable = true;
-          tokenFile = cfg.k3s-token;
+          tokenFile = cfg.k3sToken;
           head = {
             self = cfg.head.self;
             ipAddress = cfg.head.ipAddress;
@@ -146,7 +146,7 @@ in {
           addons = lib.mkIf cfg.head.self {
             minio = {
               enable = true;
-              credentialsFile = cfg.minio-credentials;
+              credentialsFile = cfg.minioCredentials;
               buckets = ["volsync" "postgres" "logs"];
               dataDir = ["/mnt/minio"];
               ipAddress = cfg.head.ipAddress;
@@ -253,8 +253,8 @@ in {
       ]
       ++ lib.optionals cfg.head.self [
         "L /var/lib/rancher/k3s/server/manifests/flux.yaml - - - - /etc/k3s/flux.yaml"
-        "L /var/lib/rancher/k3s/server/manifests/flux-git-auth.yaml - - - - ${cfg.flux-git-auth}"
-        "L /var/lib/rancher/k3s/server/manifests/flux-sops-age.yaml - - - - ${cfg.flux-sops-age}"
+        "L /var/lib/rancher/k3s/server/manifests/flux-git-auth.yaml - - - - ${cfg.fluxGitAuth}"
+        "L /var/lib/rancher/k3s/server/manifests/flux-sops-age.yaml - - - - ${cfg.fluxSopsAge}"
       ];
 
     # required for deploy-rs
@@ -283,7 +283,7 @@ in {
             branch: main
           secretRef:
             name: flux-git-auth
-          url: ssh://${cfg.git-ssh-host}:${cfg.git-repo}
+          url: ssh://${cfg.gitSshHost}:${cfg.gitRepo}
         ---
         apiVersion: kustomize.toolkit.fluxcd.io/v1
         kind: Kustomization

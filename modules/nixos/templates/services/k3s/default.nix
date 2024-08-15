@@ -304,11 +304,9 @@ in {
               sleep 28
               systemctl stop k3s
               sleep 2
-              declare -a FOLDERS
-              FOLDERS=("/opt" "/etc" "/run" "/var/lib/rancher" "/etc/rancher")
-              for FOLDER in "${FOLDERS[@]}"; do
-                if [ -d "${FOLDER}/k3s" ]; then
-                  rm -rf "${FOLDER}/k3s"
+              for FOLDER in "/opt" "/etc" "/run" "/var/lib/rancher" "/etc/rancher"; do
+                if [ -d "$FOLDER/k3s" ]; then
+                  rm -rf "$FOLDER/k3s"
                 fi
               done
               rm -rf /var/lib/cni/networks/cbr0/

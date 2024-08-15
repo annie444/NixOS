@@ -50,21 +50,11 @@
       ./nixos/configuration.nix
     ];
 
-    pkgs = import nixpkgs {
-      overlays = [
-        outputs.overlays.additions
-        outputs.overlays.modifications
-        outputs.overlays.unstable-packages
-      ];
-    };
-
     forAllSystems = nixpkgs.lib.genAttrs systems;
   in {
     packages = forAllSystems (system: import ./pkgs nixpkgs.legacyPackages.${system});
     formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
     overlays = import ./overlays {inherit inputs;};
-
-    nixpkgs.config.allowUnfree = true;
 
     nixosModules = import ./modules/nixos;
     homeManagerModules = import ./modules/home-manager;
