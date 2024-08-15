@@ -5,17 +5,23 @@
   inputs,
   ...
 }: let
-  cfg = config.roles.k3s-bootstrap;
+  cfg = config.roles.k3sBootstrap;
 in {
-  imports = with inputs.self.nixosModules; [
-    inputs.home-manager.nixosModules.home-manager
-  ];
 
-  options.roles.k3s-bootstrap = {
+  options.roles.k3sBootstrap = {
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
-      description = "Bootstrap a k3s cluster with flux and cilium";
+      description = ''
+        Bootstrap a k3s cluster with flux and cilium
+      '';
+    };
+    storageNode = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Whether this node should have sotrage utilities installed
+      '';
     };
     nvidia = lib.mkOption {
       type = lib.types.bool;
@@ -27,12 +33,12 @@ in {
       default = "root";
       description = "The user that will have admin permissions to the cluster";
     };
-    git-ssh-host = lib.mkOption {
+    gitSshHost = lib.mkOption {
       type = lib.types.str;
       default = "git@github.com";
       description = "The ssh host to connect to flux";
     };
-    git-repo = lib.mkOption {
+    gitRepo = lib.mkOption {
       type = lib.types.str;
       description = "The repo to bootstrap flux with";
     };
@@ -47,11 +53,11 @@ in {
         description = "IP address of the head node";
       };
     };
-    k3s-token = lib.mkOption {
+    k3sToken = lib.mkOption {
       type = lib.types.path;
       description = "K3s bootstrap token";
     };
-    flux-git-auth = lib.mkOption {
+    fluxGitAuth = lib.mkOption {
       type = lib.types.path;
       description = ''
         # 1. flux create secret git flux-git-auth --url="ssh://<git-ssh-domain>/<git-repo>.git" --private-key-file={{ .private_ssh_keyfile }} --export > flux-git-secret.yaml
@@ -59,11 +65,11 @@ in {
         # 3. encrypt yaml with age
       '';
     };
-    flux-sops-age = lib.mkOption {
+    fluxSopsAge = lib.mkOption {
       type = lib.types.path;
       description = "Path to the flux sops age secret";
     };
-    minio-credentials = lib.mkOption {
+    minioCredentials = lib.mkOption {
       type = lib.types.path;
       description = ''
         File containing the MINIO_ROOT_USER, default is "minioadmin", and
@@ -159,7 +165,69 @@ in {
         par2cmdline
         rsync
         gzip
-      ];
+      ] ++ (if cfg.storageNode then [
+        ceph
+        ceph-csi
+        libceph
+        (writeShellScriptBin "zap-osd" ''
+          #!/usr/bin/env bash
+
+          zap_osd() {
+            sgdisk -Z $1
+            continue_prompt
+          }
+
+          confirm() {
+            read -r -p "Zap OSD device $1?, confirm with yes (y/N): " choice
+            case "$choice" in
+              y|Y|yes|Yes)
+                echo "zapping device..."
+                zap_osd $1
+                ;;
+              *)
+                exit 0
+                ;;
+            esac
+          }
+          
+          continue_prompt() {
+            read -r -p "Would you like to continue? (y/N): " choice
+            case "$choice" in
+              y|Y|yes|Yes)
+                select_device
+                ;;
+              *) 
+                exit 0
+                ;;
+            esac
+          }
+
+          select_device() {
+            echo "Device tree:"
+            lsblk -T -n --output=NAME
+            echo ""
+            read -r -p 'Which osd would you like to remove?: ' device
+            stat "$device" 2>&1 /dev/null
+            status=$?
+            case "$status" in
+              0) 
+                confirm $device
+                ;;
+              *)
+                echo "Device $device does not exist"
+                exit 1
+                ;;
+            esac
+          }
+
+          if [ "$EUID" -ne 0 ] ; then
+            echo "Please run as root"
+            exit 1
+          fi
+
+          select_device
+        '')
+      ] else []);
     };
 
     users = {
@@ -187,7 +255,6 @@ in {
         "L /var/lib/rancher/k3s/server/manifests/flux.yaml - - - - /etc/k3s/flux.yaml"
         "L /var/lib/rancher/k3s/server/manifests/flux-git-auth.yaml - - - - ${cfg.flux-git-auth}"
         "L /var/lib/rancher/k3s/server/manifests/flux-sops-age.yaml - - - - ${cfg.flux-sops-age}"
-        "L /var/lib/rancher/k3s/server/manifests/00-coredns-custom.yaml - - - - /etc/k3s/coredns-custom.yaml"
       ];
 
     # required for deploy-rs

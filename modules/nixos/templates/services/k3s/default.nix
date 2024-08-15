@@ -304,10 +304,16 @@ in {
               sleep 28
               systemctl stop k3s
               sleep 2
-              rm -rf /var/lib/rancher/k3s/
+              declare -a FOLDERS
+              FOLDERS=("/opt" "/etc" "/run" "/var/lib/rancher" "/etc/rancher")
+              for FOLDER in "${FOLDERS[@]}"; do
+                if [ -d "${FOLDER}/k3s" ]; then
+                  rm -rf "${FOLDER}/k3s"
+                fi
+              done
               rm -rf /var/lib/cni/networks/cbr0/
-              if [ -d /opt/k3s/data/temp ]; then
-                rm -rf /opt/k3s/data/temp/*
+              if [ -d /etc/kubernetes ]; then
+                rm -rf /etc/kubernetes 
               fi
               sync
               echo -e "\n => reboot now to complete k3s cleanup!"

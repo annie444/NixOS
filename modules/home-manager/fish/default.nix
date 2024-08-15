@@ -184,7 +184,6 @@ in {
           set -gx COLORTERM "truecolor"
           set -gx TERM "xterm-256color"
 
-          batman --export-env | source
           eval (batpipe)
 
           set -gx GPG_TTY (tty)
