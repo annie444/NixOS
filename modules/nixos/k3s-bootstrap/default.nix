@@ -103,7 +103,7 @@ in {
     };
 
     services.k3s.package = pkgs.k3s;
-    systemd.services.k3s.serviceConfig.ExecStartPre = "${pkgs.coreutils}/bin/sleep 60";
+    systemd.services.k3s.serviceConfig.ExecStartPre = if cfg.head.self then "${pkgs.coreutils}/bin/sleep 60" else "${pkgs.coreutils}/bin/sleep 5m";
 
     boot.kernel.sysctl."net.ipv4.ip_forward" = 1;
 
