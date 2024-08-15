@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: flux-system
+  labels:
+    name: flux-system
+---
+apiVersion: v1
+kind: Secret
+metadata:
+    name: sops-age
+    namespace: flux-system
+type: Opaque
+data:
+    age.agekey: IyBjcmVhdGVkOiAyMDI0LTA4LTEyVDEwOjM0OjQ2LTA3OjAwCiMgcHVibGljIGtleTogYWdlMXl0cnFlY2pqMmt2YWszNXpsN204d3luM2NxZ3RkOGY2NDU0OGZjOXV6Zmw5cTBqczQzY3NuOHVsN2sKQUdFLVNFQ1JFVC1LRVktMUZSOUtITDRXQzRSVFBFQ0pIN01BTUVSVzQwVUozVjNEWjJXMFpFQ0pDOEE3UDVBTENIS1FMTFg0OVoK
