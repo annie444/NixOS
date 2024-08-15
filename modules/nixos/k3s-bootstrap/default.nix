@@ -292,7 +292,7 @@ in {
             branch: main
           secretRef:
             name: flux-git-auth
-          url: ssh://${cfg.gitSshHost}:${cfg.gitRepo}
+          url: ssh://${cfg.gitSshHost}/${cfg.gitRepo}
         ---
         apiVersion: kustomize.toolkit.fluxcd.io/v1
         kind: Kustomization
