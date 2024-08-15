@@ -233,7 +233,6 @@ in {
       ++ lib.optionals (cfg.services.traefik == false) ["traefik"];
     k3sExtraFlags =
       [
-        "--cluster-init"
         "--kube-apiserver-arg anonymous-auth=true"
         "--kube-controller-manager-arg bind-address=0.0.0.0"
         "--kube-scheduler-arg bind-address=0.0.0.0"
