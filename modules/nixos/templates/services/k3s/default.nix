@@ -407,7 +407,7 @@ in {
         k3s = {
           enable = true;
           role = "server";
-          tokenFile = cfg.tokenFile;
+          tokenFile = lib.mkIf (cfg.head.self != true) cfg.tokenFile;
           environmentFile = "/etc/rancher/k3s/k3s.service.env";
           extraFlags = lib.concatStringsSep " " k3sCombinedFlags;
           clusterInit = cfg.head.self;
