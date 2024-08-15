@@ -323,17 +323,17 @@ in {
           - name: cilium
             url: https://helm.cilium.io
         releases:
-           - name: coredns
-            namespace: kube-system
-            chart: coredns/coredns
-            version: 1.32.0
-            values: ["${./coredns.values.yaml}"]
-            wait: true
           - name: cilium
             namespace: kube-system
             chart: cilium/cilium
             version: 1.16.0
             values: ["${./cilium.values.yaml}"]
+            wait: true
+          - name: coredns
+            namespace: kube-system
+            chart: coredns/coredns
+            version: 1.32.0
+            values: ["${./coredns.values.yaml}"]
             wait: true
       '';
     };
