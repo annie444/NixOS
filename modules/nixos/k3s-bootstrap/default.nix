@@ -7,7 +7,6 @@
 }: let
   cfg = config.roles.k3sBootstrap;
 in {
-
   options.roles.k3sBootstrap = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -101,7 +100,6 @@ in {
     };
 
     services.k3s.package = pkgs.k3s;
-    systemd.services.k3s.serviceConfig.ExecStartPre = "${pkgs.coreutils}/bin/sleep 60";
 
     boot.kernel.sysctl."net.ipv4.ip_forward" = 1;
 
@@ -159,75 +157,81 @@ in {
     powerManagement.cpuFreqGovernor = "ondemand";
 
     environment = {
-      systemPackages = with pkgs; [
-        gnutar
-        ser2net
-        par2cmdline
-        rsync
-        gzip
-      ] ++ (if cfg.storageNode then [
-        ceph
-        ceph-csi
-        libceph
-        (writeShellScriptBin "zap-osd" ''
-          #!/usr/bin/env bash
+      systemPackages = with pkgs;
+        [
+          gnutar
+          ser2net
+          par2cmdline
+          rsync
+          gzip
+        ]
+        ++ (
+          if cfg.storageNode
+          then [
+            ceph
+            ceph-csi
+            libceph
+            (writeShellScriptBin "zap-osd" ''
+              #!/usr/bin/env bash
 
-          zap_osd() {
-            sgdisk -Z $1
-            continue_prompt
-          }
+              zap_osd() {
+                sgdisk -Z $1
+                continue_prompt
+              }
 
-          confirm() {
-            read -r -p "Zap OSD device $1?, confirm with yes (y/N): " choice
-            case "$choice" in
-              y|Y|yes|Yes)
-                echo "zapping device..."
-                zap_osd $1
-                ;;
-              *)
-                exit 0
-                ;;
-            esac
-          }
-          
-          continue_prompt() {
-            read -r -p "Would you like to continue? (y/N): " choice
-            case "$choice" in
-              y|Y|yes|Yes)
-                select_device
-                ;;
-              *) 
-                exit 0
-                ;;
-            esac
-          }
+              confirm() {
+                read -r -p "Zap OSD device $1?, confirm with yes (y/N): " choice
+                case "$choice" in
+                  y|Y|yes|Yes)
+                    echo "zapping device..."
+                    zap_osd $1
+                    ;;
+                  *)
+                    exit 0
+                    ;;
+                esac
+              }
 
-          select_device() {
-            echo "Device tree:"
-            lsblk -T -n --output=NAME
-            echo ""
-            read -r -p 'Which osd would you like to remove?: ' device
-            stat "$device" 2>&1 /dev/null
-            status=$?
-            case "$status" in
-              0) 
-                confirm $device
-                ;;
-              *)
-                echo "Device $device does not exist"
+              continue_prompt() {
+                read -r -p "Would you like to continue? (y/N): " choice
+                case "$choice" in
+                  y|Y|yes|Yes)
+                    select_device
+                    ;;
+                  *)
+                    exit 0
+                    ;;
+                esac
+              }
+
+              select_device() {
+                echo "Device tree:"
+                lsblk -T -n --output=NAME
+                echo ""
+                read -r -p 'Which osd would you like to remove?: ' device
+                stat "$device" 2>&1 /dev/null
+                status=$?
+                case "$status" in
+                  0)
+                    confirm $device
+                    ;;
+                  *)
+                    echo "Device $device does not exist"
+                    exit 1
+                    ;;
+                esac
+              }
+
+              if [ "$EUID" -ne 0 ] ; then
+                echo "Please run as root"
                 exit 1
-                ;;
-            esac
-          }
+              fi
 
-          if [ "$EUID" -ne 0 ] ; then
-            echo "Please run as root"
-            exit 1
-          fi
-
-          select_device
-        '')
-      ] else []);
+              select_device
+            '')
+          ]
+          else []
+        );
     };
 
     users = {

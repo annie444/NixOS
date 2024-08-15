@@ -311,7 +311,7 @@ in {
               done
               rm -rf /var/lib/cni/networks/cbr0/
               if [ -d /etc/kubernetes ]; then
-                rm -rf /etc/kubernetes 
+                rm -rf /etc/kubernetes
               fi
               sync
               echo -e "\n => reboot now to complete k3s cleanup!"

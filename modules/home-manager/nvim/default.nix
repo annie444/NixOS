@@ -74,7 +74,8 @@ in {
   config = mkIf cfg.enable {
     nixpkgs.overlays = [inputs.neovim-nightly-overlay.overlays.default];
 
-    home.packages = [
+    home.packages =
+      [
         vale
         lua
       ]
@@ -114,7 +115,7 @@ in {
         codespell
         shellcheck
         shfmt
-        
+
         mercurial
         prettierd
         eslint_d
@@ -161,7 +162,7 @@ in {
 
       coc.enable = false;
 
-      extraPython3Packages = (p: [
+      extraPython3Packages = p: [
         p.black
         p.python-lsp-black
         p.flake8
@@ -178,88 +179,91 @@ in {
         p.pnglatex
         p.plotly
         p.pip
-      ]);
+      ];
 
-      extraLuaPackages = (l: [
+      extraLuaPackages = l: [
         l.lua-lsp
         l.luacheck
         l.luarocks
         l.jsregexp
-      ]);
+      ];
 
-      extraPackages = [
-        vale
-      ]
-      ++ (with pkgs; [
-        antiprism
-        cargo
-        pnglatex
-        mono
-        uncrustify
-        cpplint
-        vim-vint
-        lua-language-server
-        black
-        hadolint
-        gitlint
-        google-java-format
-        ruby
-        perl
-        efm-langserver
-        clang-tools
-        pyright
-        cbfmt
-        actionlint
-        yamllint
-        elixir-ls
-        terraform-ls
-        jdt-language-server
-        yaml-language-server
-        gopls
-        lemminx
-        cmake
-        powershell
-        rust-analyzer-unwrapped
-        buf-language-server
-        buf
-        alex
-        codespell
-        shellcheck
-        shfmt
-        mercurial
-        prettierd
-        eslint_d
-        golangci-lint-langserver
-        golangci-lint
-        stylua
-        djlint
-        markdownlint-cli
-        mdformat
-        alejandra
-        zulu
-        julia
-        texliveFull
-      ])
-      ++ (with pkgs.nodePackages_latest; [
-        intelephense
-        csslint
-        typescript-language-server
-        svelte-language-server
-        svelte-check
-        tailwindcss
-        stylelint
-        prettier
-        eslint
-        nodejs
-      ])
-      ++ (with pkgs.php83Packages; [
-        php-codesniffer
-        composer
-      ]);
+      extraPackages =
+        [
+          vale
+        ]
+        ++ (with pkgs; [
+          antiprism
+          cargo
+          pnglatex
+          mono
+          uncrustify
+          cpplint
+          vim-vint
+          lua-language-server
+          black
+          hadolint
+          gitlint
+          google-java-format
+          ruby
+          perl
+          efm-langserver
+          clang-tools
+          pyright
+          cbfmt
+          actionlint
+          yamllint
+          elixir-ls
+          terraform-ls
+          jdt-language-server
+          yaml-language-server
+          gopls
+          lemminx
+          cmake
+          powershell
+          rust-analyzer-unwrapped
+          buf-language-server
+          buf
+          alex
+          codespell
+          shellcheck
+          shfmt
+          mercurial
+          prettierd
+          eslint_d
+          golangci-lint-langserver
+          golangci-lint
+          stylua
+          djlint
+          markdownlint-cli
+          mdformat
+          alejandra
+          zulu
+          julia
+          texliveFull
+        ])
+        ++ (with pkgs.nodePackages_latest; [
+          intelephense
+          csslint
+          typescript-language-server
+          svelte-language-server
+          svelte-check
+          tailwindcss
+          stylelint
+          prettier
+          eslint
+          nodejs
+        ])
+        ++ (with pkgs.php83Packages; [
+          php-codesniffer
+          composer
+        ]);
 
-      plugins = (with pkgs.vimPlugins; [
-        omnisharp-extended-lsp-nvim
-      ]) ++ [ treesitterWithGrammars ];
+      plugins =
+        (with pkgs.vimPlugins; [
+          omnisharp-extended-lsp-nvim
+        ])
+        ++ [treesitterWithGrammars];
     };
 
     home.file."./.config/nvim/" = {
