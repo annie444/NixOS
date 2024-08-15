@@ -41,6 +41,9 @@ in {
       type = lib.types.str;
       description = "The repo to bootstrap flux with";
     };
+    ip = lib.mkOption {
+      type = lib.types.str;
+    };
     head = {
       self = lib.mkOption {
         type = lib.types.bool;
@@ -100,6 +103,7 @@ in {
     };
 
     services.k3s.package = pkgs.k3s;
+    systemd.services.k3s.serviceConfig.ExecStartPre = "${pkgs.coreutils}/bin/sleep 60";
 
     boot.kernel.sysctl."net.ipv4.ip_forward" = 1;
 
@@ -130,9 +134,9 @@ in {
             servicelb = false;
             traefik = false;
             local-storage = false;
-            metrics-server = true;
-            coredns = true;
-            flannel = true;
+            metrics-server = false;
+            coredns = false;
+            flannel = false;
           };
           bootstrap = lib.mkIf cfg.head.self {
             helm = {
@@ -259,6 +263,7 @@ in {
         "L /var/lib/rancher/k3s/server/manifests/flux.yaml - - - - /etc/k3s/flux.yaml"
         "L /var/lib/rancher/k3s/server/manifests/flux-git-auth.yaml - - - - ${cfg.fluxGitAuth}"
         "L /var/lib/rancher/k3s/server/manifests/flux-sops-age.yaml - - - - ${cfg.fluxSopsAge}"
+        "L /var/lib/rancher/k3s/server/manifests/00-coredns-custom.yaml - - - - /etc/k3s/coredns-custom.yaml"
       ];
 
     # required for deploy-rs
@@ -313,9 +318,17 @@ in {
       mode = "0750";
       text = ''
         repositories:
+          - name: coredns
+            url: https://coredns.github.io/helm
           - name: cilium
             url: https://helm.cilium.io
         releases:
+           - name: coredns
+            namespace: kube-system
+            chart: coredns/coredns
+            version: 1.32.0
+            values: ["${./coredns.values.yaml}"]
+            wait: true
           - name: cilium
             namespace: kube-system
             chart: cilium/cilium
@@ -323,6 +336,58 @@ in {
             values: ["${./cilium.values.yaml}"]
             wait: true
       '';
+    };
+
+    environment.etc."k3s/coredns-custom.yaml" = {
+      mode = "0750";
+      text = ''
+        apiVersion: v1
+        kind: ConfigMap
+        metadata:
+          name: coredns-custom
+          namespace: kube-system
+        data:
+          domain.server: |
+            ${config.networking.hostName}.home:53 {
+              errors
+              health
+              ready
+              hosts {
+                ${cfg.ip} ${config.networking.hostName}.home
+                fallthrough
+              }
+              prometheus :9153
+              forward . /etc/resolv.conf
+              cache 30
+              loop
+              reload
+              loadbalance
+            }
+      '';
+    };
+
+    environment.etc."ser2net.yaml" = {
+      mode = "0755";
+      text = ''
+        connection: &con01
+          accepter: tcp,20108
+          connector: serialdev,/dev/ttyACM0,115200n81,nobreak,local
+          options:
+            kickolduser: true
+      '';
+    };
+
+    systemd.services.ser2net = {
+      wantedBy = ["multi-user.target"];
+      description = "Serial to network proxy";
+      after = ["network.target" "dev-ttyACM0.device"];
+      serviceConfig = {
+        Type = "simple";
+        User = "root"; # todo user with only dialout group?
+        ExecStart = ''${pkgs.ser2net}/bin/ser2net -n -c /etc/ser2net.yaml'';
+        ExecReload = ''kill -HUP $MAINPID'';
+        Restart = "on-failure";
+      };
     };
   };
 }

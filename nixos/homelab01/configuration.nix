@@ -67,6 +67,7 @@
     storageNode = true;
     gitSshHost = "git@github.com";
     gitRepo = "annie444/k3s-cluster";
+    ip = "192.168.1.40";
     head = {
       self = true;
       ipAddress = "192.168.1.40";

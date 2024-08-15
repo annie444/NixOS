@@ -35,8 +35,6 @@
       sopsFile = ../../secrets/k3s/minio-creds.env.enc;
       format = "binary";
       mode = "0770";
-      owner = "minio";
-      group = "minio";
     };
     "k3s/token" = {};
     "tailscale/auto_key" = {
@@ -61,6 +59,7 @@
     user = "annie";
     gitSshHost = "git@github.com";
     gitRepo = "annie444/k3s-cluster";
+    ip = "192.168.1.42";
     head = {
       self = false;
       ipAddress = "192.168.1.40";
