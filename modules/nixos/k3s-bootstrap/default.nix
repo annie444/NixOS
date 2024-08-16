@@ -301,7 +301,7 @@ in {
           namespace: flux-system
         spec:
           interval: 2m
-          path: ./kubernetes/flux
+          path: ./flux
           prune: true
           wait: false
           sourceRef:
