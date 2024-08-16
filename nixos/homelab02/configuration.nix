@@ -36,8 +36,11 @@
       format = "binary";
       mode = "0770";
     };
-    "k3s/token" = {};
+    "k3s/token" = {
+      restartUnits = [ "k3s.service" ];
+    };
     "tailscale/auto_key" = {
+      restartUnits = [ "tailscaled.service" ];
       mode = "0770";
     };
   };
