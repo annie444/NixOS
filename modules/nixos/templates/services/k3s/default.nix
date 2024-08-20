@@ -223,14 +223,14 @@ in {
       "TaintNodesByCondition"
       "ValidatingAdmissionWebhook"
     ];
-    k3sDisabledServices =
-      []
-      ++ lib.optionals (cfg.services.flannel == false) ["flannel"]
-      ++ lib.optionals (cfg.services.servicelb == false) ["servicelb"]
-      ++ lib.optionals (cfg.services.coredns == false) ["coredns"]
-      ++ lib.optionals (cfg.services.local-storage == false) ["local-storage"]
-      ++ lib.optionals (cfg.services.metrics-server == false) ["metrics-server"]
-      ++ lib.optionals (cfg.services.traefik == false) ["traefik"];
+    k3sDisabledServices = lib.mkMerge [
+      (lib.mkIf (!cfg.services.flannel) ["flannel"])
+      (lib.mkIf (!cfg.services.servicelb) ["servicelb"])
+      (lib.mkIf (!cfg.services.coredns) ["coredns"])
+      (lib.mkIf (!cfg.services.local-storage) ["local-storage"])
+      (lib.mkIf (!cfg.services.metrics-server) ["metrics-server"])
+      (lib.mkIf (!cfg.services.traefik) ["traefik"])
+    ];
     k3sExtraFlags =
       [
         "--kube-apiserver-arg anonymous-auth=true"
@@ -241,18 +241,18 @@ in {
         "--write-kubeconfig-mode 0644"
         "--kube-apiserver-arg='enable-admission-plugins=${lib.concatStringsSep "," k3sAdmissionPlugins}'"
       ]
-      ++ lib.lists.optionals (cfg.services.flannel == false) [
+      ++ lib.lists.optionals (!cfg.services.flannel) [
         "--flannel-backend=none"
         "--disable-network-policy"
       ]
-      ++ lib.optionals (cfg.services.kube-proxy == false) [
+      ++ lib.optionals (!cfg.services.kube-proxy) [
         "--disable-cloud-controller"
         "--disable-kube-proxy"
       ]
       ++ lib.optionals cfg.prepare.cilium [
         "--kubelet-arg=register-with-taints=node.cilium.io/agent-not-ready:NoExecute"
       ]
-      ++ lib.optionals (cfg.head.self == false) [
+      ++ lib.optionals (!cfg.head.self) [
         "--server https://${cfg.head.ipAddress}:6443"
       ];
     k3sDisableFlags = builtins.map (service: "--disable ${service}") k3sDisabledServices;
@@ -398,16 +398,15 @@ in {
             ${cfg.addons.nfs.path} ${config.networking.hostName}(rw,fsid=0,async,no_subtree_check,no_auth_nlm,insecure,no_root_squash)
           '';
         };
-        minio = lib.mkIf cfg.addons.minio.enable {
+        minio = lib.mkIf cfg.addons.minio.enable (with cfg.addons.minio; {
+          inherit region dataDir;
           enable = true;
-          region = cfg.addons.minio.region;
-          dataDir = cfg.addons.minio.dataDir;
           rootCredentialsFile = cfg.addons.minio.credentialsFile;
-        };
+        });
         k3s = {
           enable = true;
           role = "server";
-          tokenFile = lib.mkIf (cfg.head.self != true) cfg.tokenFile;
+          tokenFile = lib.mkIf (!cfg.head.self) cfg.tokenFile;
           environmentFile = "/etc/rancher/k3s/k3s.service.env";
           extraFlags = lib.concatStringsSep " " k3sCombinedFlags;
           clusterInit = cfg.head.self;
@@ -440,78 +439,80 @@ in {
               ${toString (lib.lists.forEach cfg.addons.minio.buckets (bucket: "mc --config-dir $RUNTIME_DIRECTORY mb --ignore-existing minio/${bucket};"))}
             '';
           };
-        };
-        timers."k3s-helm-bootstrap" = lib.mkIf cfg.bootstrap.helm.enable {
-          wantedBy = ["timers.target"];
-          timerConfig = {
-            OnBootSec = "3m";
-            OnUnitActiveSec = "3m";
-            Unit = "k3s-helm-bootstrap.service";
+
+          "k3s-helm-bootstrap" = lib.mkIf cfg.bootstrap.helm.enable {
+            script = ''
+              export PATH="$PATH:${pkgs.git}/bin:${pkgs.kubernetes-helm}/bin"
+              if ${pkgs.kubectl}/bin/kubectl ${cfg.bootstrap.helm.completedIf} ; then
+                exit 0
+              fi
+              sleep 30
+              if ${pkgs.kubectl}/bin/kubectl ${cfg.bootstrap.helm.completedIf} ; then
+                exit 0
+              fi
+              ${pkgs.helmfile}/bin/helmfile --quiet --file ${cfg.bootstrap.helm.helmfile} apply --skip-diff-on-install --suppress-diff
+            '';
+            serviceConfig = {
+              Type = "oneshot";
+              User = "root";
+              RestartSec = "3m";
+            };
+          };
+
+          "k3s-flux2-bootstrap" = lib.mkIf cfg.services.flux {
+            script = ''
+              export PATH="$PATH:${pkgs.git}/bin"
+              if ${pkgs.kubectl}/bin/kubectl get CustomResourceDefinition -A | grep -q "toolkit.fluxcd.io" ; then
+                exit 0
+              fi
+              sleep 30
+              if ${pkgs.kubectl}/bin/kubectl get CustomResourceDefinition -A | grep -q "toolkit.fluxcd.io" ; then
+                exit 0
+              fi
+              mkdir -p /tmp/k3s-flux2-bootstrap
+              cat > /tmp/k3s-flux2-bootstrap/kustomization.yaml << EOL
+              apiVersion: kustomize.config.k8s.io/v1beta1
+              kind: Kustomization
+              resources:
+                - github.com/fluxcd/flux2/manifests/install
+              patches:
+                # Remove the default network policies
+                - patch: |-
+                    \$patch: delete
+                    apiVersion: networking.k8s.io/v1
+                    kind: NetworkPolicy
+                    metadata:
+                      name: not-used
+                  target:
+                    group: networking.k8s.io
+                    kind: NetworkPolicy
+              EOL
+              ${pkgs.kubectl}/bin/kubectl apply --kustomize /tmp/k3s-flux2-bootstrap
+            '';
+            serviceConfig = {
+              Type = "oneshot";
+              User = "root";
+              RestartSec = "3m";
+            };
           };
         };
-        timers."k3s-flux2-bootstrap" = lib.mkIf cfg.services.flux {
-          wantedBy = ["timers.target"];
-          timerConfig = {
-            OnBootSec = "3m";
-            OnUnitActiveSec = "3m";
-            Unit = "k3s-flux2-bootstrap.service";
+        timers = {
+          "k3s-helm-bootstrap" = lib.mkIf cfg.bootstrap.helm.enable {
+            wantedBy = ["timers.target"];
+            timerConfig = {
+              OnBootSec = "3m";
+              OnUnitActiveSec = "3m";
+              Unit = "k3s-helm-bootstrap.service";
+            };
           };
-        };
-      };
-
-      systemd.services."k3s-helm-bootstrap" = lib.mkIf cfg.bootstrap.helm.enable {
-        script = ''
-          export PATH="$PATH:${pkgs.git}/bin:${pkgs.kubernetes-helm}/bin"
-          if ${pkgs.kubectl}/bin/kubectl ${cfg.bootstrap.helm.completedIf} ; then
-            exit 0
-          fi
-          sleep 30
-          if ${pkgs.kubectl}/bin/kubectl ${cfg.bootstrap.helm.completedIf} ; then
-            exit 0
-          fi
-          ${pkgs.helmfile}/bin/helmfile --quiet --file ${cfg.bootstrap.helm.helmfile} apply --skip-diff-on-install --suppress-diff
-        '';
-        serviceConfig = {
-          Type = "oneshot";
-          User = "root";
-          RestartSec = "3m";
-        };
-      };
-
-      systemd.services."k3s-flux2-bootstrap" = lib.mkIf cfg.services.flux {
-        script = ''
-          export PATH="$PATH:${pkgs.git}/bin"
-          if ${pkgs.kubectl}/bin/kubectl get CustomResourceDefinition -A | grep -q "toolkit.fluxcd.io" ; then
-            exit 0
-          fi
-          sleep 30
-          if ${pkgs.kubectl}/bin/kubectl get CustomResourceDefinition -A | grep -q "toolkit.fluxcd.io" ; then
-            exit 0
-          fi
-          mkdir -p /tmp/k3s-flux2-bootstrap
-          cat > /tmp/k3s-flux2-bootstrap/kustomization.yaml << EOL
-          apiVersion: kustomize.config.k8s.io/v1beta1
-          kind: Kustomization
-          resources:
-            - github.com/fluxcd/flux2/manifests/install
-          patches:
-            # Remove the default network policies
-            - patch: |-
-                \$patch: delete
-                apiVersion: networking.k8s.io/v1
-                kind: NetworkPolicy
-                metadata:
-                  name: not-used
-              target:
-                group: networking.k8s.io
-                kind: NetworkPolicy
-          EOL
-          ${pkgs.kubectl}/bin/kubectl apply --kustomize /tmp/k3s-flux2-bootstrap
-        '';
-        serviceConfig = {
-          Type = "oneshot";
-          User = "root";
-          RestartSec = "3m";
+          "k3s-flux2-bootstrap" = lib.mkIf cfg.services.flux {
+            wantedBy = ["timers.target"];
+            timerConfig = {
+              OnBootSec = "3m";
+              OnUnitActiveSec = "3m";
+              Unit = "k3s-flux2-bootstrap.service";
+            };
+          };
         };
       };
     };

@@ -3,9 +3,7 @@
 {
   inputs,
   outputs,
-  lib,
   config,
-  pkgs,
   ...
 }: {
   # You can import other home-manager modules here
@@ -51,54 +49,62 @@
     defaultSopsFile = ../../secrets/annie/secrets.yaml;
     defaultSopsFormat = "yaml";
     validateSopsFiles = true;
-    secrets.publicKey = {
-      format = "binary";
-      sopsFile = ../../secrets/annie/publickey.gpg.enc;
-    };
-    secrets."ssh/github/public" = {
-      path = "/home/annie/.ssh/github_id25519.pub";
-    };
-    secrets."ssh/github/private" = {
-      path = "/home/annie/.ssh/github_id25519";
-    };
-    secrets."ssh/ipac/public" = {
-      path = "/home/annie/.ssh/ipac_id25519.pub";
-    };
-    secrets."ssh/ipac/private" = {
-      path = "/home/annie/.ssh/ipac_id25519";
-    };
-    secrets."ssh/homelab/public" = {
-      path = "/home/annie/.ssh/jpeg_id25519.pub";
-    };
-    secrets."ssh/homelab/private" = {
-      path = "/home/annie/.ssh/jpeg_id25519";
-    };
-    secrets."ssh/mayfirst/public" = {
-      path = "/home/annie/.ssh/mayfirst_id25519.pub";
-    };
-    secrets."ssh/mayfirst/private" = {
-      path = "/home/annie/.ssh/mayfirst_id25519";
+    secrets = {
+      publicKey = {
+        format = "binary";
+        sopsFile = ../../secrets/annie/publickey.gpg.enc;
+      };
+      "ssh/github/public" = {
+        path = "/home/annie/.ssh/github_id25519.pub";
+      };
+      "ssh/github/private" = {
+        path = "/home/annie/.ssh/github_id25519";
+      };
+      "ssh/ipac/public" = {
+        path = "/home/annie/.ssh/ipac_id25519.pub";
+      };
+      "ssh/ipac/private" = {
+        path = "/home/annie/.ssh/ipac_id25519";
+      };
+      "ssh/homelab/public" = {
+        path = "/home/annie/.ssh/jpeg_id25519.pub";
+      };
+      "ssh/homelab/private" = {
+        path = "/home/annie/.ssh/jpeg_id25519";
+      };
+      "ssh/mayfirst/public" = {
+        path = "/home/annie/.ssh/mayfirst_id25519.pub";
+      };
+      "ssh/mayfirst/private" = {
+        path = "/home/annie/.ssh/mayfirst_id25519";
+      };
     };
   };
 
   # Enable my custom profiles
   # NOTE: Make sure each module is imported in the imports section
-  profiles.fish.enable = true;
-  profiles.tmux.enable = true;
-  profiles.nvim.enable = true;
+  profiles = {
+    fish.enable = true;
+    tmux.enable = true;
+    nvim.enable = true;
 
-  profiles.ssh = {
-    enable = true;
-    mayfirstKeyPath = config.sops.secrets."ssh/mayfirst/private".path;
-    homelabKeyPath = config.sops.secrets."ssh/homelab/private".path;
-    ipacKeyPath = config.sops.secrets."ssh/ipac/private".path;
-    githubKeyPath = config.sops.secrets."ssh/github/private".path;
+    ssh = {
+      enable = true;
+      mayfirstKeyPath = config.sops.secrets."ssh/mayfirst/private".path;
+      homelabKeyPath = config.sops.secrets."ssh/homelab/private".path;
+      ipacKeyPath = config.sops.secrets."ssh/ipac/private".path;
+      githubKeyPath = config.sops.secrets."ssh/github/private".path;
+    };
   };
 
   # Nicely reload system units when changing configs
-  systemd.user.startServices = "sd-switch";
-  systemd.user.services.sd-switch.Unit.After = ["sops-nix.service"];
-  systemd.user.services.mbsync.Unit.After = ["sops-nix.service"];
+  systemd.user = {
+    startServices = "sd-switch";
+    services = {
+      sd-switch.Unit.After = ["sops-nix.service"];
+      mbsync.Unit.After = ["sops-nix.service"];
+    };
+  };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   home.stateVersion = "23.11";

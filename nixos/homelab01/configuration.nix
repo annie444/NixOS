@@ -1,9 +1,7 @@
 {
   inputs,
   outputs,
-  lib,
   config,
-  pkgs,
   ...
 }: {
   imports = [
@@ -24,17 +22,17 @@
 
   sops.secrets = {
     flux-age-key = {
-      restartUnits = [ "k3s.service" ];
+      restartUnits = ["k3s.service"];
       sopsFile = ../../secrets/k3s/flux-age-key.yaml.enc;
       format = "binary";
     };
     flux-git-auth = {
-      restartUnits = [ "k3s.service" ];
+      restartUnits = ["k3s.service"];
       sopsFile = ../../secrets/k3s/flux-git-auth.yaml.enc;
       format = "binary";
     };
     minio-creds = {
-      restartUnits = [ "minio.service" ];
+      restartUnits = ["minio.service"];
       sopsFile = ../../secrets/k3s/minio-creds.env.enc;
       format = "binary";
       mode = "0770";
@@ -42,13 +40,13 @@
       group = "minio";
     };
     "ddns/api_key" = {
-      restartUnits = [ "inadyn.service" ];
+      restartUnits = ["inadyn.service"];
     };
     "k3s/token" = {
-      restartUnits = [ "k3s.service" ];
+      restartUnits = ["k3s.service"];
     };
     "tailscale/auto_key" = {
-      restartUnits = [ "tailscaled.service" ];
+      restartUnits = ["tailscaled.service"];
       mode = "0770";
     };
   };

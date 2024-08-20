@@ -1,11 +1,15 @@
 {
-  lib,
-  config,
   pkgs,
   inputs,
-  outputs,
   ...
 }: {
+  programs.nh = {
+    enable = true;
+    clean.enable = true;
+    clean.extraArgs = "--keep-since 4d --keep 3";
+    flake = "/home/annie/Projects/NixOS";
+  };
+
   environment.systemPackages = with pkgs; [
     # Secrets encryption
     sops
@@ -14,6 +18,23 @@
 
     # home-manager
     inputs.home-manager.packages.${pkgs.system}.default
+
+    # nix tools
+    nixos-generators
+    manix
+    nh
+    nix-du
+    nix-index
+    unstable.nix-init
+    unstable.nix-melt
+    nix-output-monitor
+    nix-tree
+    nurl
+    nvd
+    statix
+    niv
+    nix-update
+    flake-checker
 
     # Some networking tools.
     fuse

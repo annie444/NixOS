@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  nixpkgs-unstable,
   ...
 }:
 with lib; let
@@ -65,26 +64,44 @@ in {
         "options vfio-pci ids=${concatStringsSep "," cfg.vfioIds}";
     };
 
-    systemd.tmpfiles.rules = [
-      "f /dev/shm/looking-glass 0660 ${cfg.user} qemu-libvirtd -"
-      "f /dev/shm/scream 0660 ${cfg.user} qemu-libvirtd -"
-      "d /var/lib/libvirt/images 0775 root qemu-libvirtd -"
-    ];
+    systemd = {
+      tmpfiles.rules = [
+        "f /dev/shm/looking-glass 0660 ${cfg.user} qemu-libvirtd -"
+        "f /dev/shm/scream 0660 ${cfg.user} qemu-libvirtd -"
+        "d /var/lib/libvirt/images 0775 root qemu-libvirtd -"
+      ];
 
-    systemd.services."libvirt-default-pool" = {
-      wantedBy = ["multi-user.target"];
-      requires = ["libvirtd.service"];
-      script = ''
-        ${pkgs.coreutils}/bin/sleep 30
-        ${pkgs.libvirt}/bin/virsh --connect qemu:///system pool-define-as default dir --target /var/lib/libvirt/images >/dev/null 2>&1 || true
-        ${pkgs.libvirt}/bin/virsh --connect qemu:///system pool-start default >/dev/null 2>&1 || true
-        ${pkgs.libvirt}/bin/virsh --connect qemu:///system pool-autostart default >/dev/null 2>&1 || true
-      '';
-      serviceConfig = {
-        Type = "oneshot";
-        User = "root";
-        RestartSec = "1m";
-        RemainAfterExit = true;
+      services."libvirt-default-pool" = {
+        wantedBy = ["multi-user.target"];
+        requires = ["libvirtd.service"];
+        script = ''
+          ${pkgs.coreutils}/bin/sleep 30
+          ${pkgs.libvirt}/bin/virsh --connect qemu:///system pool-define-as default dir --target /var/lib/libvirt/images >/dev/null 2>&1 || true
+          ${pkgs.libvirt}/bin/virsh --connect qemu:///system pool-start default >/dev/null 2>&1 || true
+          ${pkgs.libvirt}/bin/virsh --connect qemu:///system pool-autostart default >/dev/null 2>&1 || true
+        '';
+        serviceConfig = {
+          Type = "oneshot";
+          User = "root";
+          RestartSec = "1m";
+          RemainAfterExit = true;
+        };
+      };
+
+      user.services.scream-ivshmem = lib.mkIf cfg.gui.enable {
+        enable = true;
+        description = "Scream";
+        serviceConfig = {
+          ExecStart = "${pkgs.scream}/bin/scream -n scream -o pulse -m /dev/shm/scream";
+          Restart = "always";
+        };
+        wantedBy = ["multi-user.target"];
+        requires = [
+          "libvirtd.service"
+          "pipewire-pulse.service"
+          "pipewire.service"
+          "sound.target"
+        ];
       };
     };
 
@@ -148,22 +165,6 @@ in {
           ];
         };
       };
-    };
-
-    systemd.user.services.scream-ivshmem = lib.mkIf cfg.gui.enable {
-      enable = true;
-      description = "Scream";
-      serviceConfig = {
-        ExecStart = "${pkgs.scream}/bin/scream -n scream -o pulse -m /dev/shm/scream";
-        Restart = "always";
-      };
-      wantedBy = ["multi-user.target"];
-      requires = [
-        "libvirtd.service"
-        "pipewire-pulse.service"
-        "pipewire.service"
-        "sound.target"
-      ];
     };
   };
 }

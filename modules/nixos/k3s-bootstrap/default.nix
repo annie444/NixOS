@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  inputs,
   ...
 }: let
   cfg = config.roles.k3sBootstrap;
@@ -103,7 +102,40 @@ in {
     };
 
     services.k3s.package = pkgs.k3s;
-    systemd.services.k3s.serviceConfig.ExecStartPre = "${pkgs.coreutils}/bin/sleep 60";
+    systemd = {
+      services = {
+        k3s.serviceConfig.ExecStartPre = "${pkgs.coreutils}/bin/sleep 60";
+        ser2net = {
+          wantedBy = ["multi-user.target"];
+          description = "Serial to network proxy";
+          after = ["network.target" "dev-ttyACM0.device"];
+          serviceConfig = {
+            Type = "simple";
+            User = "root"; # todo user with only dialout group?
+            ExecStart = ''${pkgs.ser2net}/bin/ser2net -n -c /etc/ser2net.yaml'';
+            ExecReload = ''kill -HUP $MAINPID'';
+            Restart = "on-failure";
+          };
+        };
+      };
+      tmpfiles.rules =
+        [
+          "d /opt/k3s 0775 ${cfg.user} data -"
+          "d /opt/k3s/data 0775 ${cfg.user} data -"
+          "d /home/${cfg.user}/.config 0775 ${cfg.user} data -"
+          "d /home/${cfg.user}/.config/sops 0775 ${cfg.user} data -"
+          "d /home/${cfg.user}/.config/sops/age 0775 ${cfg.user} data -"
+          "d /home/${cfg.user}/.kube 0775 ${cfg.user} data -"
+          "d /var/lib/rancher/k3s/server/manifests 0775 root data -"
+          "L /home/${cfg.user}/.kube/config  - - - - /etc/rancher/k3s/k3s.yaml"
+        ]
+        ++ lib.optionals cfg.head.self [
+          "L /var/lib/rancher/k3s/server/manifests/flux.yaml - - - - /etc/k3s/flux.yaml"
+          "L /var/lib/rancher/k3s/server/manifests/flux-git-auth.yaml - - - - ${cfg.fluxGitAuth}"
+          "L /var/lib/rancher/k3s/server/manifests/flux-sops-age.yaml - - - - ${cfg.fluxSopsAge}"
+          "L /var/lib/rancher/k3s/server/manifests/00-coredns-custom.yaml - - - - /etc/k3s/coredns-custom.yaml"
+        ];
+    };
 
     boot.kernel.sysctl."net.ipv4.ip_forward" = 1;
 
@@ -119,12 +151,9 @@ in {
       };
       services = {
         k3s = {
+          inherit cfg;
           enable = true;
           tokenFile = cfg.k3sToken;
-          head = {
-            self = cfg.head.self;
-            ipAddress = cfg.head.ipAddress;
-          };
           prepare = {
             cilium = true;
           };
@@ -146,12 +175,12 @@ in {
             };
           };
           addons = lib.mkIf cfg.head.self {
-            minio = {
+            minio = with cfg.head; {
+              inherit ipAddress;
               enable = true;
               credentialsFile = cfg.minioCredentials;
               buckets = ["volsync" "postgres" "logs"];
               dataDir = ["/mnt/minio"];
-              ipAddress = cfg.head.ipAddress;
             };
           };
         };
@@ -247,24 +276,6 @@ in {
         };
       };
     };
-
-    systemd.tmpfiles.rules =
-      [
-        "d /opt/k3s 0775 ${cfg.user} data -"
-        "d /opt/k3s/data 0775 ${cfg.user} data -"
-        "d /home/${cfg.user}/.config 0775 ${cfg.user} data -"
-        "d /home/${cfg.user}/.config/sops 0775 ${cfg.user} data -"
-        "d /home/${cfg.user}/.config/sops/age 0775 ${cfg.user} data -"
-        "d /home/${cfg.user}/.kube 0775 ${cfg.user} data -"
-        "d /var/lib/rancher/k3s/server/manifests 0775 root data -"
-        "L /home/${cfg.user}/.kube/config  - - - - /etc/rancher/k3s/k3s.yaml"
-      ]
-      ++ lib.optionals cfg.head.self [
-        "L /var/lib/rancher/k3s/server/manifests/flux.yaml - - - - /etc/k3s/flux.yaml"
-        "L /var/lib/rancher/k3s/server/manifests/flux-git-auth.yaml - - - - ${cfg.fluxGitAuth}"
-        "L /var/lib/rancher/k3s/server/manifests/flux-sops-age.yaml - - - - ${cfg.fluxSopsAge}"
-        "L /var/lib/rancher/k3s/server/manifests/00-coredns-custom.yaml - - - - /etc/k3s/coredns-custom.yaml"
-      ];
 
     # required for deploy-rs
     nix.settings.trusted-users = ["root" "${cfg.user}"];
@@ -375,19 +386,6 @@ in {
           options:
             kickolduser: true
       '';
-    };
-
-    systemd.services.ser2net = {
-      wantedBy = ["multi-user.target"];
-      description = "Serial to network proxy";
-      after = ["network.target" "dev-ttyACM0.device"];
-      serviceConfig = {
-        Type = "simple";
-        User = "root"; # todo user with only dialout group?
-        ExecStart = ''${pkgs.ser2net}/bin/ser2net -n -c /etc/ser2net.yaml'';
-        ExecReload = ''kill -HUP $MAINPID'';
-        Restart = "on-failure";
-      };
     };
   };
 }

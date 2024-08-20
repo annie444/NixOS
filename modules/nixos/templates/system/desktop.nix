@@ -176,8 +176,8 @@ in {
         sddm = {
           enable = true;
           package = lib.mkForce (pkgs.kdePackages.sddm.override {
+            inherit extraPackages;
             withWayland = true;
-            extraPackages = extraPackages;
           });
           enableHidpi = true;
           autoNumlock = true;

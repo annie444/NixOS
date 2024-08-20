@@ -51,12 +51,14 @@ in {
       ];
 
     services.xserver.videoDrivers = ["nvidia"];
-    boot.initrd.kernelModules = ["nvidia"];
-    boot.extraModulePackages = [config.boot.kernelPackages.nvidia_x11];
+    boot = {
+      initrd.kernelModules = ["nvidia"];
+      extraModulePackages = [config.boot.kernelPackages.nvidia_x11];
 
-    boot.kernelParams = ["module_blacklist=amdgpu"];
+      kernelParams = ["module_blacklist=amdgpu"];
 
-    boot.blacklistedKernelModules = ["nouveau"];
+      blacklistedKernelModules = ["nouveau"];
+    };
 
     nixpkgs.config.cudaSupport = true;
 
