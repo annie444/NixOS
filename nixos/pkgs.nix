@@ -26,7 +26,7 @@
     nix-du
     nix-index
     unstable.nix-init
-    unstable.nix-melt
+    nix-melt
     nix-output-monitor
     nix-tree
     nurl
