@@ -1,0 +1,5 @@
+{
+  "General Settings" = {
+    clear = true;
+  };
+}

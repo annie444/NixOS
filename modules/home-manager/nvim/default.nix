@@ -69,10 +69,36 @@ with lib; let
 
   cfg = config.profiles.nvim;
 in {
+  imports = [
+    inputs.nixvim.homeManagerModules.nixvim
+  ];
+
   options.profiles.nvim.enable = mkEnableOption "neovim profile";
 
   config = mkIf cfg.enable {
     nixpkgs.overlays = [inputs.neovim-nightly-overlay.overlays.default];
+
+    programs.nixvim = {
+      enable = true;
+      defaultEditor = true;
+      enableMan = true;
+      extraConfigVim = ''
+        set spell
+        syntax enable
+        filetype plugin indent on
+        set modeline
+        set modelines=5
+      '';
+      opts = import ./opts.nix;
+      plugins = import ./plugins;
+      colorschemes = import ./colorschemes.nix;
+      autoCmd = import ./auto_cmd.nix;
+      autoGroups = import ./auto_groups.nix;
+      files = import ./files;
+      highlight = import ./highlight.nix;
+      globals = import ./globals.nix;
+      keymaps = import ./keymaps;
+    };
 
     home = {
       packages =

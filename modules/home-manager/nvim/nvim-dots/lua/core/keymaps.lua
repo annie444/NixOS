@@ -12,31 +12,10 @@ local modes = {
   command_mode = "c",
 }
 
-local function close()
-  if vim.bo.buftype == "terminal" then
-    vim.cmd "Bdelete!"
-    vim.cmd "silent! close"
-  elseif #vim.api.nvim_list_wins() > 1 then
-    vim.cmd "silent! close"
-  else
-    vim.notify("Can't Close Window", vim.log.levels.WARN, { title = "Close Window" })
-  end
-end
+local 
 
-local function forward_search()
-  if fn.getcmdtype() == "/" or fn.getcmdtype() == "?" then
-    return "<CR>/<C-r>/"
-  end
-  return "<C-z>"
-end
-
-local function backward_search()
-  if fn.getcmdtype() == "/" or fn.getcmdtype() == "?" then
-    return "<CR>?<C-r>/"
-  end
-  return "<S-Tab>"
-end
-
+local 
+local 
 
 
 local keymaps = {
