@@ -84,7 +84,7 @@
     minioCredentials = config.sops.secrets.minio-creds.path;
   };
 
-  sops.templates."1948-password.conf" = {
+  sops.templates."cloudflare-password.conf" = {
     content = ''
       password = "${config.sops.placeholder."ddns/api_key"}"
     '';
@@ -98,16 +98,13 @@
     group = "inadyn";
     logLevel = "notice";
     settings = {
-      custom = {
-        "onenineeightfour" = {
-          ssl = true;
-          ddns-server = "api.1984.is";
-          ddns-path = "/1.0/freedns/?apikey=%p&domain=%h&ip=%i";
-          include = config.sops.templates."1948-password.conf".path;
-          hostname = "jpeg.gay";
-        };
+      cloudflare = {
+        username = "jpeg.gay";
+        include = config.sops.templates."cloudflare-password.conf".path;
+        hostname = "jpeg.gay";
+        proxied = true;
       };
-      allow-ipv6 = false;
+      allow-ipv6 = true;
       forced-update = 86400;
     };
   };
