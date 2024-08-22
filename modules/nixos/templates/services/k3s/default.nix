@@ -398,11 +398,12 @@ in {
             ${cfg.addons.nfs.path} ${config.networking.hostName}(rw,fsid=0,async,no_subtree_check,no_auth_nlm,insecure,no_root_squash)
           '';
         };
-        minio = lib.mkIf cfg.addons.minio.enable (with cfg.addons.minio; {
-          inherit region dataDir;
+        minio = lib.mkIf cfg.addons.minio.enable {
+          region = cfg.addons.minio.region;
+          dataDir = cfg.addons.minio.dataDir; 
           enable = true;
           rootCredentialsFile = cfg.addons.minio.credentialsFile;
-        });
+        };
         k3s = {
           enable = true;
           role = "server";

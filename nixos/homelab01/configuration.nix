@@ -98,11 +98,12 @@
     group = "inadyn";
     logLevel = "notice";
     settings = {
-      cloudflare = {
-        username = "jpeg.gay";
-        include = config.sops.templates."cloudflare-password.conf".path;
-        hostname = "jpeg.gay";
-        proxied = true;
+      provider = {
+        cloudflare = {
+          username = "jpeg.gay";
+          include = config.sops.templates."cloudflare-password.conf".path;
+          hostname = "jpeg.gay";
+        };
       };
       allow-ipv6 = true;
       forced-update = 86400;

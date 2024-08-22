@@ -151,7 +151,10 @@ in {
       };
       services = {
         k3s = {
-          inherit cfg;
+          head = {
+            self = cfg.head.self;
+            ipAddress = cfg.head.ipAddress;
+          };
           enable = true;
           tokenFile = cfg.k3sToken;
           prepare = {
@@ -175,8 +178,8 @@ in {
             };
           };
           addons = lib.mkIf cfg.head.self {
-            minio = with cfg.head; {
-              inherit ipAddress;
+            minio = {
+              ipAddress = cfg.head.ipAddress;
               enable = true;
               credentialsFile = cfg.minioCredentials;
               buckets = ["volsync" "postgres" "logs"];
