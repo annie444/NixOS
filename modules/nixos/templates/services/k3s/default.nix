@@ -223,14 +223,14 @@ in {
       "TaintNodesByCondition"
       "ValidatingAdmissionWebhook"
     ];
-    k3sDisabledServices = lib.mkMerge [
-      (lib.mkIf (!cfg.services.flannel) ["flannel"])
-      (lib.mkIf (!cfg.services.servicelb) ["servicelb"])
-      (lib.mkIf (!cfg.services.coredns) ["coredns"])
-      (lib.mkIf (!cfg.services.local-storage) ["local-storage"])
-      (lib.mkIf (!cfg.services.metrics-server) ["metrics-server"])
-      (lib.mkIf (!cfg.services.traefik) ["traefik"])
-    ];
+    k3sDisabledServices =
+     []
+      ++ (lib.optionals (!cfg.services.flannel) ["flannel"])
+      ++ (lib.optionals (!cfg.services.servicelb) ["servicelb"])
+      ++ (lib.optionals (!cfg.services.coredns) ["coredns"])
+      ++ (lib.optionals (!cfg.services.local-storage) ["local-storage"])
+      ++ (lib.optionals (!cfg.services.metrics-server) ["metrics-server"])
+      ++ (lib.optionals (!cfg.services.traefik) ["traefik"]);
     k3sExtraFlags =
       [
         "--kube-apiserver-arg anonymous-auth=true"
@@ -409,7 +409,7 @@ in {
           role = "server";
           tokenFile = lib.mkIf (!cfg.head.self) cfg.tokenFile;
           environmentFile = "/etc/rancher/k3s/k3s.service.env";
-          extraFlags = lib.concatStringsSep " " k3sCombinedFlags;
+          extraFlags = (lib.concatStringsSep " " k3sCombinedFlags);
           clusterInit = cfg.head.self;
         };
       };
