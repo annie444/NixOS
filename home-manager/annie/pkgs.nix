@@ -1,5 +1,4 @@
 {
-  lib,
   config,
   outputs,
   pkgs,
@@ -25,6 +24,7 @@
 
   home.packages = with pkgs; [
     # Add your packages here
+    devbox
 
     # Kubernetes integration
     kubectl
@@ -57,6 +57,7 @@
       p.poetry-plugin-poeblix
     ]))
     poetry2conda
+    pre-commit
 
     #  Terraform with plugins
     (terraform.withPlugins (p: [
