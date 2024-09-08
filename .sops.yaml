@@ -2,7 +2,7 @@
 keys:
   - &annie age1vzktrphual65cu0htt6sy2klt5k7t52nuvqum4envkda5v8xdvfsgn8tvh
   - &homelab01 age1y3tp20acg4v26evmmc3r22tl2aqq9r8wdp8kgz6d0ymn5lptgvksh27k45
-  - &homelab02 age1hrctpn2rtshvtq4868g2vh4lmsngqre3u0sgsve7zlvufchndd0qtz4ntu
+  - &homelab02 age1akh366mgvuauw6c8cgp473ns5uaknklsya380hg92adz3ekrnayqraxjux 
   - &spinoza age1a6zwyyc4dya2g94yr49qr378mak9420srarnmuv08zw3jcd4tvaq8v0g98
   - &flux age1ytrqecjj2kvak35zl7m8wyn3cqgtd8f64548fc9uzfl9q0js43csn8ul7k
 creation_rules: 

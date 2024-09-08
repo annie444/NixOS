@@ -17,57 +17,39 @@
     ./hardware-configuration.nix
   ];
 
+  nixpkgs.hostPlatform = "x86_64-linux";
+
   networking.hostName = "homelab02";
   networking.hostId = "10fe182f";
 
   sops.secrets = {
-    flux-age-key = {
-      sopsFile = ../../secrets/k3s/flux-age-key.yaml.enc;
-      format = "binary";
-    };
-    flux-git-auth = {
-      sopsFile = ../../secrets/k3s/flux-git-auth.yaml.enc;
-      format = "binary";
-    };
-    minio-creds = {
-      sopsFile = ../../secrets/k3s/minio-creds.env.enc;
-      format = "binary";
-      mode = "0770";
-    };
-    "k3s/token" = {
-      restartUnits = ["k3s.service"];
-    };
     "tailscale/auto_key" = {
       restartUnits = ["tailscaled.service"];
       mode = "0770";
     };
   };
 
-  templates.services = {
-    docker.enable = true;
-    tailscale = {
-      enable = true;
-      autoconnect = {
+  templates = {
+    services = {
+      docker.enable = true;
+      tailscale = {
         enable = true;
-        keyFile = config.sops.secrets."tailscale/auto_key".path;
+        autoconnect = {
+          enable = true;
+          keyFile = config.sops.secrets."tailscale/auto_key".path;
+        };
       };
     };
+    system.grub.enable = true;
   };
 
-  roles.k3sBootstrap = {
+  services.vault = {
     enable = true;
-    nvidia = false;
-    user = "annie";
-    gitSshHost = "git@github.com";
-    gitRepo = "annie444/k3s-cluster";
-    ip = "192.168.1.42";
-    head = {
-      self = false;
-      ipAddress = "192.168.1.40";
-    };
-    k3sToken = config.sops.secrets."k3s/token".path;
-    fluxGitAuth = config.sops.secrets.flux-git-auth.path;
-    fluxSopsAge = config.sops.secrets.flux-age-key.path;
-    minioCredentials = config.sops.secrets.minio-creds.path;
+    address = "192.168.1.42:8200";
+    storageBackend = "raft";
+    storagePath = "/var/lib/vault";
+    storageConfig = ''
+      node_id = "vault-node-1"
+    '';
   };
 }

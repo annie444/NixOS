@@ -23,8 +23,10 @@
     ./pkgs.nix
   ];
 
-  fonts.enableDefaultPackages = true;
+  nixpkgs.hostPlatform = "x86_64-linux";
 
+  fonts.enableDefaultPackages = true;
+  
   networking.hostName = "spinoza";
   networking.hostId = "4c0902ca";
 
@@ -44,15 +46,18 @@
       printer.enable = true;
       smartdWebui.enable = true;
     };
-    system.desktop = {
-      enable = true;
-      waydroid.enable = true;
-      sddm.enable = true;
-      portals = with pkgs; [
-        xdg-desktop-portal-wlr
-        kdePackages.xdg-desktop-portal-kde
-      ];
-      users = ["annie"];
+    system = {
+      grub.enable = true;
+      desktop = {
+        enable = true;
+        waydroid.enable = true;
+        sddm.enable = true;
+        portals = with pkgs; [
+          xdg-desktop-portal-wlr
+          kdePackages.xdg-desktop-portal-kde
+        ];
+        users = ["annie"];
+      };
     };
   };
 }

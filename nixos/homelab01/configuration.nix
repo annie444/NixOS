@@ -17,6 +17,8 @@
     ./hardware-configuration.nix
   ];
 
+  nixpkgs.hostPlatform = "x86_64-linux";
+
   networking.hostName = "homelab01";
   networking.hostId = "d58b8d19";
 
@@ -64,6 +66,7 @@
       };
     };
     hardware.nvidia.enable = true;
+    system.grub.enable = true;
   };
 
   roles.k3sBootstrap = {

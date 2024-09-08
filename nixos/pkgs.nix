@@ -15,6 +15,7 @@
     sops
     age
     ssh-to-age
+    vault
 
     # home-manager
     inputs.home-manager.packages.${pkgs.system}.default

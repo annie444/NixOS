@@ -11,15 +11,6 @@
       "splash"
     ];
 
-    loader.grub = {
-      enable = true;
-      device = "nodev";
-      backgroundColor = "#282A36";
-      efiSupport = true;
-      memtest86.enable = true;
-      copyKernels = true;
-    };
-
     tmp = {
       cleanOnBoot = true;
 
