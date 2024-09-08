@@ -20,7 +20,7 @@ creation_rules:
         - *homelab01
         - *homelab02
         - *spinoza
-  - path_regex: secrets/k3s/[^/]+\.(yaml|json|env|ini|gpg|enc)$
+  - path_regex: secrets/k3s/[^/]+\.(yaml|json|env|ini|enc)$
     key_groups:
       - age:
         - *annie

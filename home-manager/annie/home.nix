@@ -50,10 +50,7 @@
     defaultSopsFormat = "yaml";
     validateSopsFiles = true;
     secrets = {
-      publicKey = {
-        format = "binary";
-        sopsFile = ../../secrets/annie/publickey.gpg.enc;
-      };
+      
       "ssh/github/public" = {
         path = "/home/annie/.ssh/github_id25519.pub";
       };

@@ -12,6 +12,10 @@ in {
     enable = mkEnableOption "enable gpg profile";
   };
   config = mkIf cfg.enable {
+    sops.secrets.publicKey = {
+      format = "binary";
+      sopsFile = ../../../secrets/annie/publickey.gpg.enc;
+    };
     programs.gpg = {
       enable = true;
       mutableKeys = true;
