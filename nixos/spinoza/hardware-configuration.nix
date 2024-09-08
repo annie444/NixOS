@@ -26,6 +26,7 @@
       availableKernelModules = ["nvme" "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod"];
       kernelModules = [];
     };
+    supportedFilesystems = ["zfs"];
     kernelModules = ["kvm-amd" "nvidia"];
     extraModulePackages = [];
     loader.efi = {

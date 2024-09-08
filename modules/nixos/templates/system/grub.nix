@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }: let
   cfg = config.templates.system.grub;
@@ -15,7 +14,7 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    loader.grub = {
+    boot.loader.grub = {
       enable = true;
       device = "nodev";
       backgroundColor = "#282A36";

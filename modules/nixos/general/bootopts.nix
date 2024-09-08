@@ -3,8 +3,6 @@
     crashDump.enable = true;
     enableContainers = true;
 
-    supportedFilesystems = ["zfs"];
-
     extraModulePackages = with config.boot.kernelPackages; [opensnitch-ebpf];
     kernelParams = [
       "quiet"

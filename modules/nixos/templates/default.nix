@@ -15,5 +15,6 @@
     ./services/docker.nix
     ./services/tailscale.nix
     ./system/desktop.nix
+    ./system/grub.nix
   ];
 }

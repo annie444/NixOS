@@ -17,10 +17,7 @@
     ./hardware-configuration.nix
   ];
 
-  nixpkgs.hostPlatform = "x86_64-linux";
-
   networking.hostName = "homelab02";
-  networking.hostId = "10fe182f";
 
   sops.secrets = {
     "tailscale/auto_key" = {
