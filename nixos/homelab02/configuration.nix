@@ -48,5 +48,10 @@
     storageConfig = ''
       node_id = "vault-node-1"
     '';
+    extraConfig = ''
+      ui            = true
+      cluster_addr  = "https://192.168.1.43:8201"
+      api           = "https://192.168.1.43:8200"
+    '';
   };
 }
