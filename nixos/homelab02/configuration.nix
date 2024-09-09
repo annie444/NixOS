@@ -5,6 +5,7 @@
   inputs,
   outputs,
   config,
+  pkgs,
   ...
 }: {
   imports = [
@@ -42,6 +43,7 @@
 
   services.vault = {
     enable = true;
+    package = pkgs.vault-bin;
     address = "192.168.1.42:8200";
     storageBackend = "raft";
     storagePath = "/var/lib/vault";
@@ -51,7 +53,7 @@
     extraConfig = ''
       ui            = true
       cluster_addr  = "https://192.168.1.43:8201"
-      api           = "https://192.168.1.43:8200"
+      api_addr      = "https://192.168.1.43:8200"
     '';
   };
 }
