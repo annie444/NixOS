@@ -118,7 +118,6 @@
           deadnix.enable = true;
           flake-checker.enable = true;
           nil.enable = true;
-          statix.enable = true;
           shfmt.enable = true;
           shellcheck.enable = true;
           detect-private-keys.enable = true;
