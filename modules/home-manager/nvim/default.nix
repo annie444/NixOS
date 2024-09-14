@@ -89,15 +89,19 @@ in {
         set modeline
         set modelines=5
       '';
+      luaLoader.enable = true;
+      editorconfig.enable = true;
+      clipboard.providers.wl-copy.enable = true;
       opts = import ./opts.nix;
-      plugins = import ./plugins;
+      extraPlugins = import ./extra_plugins;
       colorschemes = import ./colorschemes.nix;
       autoCmd = import ./auto_cmd.nix;
       autoGroups = import ./auto_groups.nix;
-      files = import ./files;
+      extraFiles = import ./extra_files;
       highlight = import ./highlight.nix;
       globals = import ./globals.nix;
       keymaps = import ./keymaps;
+      userCommands = import ./user_commands.nix;
     };
 
     home = {
