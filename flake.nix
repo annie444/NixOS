@@ -122,7 +122,6 @@
         hooks = {
           alejandra.enable = true;
           deadnix.enable = true;
-          flake-checker.enable = true;
           nil.enable = true;
           statix.enable = true;
           shfmt.enable = true;
