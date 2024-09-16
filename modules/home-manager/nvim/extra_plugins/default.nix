@@ -1,5 +1,6 @@
 {
   imports = [
-    ./bufferline.nix
-  ];
+    ./treesitter-amber.nix
+    ./treesitter-just.nix
+  ]
 }

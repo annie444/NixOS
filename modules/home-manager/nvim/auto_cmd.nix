@@ -5,6 +5,27 @@
 }: {
   self = [
     {
+      event = "FileType";
+      pattern = [
+        "help",
+        "alpha",
+        "dashboard",
+        "neo-tree",
+        "Trouble",
+        "lazy",
+        "mason",
+        "notify",
+        "toggleterm",
+        "lazyterm",
+      ];
+      callback.__raw = ''
+        function()
+          vim.b.miniindentscope_disable = true
+        end
+      '';
+    }
+
+    {
       event = "BufNewFile";
       pattern = [
         "*.md"

@@ -11,14 +11,8 @@
   };
   vimtex_view_enabled = 0;
   vimtex_view_automatic = 0;
-  vscode_snippets_path = "vim.fn.stdpath(\"config\") .. \"/snippets/vscode\"";
-  lua_snippets_path = "vim.fn.stdpath(\"config\") .. \"/lua/custom/lua_snippets\"";
-  magma_image_provider = "kitty";
-  magma_automatically_open_output = "true";
-  magma_wrap_output = "false";
-  magma_output_window_borders = "false";
-  magma_cell_highlight_group = "CursorLine";
-  magma_save_path = "vim.fn.stdpath(\"data\") .. \"/magma\"";
+  vscode_snippets_path.__raw = "vim.fn.stdpath(\"config\") .. \"/snippets/vscode\"";
+  lua_snippets_path.__raw = "vim.fn.stdpath(\"config\") .. \"/lua/custom/lua_snippets\"";
   vim_svelte_plugin_load_full_syntax = 1;
   python3_host_prog = "${pkgs.python311}/bin/python";
   ruby_host_prog = "${pkgs.ruby}/bin/ruby";
