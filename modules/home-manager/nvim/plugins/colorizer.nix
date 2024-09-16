@@ -1,5 +1,5 @@
 {
-  plugins.nvim-colorizer = {
+  nvim-colorizer = {
     enable = true;
     fileTypes = {
       css = {

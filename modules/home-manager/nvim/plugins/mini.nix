@@ -1,5 +1,5 @@
 {
-  plugins.mini = {
+  mini = {
     enable = true;
     modules = {
       indentscope = {

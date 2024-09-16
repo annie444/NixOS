@@ -1,4 +1,4 @@
-{ pkgs }: {
+{ pkgs, ... }: {
   toggleterm = {
     enable = true;
     settings = {

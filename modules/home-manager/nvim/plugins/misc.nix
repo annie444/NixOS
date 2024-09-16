@@ -13,4 +13,5 @@
   diffview.enable = true;
   direnv.enable = true;
   vimtex.enable = true;
+  lsp-format.enable = true;
 }

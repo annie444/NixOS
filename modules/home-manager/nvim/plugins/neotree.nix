@@ -1,4 +1,4 @@
-{ pkgs }: {
+{ pkgs, ... }: {
   neo-tree = {
     enable = true;
     enableDiagnostics = true;

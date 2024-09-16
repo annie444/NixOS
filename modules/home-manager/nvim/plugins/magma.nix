@@ -1,5 +1,4 @@
 {
-
   magma-nvim = {
     enable = true;
     settings = {

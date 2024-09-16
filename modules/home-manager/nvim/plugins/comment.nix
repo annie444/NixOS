@@ -1,5 +1,5 @@
 {
-  plugins.comment = {
+  comment = {
     enable = true;
     settings = {
       pre_hook.__raw = ''
