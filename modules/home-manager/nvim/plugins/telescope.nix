@@ -1,5 +1,5 @@
 {
-  telescope = {
+  programs.nixvim.plugins.telescope = {
     enable = true;
     extensions = {
       fzf-native = {
@@ -30,10 +30,10 @@
         sorting_strategy = "ascending";
         prompt_prefix = "   ";
         selection_caret = "󰜴 ";
-        path_display = [ "smart" ];
+        path_display = ["smart"];
         file_ignore_patterns = [
-          ".git/",
-          ".git\\",
+          ".git/"
+          ".git\\"
           "node_modules"
         ];
         mappings = {

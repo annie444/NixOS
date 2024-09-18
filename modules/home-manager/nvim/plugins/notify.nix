@@ -1,5 +1,5 @@
 {
-  notify = {
+  programs.nixvim.plugins.notify = {
     enable = true;
     level = 2;
     minimumWidth = 50;

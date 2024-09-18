@@ -6,7 +6,6 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     nur.url = "github:nix-community/NUR";
-    neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
 
     # Home manager
     home-manager.url = "github:nix-community/home-manager/release-24.05";
@@ -26,7 +25,7 @@
     nixos-hardware.inputs.nixpkgs.follows = "nixpkgs";
 
     nixvim.url = "github:nix-community/nixvim";
-    nixvim.inputs.nixpkgs.follows = "nixpkgs";
+    nixvim.inputs.nixpkgs.follows = "nixpkgs-unstable";
 
     pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";
     pre-commit-hooks.inputs.nixpkgs.follows = "nixpkgs";

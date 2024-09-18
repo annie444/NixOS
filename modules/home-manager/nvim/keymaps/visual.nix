@@ -1,18 +1,14 @@
-{
-  self,
-  lib,
-  ...
-}: {
-  self = lib.lists.forEach [
+{lib, ...}: {
+  programs.nixvim.keymaps = lib.lists.forEach [
     {
       key = "<Tab>";
       action = ">gv";
-      desc = "Indent forward";
+      options.desc = "Indent forward";
     }
     {
       key = "<S-Tab>";
       action = "<gv";
-      desc = "Indent backward";
+      options.desc = "Indent backward";
     }
     {
       key = "j";

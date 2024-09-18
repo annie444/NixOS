@@ -1,5 +1,5 @@
 {
-  dracula = {
+  programs.nixvim.colorschemes.dracula = {
     bold = true;
     colorterm = true;
     enable = true;

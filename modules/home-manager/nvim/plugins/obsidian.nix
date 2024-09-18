@@ -1,8 +1,13 @@
 {
-  obsidian = {
+  programs.nixvim.plugins.obsidian = {
     enable = true;
     settings = {
-      workspaces.__raw = "vim.g.obsidian_workspaces";
+      workspaces = [
+        {
+          name = "Notes";
+          path = "~/Documents/Notes";
+        }
+      ];
       daily_notes = {
         folder = "Notes/Dailies";
         date_format = "%Y-%m-%d";
@@ -10,7 +15,7 @@
         template = "0B_01_Periodics/Daily.md";
       };
       notes_subdir = "Notes";
-      log_level.__raw = "vim.log.levels.INFO";
+      log_level = "info";
       new_notes_location = "notes_subdir";
       completion = {
         nvim_cmp = true;
@@ -30,7 +35,7 @@
               return require("obsidian").util.gf_passthrough()
             end
           '';
-          opts = { 
+          opts = {
             noremap = false;
             expr = true;
             buffer = true;
@@ -50,7 +55,7 @@
               return require("obsidian").util.smart_action()
             end
           '';
-          opts = { 
+          opts = {
             buffer = true;
             expr = true;
           };
@@ -137,14 +142,14 @@
         enable = true;
         update_debounce = 200;
         checkboxes = {
-          " " = { 
+          " " = {
             char = "󰄱";
             hl_group = "ObsidianTodo";
           };
           "x" = {
-            char = ""; 
+            char = "";
             hl_group = "ObsidianDone";
-          },
+          };
           ">" = {
             char = "";
             hl_group = "ObsidianRightArrow";
@@ -174,18 +179,18 @@
             bold = true;
             fg = "#f78c6c";
           };
-          ObsidianTilde = { 
+          ObsidianTilde = {
             bold = true;
             fg = "#ff5370";
           };
-          ObsidianRefText = { 
+          ObsidianRefText = {
             underline = true;
             fg = "#c792ea";
           };
           ObsidianExtLinkIcon.fg = "#c792ea";
-          ObsidianTag = { 
+          ObsidianTag = {
             italic = true;
-            fg = "#89ddff"; 
+            fg = "#89ddff";
           };
           ObsidianHighlightText.bg = "#75662e";
         };

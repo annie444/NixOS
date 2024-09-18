@@ -1,5 +1,5 @@
 {
-  dressing = {
+  programs.nixvim.plugins.dressing = {
     enable = true;
     settings = {
       input = {
@@ -9,7 +9,7 @@
       };
       select = {
         enabled = true;
-        backend = [ "telescope" "builtin" ];
+        backend = ["telescope" "builtin"];
         builtin.win_options.winblend = 0;
       };
     };

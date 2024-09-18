@@ -1,5 +1,5 @@
 {
-  magma-nvim = {
+  programs.nixvim.plugins.magma-nvim = {
     enable = true;
     settings = {
       image_provider = "kitty";

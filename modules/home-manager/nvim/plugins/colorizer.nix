@@ -1,8 +1,9 @@
 {
-  nvim-colorizer = {
+  programs.nixvim.plugins.nvim-colorizer = {
     enable = true;
-    fileTypes = {
-      css = {
+    fileTypes = [
+      {
+        language = "css";
         RGB = true;
         RRGGBB = true;
         names = true;
@@ -11,12 +12,25 @@
         hsl_fn = true;
         css = true;
         css_fn = true;
-      };
-      html = { mode = "background"; };
-      markdown = { names = false; };
-      "yaml";
-      lua = { names = false; };
-      "*";
-    };
+      }
+      {
+        language = "html";
+        mode = "background";
+      }
+      {
+        language = "markdown";
+        names = false;
+      }
+      {
+        language = "yaml";
+      }
+      {
+        language = "lua";
+        names = false;
+      }
+      {
+        language = "*";
+      }
+    ];
   };
 }

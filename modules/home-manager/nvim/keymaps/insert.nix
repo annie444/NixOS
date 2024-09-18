@@ -1,9 +1,5 @@
-{
-  self,
-  lib,
-  ...
-}: {
-  self = lib.lists.forEach [
+{lib, ...}: {
+  programs.nixvim.keymaps = lib.lists.forEach [
     {
       key = "<A-j>";
       action = "<Esc>:m .+1<CR>==gi";

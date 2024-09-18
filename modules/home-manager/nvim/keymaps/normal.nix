@@ -1,40 +1,36 @@
-{
-  self,
-  lib,
-  ...
-}: {
-  self = lib.lists.forEach [
-    { 
+{lib, ...}: {
+  programs.nixvim.keymaps = lib.lists.forEach [
+    {
       key = "<leader>ji";
       action = "<cmd>MagmaInit<CR>";
       options.desc = "This command initializes a runtime for the current buffer.";
     }
-    
-    { 
+
+    {
       key = "<leader>jo";
       action = "<cmd>MagmaEvaluateOperator<CR>";
       options.desc = "Evaluate the text given by some operator.";
     }
 
-    { 
+    {
       key = "<leader>jl";
       action = "<cmd>MagmaEvaluateLine<CR>";
       options.desc = "Evaluate the current line.";
     }
 
-    { 
+    {
       key = "<leader>jv";
       action = "<cmd>MagmaEvaluateVisual<CR>";
       options.desc = "Evaluate the selected text.";
     }
 
-    { 
+    {
       key = "<leader>jc";
       action = "<cmd>MagmaEvaluateOperator<CR>";
       options.desc = "Reevaluate the currently selected cell.";
     }
 
-    { 
+    {
       key = "<leader>jr";
       action = "<cmd>MagmaRestart!<CR>";
       options.desc = "Shuts down and restarts the current kernel.";

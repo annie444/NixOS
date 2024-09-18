@@ -1,5 +1,5 @@
 {
-  comment = {
+  programs.nixvim.plugins.comment = {
     enable = true;
     settings = {
       pre_hook.__raw = ''
@@ -39,7 +39,6 @@
       mappings = {
         basic = true;
         extra = true;
-        extended = false;
       };
     };
   };

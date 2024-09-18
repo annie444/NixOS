@@ -1,5 +1,5 @@
 {
-  todo-comments = {
+  programs.nixvim.plugins.todo-comments = {
     enable = true;
     settings = {
       signs = true;
@@ -8,34 +8,34 @@
         FIX = {
           icon = " ";
           color = "error";
-          alt = [ "FIXME" "BUG" "FIXIT" "ISSUE" ];
+          alt = ["FIXME" "BUG" "FIXIT" "ISSUE"];
         };
-        TODO = { 
+        TODO = {
           icon = " ";
           color = "info";
         };
-        HACK = { 
+        HACK = {
           icon = " ";
           color = "warning";
         };
-        WARN = { 
+        WARN = {
           icon = " ";
           color = "warning";
-          alt = [ "WARNING" "XXX" ];
+          alt = ["WARNING" "XXX"];
         };
-        PERF = { 
+        PERF = {
           icon = "󰥔 ";
-          alt = [ "OPTIM" "PERFORMANCE" "OPTIMIZE" ]; 
+          alt = ["OPTIM" "PERFORMANCE" "OPTIMIZE"];
         };
-        NOTE = { 
+        NOTE = {
           icon = "󱞁 ";
           color = "hint";
-          alt = [ "INFO" ];
+          alt = ["INFO"];
         };
-        TEST = { 
-          icon = "⏲ "; 
-          color = "test"; 
-          alt = [ "TESTING" "PASSED" "FAILED" ];
+        TEST = {
+          icon = "⏲ ";
+          color = "test";
+          alt = ["TESTING" "PASSED" "FAILED"];
         };
       };
       gui_style = {
@@ -55,12 +55,12 @@
         max_line_len = 400;
       };
       colors = {
-        error = [ "DiagnosticError" "ErrorMsg" "#DC2626" ];
-        warning = [ "DiagnosticWarn" "WarningMsg" "#FBBF24" ];
-        info = [ "DiagnosticInfo" "#2563EB" ];
-        hint = [ "DiagnosticHint" "#10B981" ];
-        default = [ "Identifier" "#7C3AED" ];
-        test = [ "Identifier" "#FF00FF" ];
+        error = ["DiagnosticError" "ErrorMsg" "#DC2626"];
+        warning = ["DiagnosticWarn" "WarningMsg" "#FBBF24"];
+        info = ["DiagnosticInfo" "#2563EB"];
+        hint = ["DiagnosticHint" "#10B981"];
+        default = ["Identifier" "#7C3AED"];
+        test = ["Identifier" "#FF00FF"];
       };
       search = {
         command = "rg";
@@ -71,7 +71,7 @@
           "--line-number"
           "--column"
         ];
-        pattern = "[[\b(KEYWORDS):]]"
+        pattern = "[[\b(KEYWORDS):]]";
       };
     };
   };

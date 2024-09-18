@@ -1,5 +1,5 @@
 {
-  twilight = {
+  programs.nixvim.plugins.twilight = {
     enable = true;
     settings = {
       dimming = {

@@ -1,9 +1,5 @@
-{
-  self,
-  lib,
-  ...
-}: {
-  self = lib.lists.forEach [
+{lib, ...}: {
+  programs.nixvim.keymaps = lib.lists.forEach [
     {
       key = "<Tab>";
       action.__raw = ''

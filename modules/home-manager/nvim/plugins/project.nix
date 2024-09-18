@@ -1,16 +1,16 @@
 {
-  project-nvim = {
+  programs.nixvim.plugins.project-nvim = {
     enable = true;
     enableTelescope = true;
     settings = {
       manual_mode = false;
-      detection_methods = [ "pattern" "lsp" ];
+      detection_methods = ["pattern" "lsp"];
       patterns = [
         ".git"
         ".vscode"
         ".svn"
         "Makefile"
-        "package.json" 
+        "package.json"
         "pyproject.toml"
         "Cargo.toml"
         "setup.py"

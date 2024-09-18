@@ -1,5 +1,5 @@
 {
-  gitsigns = {
+  programs.nixvim.plugins.gitsigns = {
     enable = true;
     settings = {
       signs = {
@@ -9,29 +9,29 @@
           numhl = "GitSignsAddNr";
           linehl = "GitSignsAddLn";
         };
-        change = { 
+        change = {
           hl = "GitSignsChange";
           text = "▎";
           numhl = "GitSignsChangeNr";
           linehl = "GitSignsChangeLn";
         };
-        delete = { 
-          hl = "GitSignsDelete"; 
-          text = ""; 
-          numhl = "GitSignsDeleteNr"; 
+        delete = {
+          hl = "GitSignsDelete";
+          text = "";
+          numhl = "GitSignsDeleteNr";
           linehl = "GitSignsDeleteLn";
         };
-        topdelete = { 
-          hl = "GitSignsDelete"; 
-          text = ""; 
-          numhl = "GitSignsDeleteNr"; 
-          linehl = "GitSignsDeleteLn"; 
+        topdelete = {
+          hl = "GitSignsDelete";
+          text = "";
+          numhl = "GitSignsDeleteNr";
+          linehl = "GitSignsDeleteLn";
         };
-        changedelete = { 
-          hl = "GitSignsChange"; 
-          text = "▎"; 
-          numhl = "GitSignsChangeNr"; 
-          linehl = "GitSignsChangeLn"; 
+        changedelete = {
+          hl = "GitSignsChange";
+          text = "▎";
+          numhl = "GitSignsChangeNr";
+          linehl = "GitSignsChangeLn";
         };
         untracked.text = "▎";
       };
@@ -44,7 +44,7 @@
       current_line_blame = false;
       current_line_blame_opts = {
         virt_text = true;
-        virt_text_pos = 'eol';
+        virt_text_pos = "eol";
         delay = 1000;
         ignore_whitespace = false;
       };

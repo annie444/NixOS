@@ -1,7 +1,7 @@
 {
-  nvim-ufo = {
+  programs.nixvim.plugins.nvim-ufo = {
     enable = true;
-    provider_selector.__raw = ''
+    providerSelector.__raw = ''
       function(_, _, _)
         return { "treesitter", "indent" }
       end

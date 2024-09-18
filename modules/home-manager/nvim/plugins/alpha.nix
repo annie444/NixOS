@@ -1,11 +1,12 @@
-{}: let
+let
   button = {
-      sc,
-      txt,
-      keybind ? "nil",
-      keybind_opts ? "nil",
-    }: {
-    __raw = ''
+    sc,
+    txt,
+    keybind ? "nil",
+    keybind_opts ? "nil",
+  }: {
+    type = "button";
+    val = ''
       function(${sc}, ${txt}, ${keybind}, ${keybind_opts})
         local sc_ = sc:gsub("%s", ""):gsub("SPC", "<leader>")
 
@@ -38,7 +39,7 @@
     '';
   };
 in {
-  alpha = {
+  programs.nixvim.plugins.alpha = {
     enable = true;
     layout = [
       {
@@ -47,14 +48,14 @@ in {
       }
 
       {
-        type = "text",
+        type = "text";
         val = ''
-            ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗
-            ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║
-            ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║
-            ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║
-            ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║
-            ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝
+          ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗
+          ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║
+          ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║
+          ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║
+          ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║
+          ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝
         '';
         opts = {
           position = "center";
@@ -92,10 +93,9 @@ in {
         txt = "  Quit Neovim";
       })
 
-
       {
         type = "text";
-        val.__raw = ''" " .. vim.version().major .. "." .. vim.version().minor .. "." .. vim.version().patch'';
+        val = ''" " .. vim.version().major .. "." .. vim.version().minor .. "." .. vim.version().patch'';
         opts = {
           position = "center";
           hl = "AlphaFooter";

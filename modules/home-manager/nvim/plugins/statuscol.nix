@@ -1,20 +1,20 @@
 {
-  statuscol = {
+  programs.nixvim.plugins.statuscol = {
     enable = true;
     settings = {
       relculright = true;
       segments = [
-        { 
-          text = [ 
-            { 
-              __raw = ''require("statuscol.builtin").foldfunc''; 
-            } 
-            " " 
+        {
+          text = [
+            {
+              __raw = ''require("statuscol.builtin").foldfunc'';
+            }
+            " "
           ];
-          click = "v:lua.ScFa"; 
+          click = "v:lua.ScFa";
         }
-        { 
-          text = [ 
+        {
+          text = [
             {
               __raw = ''require("statuscol.builtin").lnumfunc'';
             }
@@ -22,11 +22,11 @@
           ];
           click = "v:lua.ScLa";
         }
-        { 
-          text = [ "%s" ];
+        {
+          text = ["%s"];
           click = "v:lua.ScSa";
         }
-      ]
+      ];
     };
   };
 }

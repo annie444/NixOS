@@ -1,6 +1,11 @@
 {
-  efmls-configs = {
+  programs.nixvim.plugins.efmls-configs = {
     enable = true;
+    externallyManagedPackages = [
+      "cspell"
+      "gersemi"
+      "pint"
+    ];
     setup = {
       all.linter = [
         "alex"
@@ -150,7 +155,7 @@
         linter = "shellcheck";
       };
       sql = {
-        formatter = "sqlformat";
+        formatter = "sql-formatter";
         linter = "sqlfluff";
       };
       terraform.formatter = "terraform_fmt";

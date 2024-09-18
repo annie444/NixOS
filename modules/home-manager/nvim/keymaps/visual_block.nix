@@ -1,9 +1,5 @@
-{
-  self,
-  lib,
-  ...
-}: {
-  self = lib.lists.forEach [
+{lib, ...}: {
+  programs.nixvim.keymaps = lib.lists.forEach [
     {
       key = "j";
       action = "v:count == 0 ? 'gj' : 'j'";

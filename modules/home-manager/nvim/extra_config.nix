@@ -1,5 +1,25 @@
-{
-  noice = ''
+{pkgs, ...}: {
+  programs.nixvim.extraConfigLua = ''
+    local icons = require('nvim-web-devicons')
+    icons.set_icon {
+      deb = { icon = "", name = "Deb", color = "#A1B7EE" },
+      lock = { icon = "", name = "Lock", color = "#C4C720" },
+      mp3 = { icon = "󰈣", name = "Mp3", color = "#D39EDE" },
+      mp4 = { icon = "", name = "Mp4", color = "#9EA3DE" },
+      out = { icon = "󰈚", name = "Out", color = "#ABB2BF" },
+      ["robots.txt"] = { icon = "󱜙", name = "Robots", "#ABB2BF" },
+      [""] = { icon = "󰈚", name = "default", "#ABB2Bf" },
+      norg = { icon = "󰈚", name = "default", "#ABB2Bf" },
+      ttf = { icon = "", name = "TrueTypeFont", "#ABB2Bf" },
+      rpm = { icon = "", name = "Rpm", "#FCA2Aa" },
+      woff = { icon = "", name = "WebOpenFontFormat", color = "#ABB2Bf" },
+      woff2 = { icon = "", name = "WebOpenFontFormat2", color = "#ABB2Bf" },
+      xz = { icon = "", name = "Xz", color = "#519ABa" },
+      zip = { icon = "", name = "Zip", color = "#F9D71c" },
+      snippets = { icon = "", name = "Snippets", color = "#51AFEf" },
+      ahk = { icon = "󰈚", name = "AutoHotkey", color = "#51AFEf" },
+    }
+
     require('noice').setup({
       lsp = {
         progress = {
@@ -64,5 +84,30 @@
         lsp_doc_border = false,       -- add a border to hover docs and signature help
       },
     })
+
+    local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
+
+    parser_config.amber = {
+      install_info = {
+        url = "${pkgs.treesitter-amber}", -- local path or git repo
+        files = {"src/parser.c"}, -- note that some parsers also require src/scanner.c or src/scanner.cc
+        branch = "main", -- default branch in case of git repo if different from master
+        generate_requires_npm = true, -- if stand-alone parser without npm dependencies
+        requires_generate_from_grammar = true, -- if folder contains pre-generated src/parser.c
+      },
+      filetype = "ab", -- if filetype does not match the parser name
+    }
+
+    parser_config.just = {
+      install_info = {
+        url = "${pkgs.treesitter-just}", -- local path or git repo
+        files = {"src/parser.c", "src/scanner.c"}, -- note that some parsers also require src/scanner.c or src/scanner.cc
+        branch = "main", -- default branch in case of git repo if different from master
+        generate_requires_npm = false, -- if stand-alone parser without npm dependencies
+        requires_generate_from_grammar = false, -- if folder contains pre-generated src/parser.c
+      },
+      filetype = "justfile", -- if filetype does not match the parser name
+    }
+
   '';
 }

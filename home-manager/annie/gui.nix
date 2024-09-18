@@ -1,7 +1,6 @@
 # This is your home-manager configuration file
 # Use this to configure your home environment (it replaces ~/.config/nixpkgs/home.nix)
 {
-  inputs,
   outputs,
   lib,
   config,
@@ -20,9 +19,6 @@
       outputs.overlays.additions
       outputs.overlays.modifications
       outputs.overlays.unstable-packages
-
-      # You can also add overlays exported from other flakes:
-      inputs.neovim-nightly-overlay.overlays.default
     ];
     # Configure your nixpkgs instance
     config = {

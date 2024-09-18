@@ -1,22 +1,18 @@
-{
-  self,
-  pkgs,
-  ...
-}: {
-  self = [
+{pkgs, ...}: {
+  programs.nixvim.autoCmd = [
     {
       event = "FileType";
       pattern = [
-        "help",
-        "alpha",
-        "dashboard",
-        "neo-tree",
-        "Trouble",
-        "lazy",
-        "mason",
-        "notify",
-        "toggleterm",
-        "lazyterm",
+        "help"
+        "alpha"
+        "dashboard"
+        "neo-tree"
+        "Trouble"
+        "lazy"
+        "mason"
+        "notify"
+        "toggleterm"
+        "lazyterm"
       ];
       callback.__raw = ''
         function()

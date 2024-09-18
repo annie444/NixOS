@@ -1,4 +1,4 @@
-{}: let
+let
   added = "#67B0E8";
   delete = "#E57474";
   change = "#C47FD5";
@@ -25,12 +25,12 @@
         else
           background = ""
         end
-        return background 
+        return background
       end
     '';
   };
 in {
-  lualine = {
+  programs.nixvim.plugins.lualine = {
     enable = true;
     settings = {
       options = {
@@ -40,19 +40,19 @@ in {
           left = "";
           right = "";
         };
-        section_separators = { 
+        section_separators = {
           left = "";
           right = "";
         };
         theme = {
           normal = {
-            a = { 
+            a = {
               fg = "#000000";
               bg = "#7AA2F7";
             };
             b = {
               bg = "#0F1416";
-              fg = "#5A5D61"
+              fg = "#5A5D61";
             };
             c = {
               bg = "NONE";
@@ -149,7 +149,6 @@ in {
       };
 
       sections = {
-
         lualine_c = [
           {
             __unkeyed-1.__raw = ''
@@ -189,7 +188,7 @@ in {
 
           {
             __unkeyed-1 = "diff";
-            symbols = { 
+            symbols = {
               added = " ";
               modified = " ";
               removed = " ";
@@ -204,7 +203,7 @@ in {
                 return vim.fn.winwidth(0) > 80
               end
             '';
-            color = { 
+            color = {
               fg = foreground;
               bg = "NONE";
             };
@@ -215,11 +214,11 @@ in {
           {
             __unkeyed-1 = "filename";
             icon = "";
-            color = { 
+            color = {
               fg = foreground;
               bg = background;
             };
-            separator = { 
+            separator = {
               right = "";
               left = "";
             };
@@ -240,15 +239,15 @@ in {
 
           {
             __unkeyed-1 = "diagnostics";
-            sources = [ 
+            sources = [
               "nvim_diagnostic"
             ];
-            sections = [ 
+            sections = [
               "error"
-              "warn" 
-              "hint" 
+              "warn"
+              "hint"
             ];
-            symbols = { 
+            symbols = {
               error = " ";
               warn = " ";
               hint = "󰌵 ";
@@ -260,7 +259,7 @@ in {
             };
             update_in_insert = false;
             always_visible = false;
-            color = { 
+            color = {
               fg = foreground;
               bg = "NONE";
             };
@@ -309,11 +308,11 @@ in {
                 end
               end
             '';
-            separator = { 
+            separator = {
               right = "";
-              left = ""
+              left = "";
             };
-            color = { 
+            color = {
               fg = foreground;
               bg = background;
             };
@@ -343,7 +342,7 @@ in {
                 return format_file_size(file)
               end
             '';
-            color = { 
+            color = {
               fg = foreground;
               bg = "NONE";
             };
@@ -356,7 +355,7 @@ in {
                 return { bg = mode_color[vim.api.nvim_get_mode().mode], fg = "Black" }
               end
             '';
-            separator = { 
+            separator = {
               right = "";
               left = "";
             };
@@ -373,7 +372,7 @@ in {
                 return chars[index]
               end
             '';
-            color = { 
+            color = {
               fg = foreground;
               bg = "NONE";
             };
@@ -390,7 +389,7 @@ in {
                 return { bg = mode_color[vim.api.nvim_get_mode().mode], fg = "Black" }
               end
             '';
-            separator = { 
+            separator = {
               right = "";
               left = "";
             };

@@ -1,12 +1,12 @@
-{ pkgs, ...}: let 
-  ansiblePython = (pkgs.python312.withPackages (p: [
+{pkgs, ...}: let
+  ansiblePython = pkgs.unstable.python312.withPackages (p: [
     p.ansible-core
     p.ansible
     p.jinja2-ansible-filters
     p.ansible-builder
     p.pytest-ansible
     p.ansible-compat
-  ]));
+  ]);
 
   util = ''require("lspconfig.util")'';
   async = ''require('lspconfig.async')'';
@@ -61,7 +61,7 @@
     end
   '';
 
-  lspHighlight =''
+  lspHighlight = ''
     local function lsp_highlight(client, bufnr)
       if client.supports_method "textDocument/documentHighlight" then
         vim.api.nvim_create_augroup("lsp_document_highlight", {
@@ -86,11 +86,11 @@
   '';
 
   signs = ''
-    local signs = { 
-      Error = "", 
-      Warn = "", 
-      Hint = "󰌵", 
-      Info = "" 
+    local signs = {
+      Error = "",
+      Warn = "",
+      Hint = "󰌵",
+      Info = ""
     }
     for type, icon in pairs(signs) do
       local hl = "DiagnosticSign" .. type
@@ -159,15 +159,15 @@
       end
   '';
 
-  rls = (pkgs.rWrapper.override { packages = with rPackages; [ languageserver ]; });
+  rls = pkgs.rWrapper.override {packages = with pkgs.rPackages; [languageserver];};
 in {
-  lsp = {
+  programs.nixvim.plugins.lsp = {
     enable = true;
     inlayHints = true;
-    capabilities.__raw = ''
+    capabilities = ''
       require("cmp_nvim_lsp").default_capabilities()
     '';
-    onAttach.__raw = ''
+    onAttach = ''
       function(client, bufnr)
         ${lspKeymaps}
         ${lspHighlight}
@@ -178,7 +178,7 @@ in {
         end
       end
     '';
-    preConfig.__raw = ''
+    preConfig = ''
       function()
         ${config}
         ${onHover}
@@ -190,15 +190,16 @@ in {
       ansiblels = {
         enable = true;
         autostart = true;
+        package = pkgs.unstable.ansible-language-server;
         cmd = [
-          "${pkgs.ansible-language-server}/bin/ansible-language-server"
+          "${pkgs.unstable.ansible-language-server}/bin/ansible-language-server"
           "--stdio"
         ];
-        filetypes = [ "yaml.ansible" ];
-        extraOptions = { 
-          ansible = { 
+        filetypes = ["yaml.ansible"];
+        extraOptions = {
+          ansible = {
             ansible = {
-              path = "${pkgs.ansible}/bin/ansible";
+              path = "${pkgs.unstable.ansible}/bin/ansible";
             };
             executionEnvironment = {
               enabled = false;
@@ -210,7 +211,7 @@ in {
               enabled = true;
               lint = {
                 enabled = true;
-                path = "${pkgs.ansible-lint}/bin/ansible-lint";
+                path = "${pkgs.unstable.ansible-lint}/bin/ansible-lint";
               };
             };
           };
@@ -220,11 +221,12 @@ in {
       astro = {
         enable = true;
         autostart = true;
+        package = pkgs.unstable.astro-language-server;
         cmd = [
           "${pkgs.unstable.astro-language-server}/bin/astro-ls"
           "--stdio"
         ];
-        filetypes = [ "astro" ];
+        filetypes = ["astro"];
         extraOptions = {
           typescript = {};
         };
@@ -234,8 +236,9 @@ in {
       bashls = {
         enable = true;
         autostart = true;
-        cmd = [ "${pkgs.bash-language-server}/bin/bash-language-server" "start" ];
-        filetypes = [ "sh" ];
+        package = pkgs.unstable.bash-language-server;
+        cmd = ["${pkgs.unstable.bash-language-server}/bin/bash-language-server" "start"];
+        filetypes = ["sh"];
         extraOptions = {
           bashIde = {
             globPattern.__raw = ''vim.env.GLOB_PATTERN or "*@(.sh|.inc|.bash|.command)"'';
@@ -247,8 +250,9 @@ in {
       biome = {
         enable = true;
         autostart = true;
-        cmd = [ 
-          "${pkgs.biome}/bin/biome"
+        package = pkgs.unstable.biome;
+        cmd = [
+          "${pkgs.unstable.biome}/bin/biome"
           "lsp-proxy"
         ];
         filetypes = [
@@ -270,11 +274,12 @@ in {
       bufls = {
         enable = true;
         autostart = true;
-        cmd = [ 
-          "${pkgs.buf-language-server}/bin/bufls"
+        package = pkgs.unstable.buf-language-server;
+        cmd = [
+          "${pkgs.unstable.buf-language-server}/bin/bufls"
           "serve"
         ];
-        filetypes = [ "proto" ];
+        filetypes = ["proto"];
         rootDir.__raw = ''
           function(fname)
             return ${util}.root_pattern('buf.work.yaml', '.git')(fname)
@@ -285,13 +290,14 @@ in {
       clangd = {
         enable = true;
         autostart = true;
+        package = pkgs.unstable.rocmPackages.llvm.clang-tools-extra;
         rootDir.__raw = ''
           function(fname)
             return ${util}.root_pattern('.clangd', '.clang-tidy', '.clang-format', 'compile_commands.json', 'compile_flags.txt', 'configure.ac')(fname) or ${util}.find_git_ancestor(fname)
           end
         '';
-        cmd = [ "${pkgs.clangd}/bin/clangd" ];
-        filetypes = [ "c" "cpp" "objc" "objcpp" "cuda" "proto" ];
+        cmd = ["${pkgs.unstable.rocmPackages.llvm.clang-tools-extra}/bin/clangd"];
+        filetypes = ["c" "cpp" "objc" "objcpp" "cuda" "proto"];
         extraOptions = {
           capabilities = {
             textDocument = {
@@ -299,7 +305,7 @@ in {
                 editsNearCursor = true;
               };
             };
-            offsetEncoding = [ "utf-8" "utf-16" ];
+            offsetEncoding = ["utf-8" "utf-16"];
           };
         };
       };
@@ -307,8 +313,9 @@ in {
       cmake = {
         enable = true;
         autostart = true;
-        cmd = [ "${pkgs.cmake-language-server}/bin/cmake-language-server" ];
-        filetypes = [ "cmake" ];
+        package = pkgs.unstable.cmake-language-server;
+        cmd = ["${pkgs.unstable.cmake-language-server}/bin/cmake-language-server"];
+        filetypes = ["cmake"];
         rootDir.__raw = ''
           function(fname)
             return util.root_pattern(unpack('CMakePresets.json', 'CTestConfig.cmake', '.git', 'build', 'cmake'))(fname)
@@ -324,14 +331,15 @@ in {
       cssls = {
         enable = true;
         autostart = true;
-        cmd = [ "${pkgs.vscode-langservers-extracted}/bin/vscode-css-language-server" "--stdio" ];
-        filetypes = [ "css" "scss" "less" ];
+        package = pkgs.unstable.vscode-langservers-extracted;
+        cmd = ["${pkgs.unstable.vscode-langservers-extracted}/bin/vscode-css-language-server" "--stdio"];
+        filetypes = ["css" "scss" "less"];
         extraOptions = {
           init_options.provideFormatter = true;
         };
         rootDir.__raw = ''${util}.root_pattern('package.json', '.git')'';
         settings = {
-          css.validate = true; 
+          css.validate = true;
           scss.validate = true;
           less.validate = true;
         };
@@ -340,31 +348,35 @@ in {
       docker-compose-language-service = {
         enable = true;
         autostart = true;
-        cmd = [ "${pkgs.docker-compose-language-service}/bin/docker-compose-langserver" "--stdio" ];
-        filetypes = [ "yaml.docker-compose" ];
+        package = pkgs.unstable.docker-compose-language-service;
+        cmd = ["${pkgs.unstable.docker-compose-language-service}/bin/docker-compose-langserver" "--stdio"];
+        filetypes = ["yaml.docker-compose"];
         rootDir.__raw = ''${util}.root_pattern('docker-compose.yaml', 'docker-compose.yml', 'compose.yaml', 'compose.yml')'';
       };
 
       dockerls = {
         enable = true;
         autostart = true;
-        cmd = [ "${pkgs.dockerfile-language-server-nodejs}/bin/docker-langserver" "--stdio" ];
-        filetypes = [ "dockerfile" ];
+        package = pkgs.unstable.dockerfile-language-server-nodejs;
+        cmd = ["${pkgs.unstable.dockerfile-language-server-nodejs}/bin/docker-langserver" "--stdio"];
+        filetypes = ["dockerfile"];
         rootDir.__raw = ''${util}.root_pattern('Dockerfile')'';
       };
 
       efm = {
         enable = true;
         autostart = true;
-        filetypes = [ "*" ];
-        cmd = [ "${pkgs.efm-langserver}/bin/efm-langserver" ];
+        filetypes = ["*"];
+        package = pkgs.unstable.efm-langserver;
+        cmd = ["${pkgs.unstable.efm-langserver}/bin/efm-langserver"];
         rootDir.__raw = ''${util}.find_git_ancestor'';
       };
 
       emmet-ls = {
         enable = true;
         autostart = true;
-        cmd = [ "${pkgs.emmet-ls}/bin/emmet-ls" "--stdio" ];
+        package = pkgs.unstable.emmet-ls;
+        cmd = ["${pkgs.unstable.emmet-ls}/bin/emmet-ls" "--stdio"];
         filetypes = [
           "astro"
           "css"
@@ -385,9 +397,10 @@ in {
       };
 
       eslint = {
-        cmd = [ 
-          "${pkgs.vscode-langservers-extracted}/bin/vscode-eslint-language-server"
-          "--stdio" 
+        package = pkgs.unstable.vscode-langservers-extracted;
+        cmd = [
+          "${pkgs.unstable.vscode-langservers-extracted}/bin/vscode-eslint-language-server"
+          "--stdio"
         ];
         filetypes = [
           "javascript"
@@ -503,8 +516,9 @@ in {
       gleam = {
         enable = true;
         autostart = true;
-        cmd = [ "${pkgs.gleam}/bin/gleam" "lsp" ];
-        filetypes = [ "gleam" ];
+        package = pkgs.unstable.gleam;
+        cmd = ["${pkgs.unstable.gleam}/bin/gleam" "lsp"];
+        filetypes = ["gleam"];
         rootDir.__raw = ''
           function(fname)
             return ${util}.root_pattern('gleam.toml', '.git')(fname)
@@ -515,11 +529,12 @@ in {
       golangci-lint-ls = {
         enable = true;
         autostart = true;
-        cmd = [ "${pkgs.golangci-lint-langserver}/bin/golangci-lint-langserver" ];
-        filetypes = [ "go" "gomod" ];
+        package = pkgs.unstable.golangci-lint-langserver;
+        cmd = ["${pkgs.unstable.golangci-lint-langserver}/bin/golangci-lint-langserver"];
+        filetypes = ["go" "gomod"];
         extraOptions = {
           init_options = {
-            command = [ "golangci-lint" "run" "--out-format" "json" ];
+            command = ["golangci-lint" "run" "--out-format" "json"];
           };
         };
         rootDir.__raw = ''
@@ -540,8 +555,9 @@ in {
       gopls = {
         enable = true;
         autostart = true;
-        cmd = [ "${pkgs.gopls}/bin/gopls" ];
-        filetypes = [ "go" "gomod" "gowork" "gotmpl" ];
+        package = pkgs.unstable.gopls;
+        cmd = ["${pkgs.unstable.gopls}/bin/gopls"];
+        filetypes = ["go" "gomod" "gowork" "gotmpl"];
         rootDir.__raw = ''
           function(fname)
             -- see: https://github.com/neovim/nvim-lspconfig/issues/804
@@ -565,15 +581,17 @@ in {
       graphql = {
         enable = true;
         autostart = true;
-        cmd = [ "${pkgs.nodePackages.graphql-language-service-cli}/bin/graphql-lsp" "server" "-m" "stream" ];
-        filetypes = [ "graphql" "typescriptreact" "javascriptreact" ];
+        package = pkgs.unstable.nodePackages.graphql-language-service-cli;
+        cmd = ["${pkgs.unstable.nodePackages.graphql-language-service-cli}/bin/graphql-lsp" "server" "-m" "stream"];
+        filetypes = ["graphql" "typescriptreact" "javascriptreact"];
         rootDir.__raw = ''${util}.root_pattern('.graphqlrc*', '.graphql.config.*', 'graphql.config.*')'';
       };
 
       harper-ls = {
         enable = true;
         autostart = true;
-        cmd = [ "${pkgs.unstable.harper}/bin/harper-ls" "--stdio" ];
+        package = pkgs.unstable.harper;
+        cmd = ["${pkgs.unstable.harper}/bin/harper-ls" "--stdio"];
         filetypes = [
           "markdown"
           "rust"
@@ -599,8 +617,9 @@ in {
       helm-ls = {
         enable = true;
         autostart = true;
-        cmd = [ "${pkgs.helm-ls}/bin/helm_ls" "serve" ];
-        filetypes = [ "helm" ];
+        package = pkgs.unstable.helm-ls;
+        cmd = ["${pkgs.unstable.helm-ls}/bin/helm_ls" "serve"];
+        filetypes = ["helm"];
         rootDir.__raw = ''${util}.root_pattern('Chart.yaml')'';
         extraOptions.capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = true;
       };
@@ -608,24 +627,26 @@ in {
       html = {
         enable = true;
         autostart = true;
-        cmd = [ "${pkgs.vscode-langservers-extracted}/bin/vscode-html-language-server" "--stdio" ];
-        filetypes = [ "html" "templ" ];
+        package = pkgs.unstable.vscode-langservers-extracted;
+        cmd = ["${pkgs.unstable.vscode-langservers-extracted}/bin/vscode-html-language-server" "--stdio"];
+        filetypes = ["html" "templ"];
         rootDir.__raw = ''${util}.root_pattern("package.json", ".git")'';
         extraOptions.init_options = {
           provideFormatter = true;
-          embeddedLanguages = { 
+          embeddedLanguages = {
             css = true;
-            javascript = true; 
+            javascript = true;
           };
-          configurationSection = [ "html" "css" "javascript" ];
+          configurationSection = ["html" "css" "javascript"];
         };
       };
 
       htmx = {
         enable = true;
         autostart = true;
-        cmd = [ "${pkgs.htmx-lsp}/bin/htmx-lsp" ];
-        filetypes = {
+        package = pkgs.unstable.htmx-lsp;
+        cmd = ["${pkgs.unstable.htmx-lsp}/bin/htmx-lsp"];
+        filetypes = [
           "aspnetcorerazor"
           "astro"
           "astro-markdown"
@@ -669,7 +690,7 @@ in {
           "vue"
           "svelte"
           "templ"
-        };
+        ];
         rootDir.__raw = ''
           function(fname)
             return ${util}.find_git_ancestor(fname)
@@ -680,8 +701,9 @@ in {
       intelephense = {
         enable = true;
         autostart = true;
-        cmd = [ "${pkgs.nodePackages_latest.intelephense}/bin/intelephense" "--stdio" ];
-        filetypes = [ "php" ];
+        package = pkgs.unstable.nodePackages_latest.intelephense;
+        cmd = ["${pkgs.unstable.nodePackages_latest.intelephense}/bin/intelephense" "--stdio"];
+        filetypes = ["php"];
         rootDir.__raw = ''
           function(pattern)
             local cwd = vim.loop.cwd()
@@ -696,18 +718,20 @@ in {
       java-language-server = {
         enable = true;
         autostart = true;
-        cmd = [ "${pkgs.java-language-server}/bin/java-language-server" ];
-        filetypes = [ "java" ];
+        package = pkgs.unstable.java-language-server;
+        cmd = ["${pkgs.unstable.java-language-server}/bin/java-language-server"];
+        filetypes = ["java"];
         rootDir.__raw = ''${util}.root_pattern('build.gradle', 'pom.xml', '.git')'';
       };
 
       jdt-language-server = {
         enable = true;
         autostart = true;
+        package = pkgs.unstable.jdt-language-server;
         cmd = [
-          "${pkgs.jdt-language-server}/bin/jdtls",
+          "${pkgs.unstable.jdt-language-server}/bin/jdtls"
         ];
-        filetypes = [ "java" ];
+        filetypes = ["java"];
         rootDir.__raw = ''
           function(fname)
             local root_files = {
@@ -786,8 +810,9 @@ in {
       jsonls = {
         enable = true;
         autostart = true;
-        cmd = [ "${pkgs.vscode-langservers-extracted}/bin/vscode-json-language-server" "--stdio" ];
-        filetypes = [ "json" "jsonc" ];
+        package = pkgs.unstable.vscode-langservers-extracted;
+        cmd = ["${pkgs.unstable.vscode-langservers-extracted}/bin/vscode-json-language-server" "--stdio"];
+        filetypes = ["json" "jsonc"];
         extraOptions.init_options.provideFormatter = true;
         rootDir.__raw = ''${util}.find_git_ancestor'';
       };
@@ -795,16 +820,18 @@ in {
       lemminx = {
         enable = true;
         autostart = true;
-        cmd = [ "${pkgs.lemminx}/bin/lemminx" ];
-        filetypes = [ "xml" "xsd" "xsl" "xslt" "svg" ];
+        package = pkgs.unstable.lemminx;
+        cmd = ["${pkgs.unstable.lemminx}/bin/lemminx"];
+        filetypes = ["xml" "xsd" "xsl" "xslt" "svg"];
         rootDir.__raw = ''${util}.find_git_ancestor'';
       };
 
       lexical = {
         enable = true;
         autostart = true;
-        cmd = [ "${pkgs.lexical}/bin/lexical" ];
-        filetypes = [ "elixir" "eelixir" "heex" "surface" ];
+        package = pkgs.unstable.lexical;
+        cmd = ["${pkgs.unstable.lexical}/bin/lexical"];
+        filetypes = ["elixir" "eelixir" "heex" "surface"];
         rootDir.__raw = ''
           function(fname)
             return ${util}.root_pattern('mix.exs')(fname) or ${util}.find_git_ancestor(fname)
@@ -815,7 +842,8 @@ in {
       ltex = {
         enable = true;
         autostart = true;
-        cmd = [ "${pkg.ltex-ls}/bin/ltex-ls" ];
+        package = pkgs.unstable.ltex-ls;
+        cmd = ["${pkgs.unstable.ltex-ls}/bin/ltex-ls"];
         filetypes = [
           "bib"
           "gitcommit"
@@ -856,7 +884,7 @@ in {
         '';
         settings = {
           completionEnabled = true;
-          enabled = {
+          enabled = [
             "bibtex"
             "gitcommit"
             "markdown"
@@ -880,8 +908,9 @@ in {
       lua-ls = {
         enable = true;
         autostart = true;
-        cmd = [ "${pkgs.lua-language-server}/bin/lua-language-server" ];
-        filetypes = [ "lua" ];
+        package = pkgs.unstable.lua-language-server;
+        cmd = ["${pkgs.unstable.lua-language-server}/bin/lua-language-server"];
+        filetypes = ["lua"];
         rootDir.__raw = ''
           function(fname)
             local root_files = {
@@ -909,8 +938,9 @@ in {
       marksman = {
         enable = true;
         autostart = true;
-        cmd = [ "${pkgs.marksman}/bin/marksman" "server" ];
-        filetypes = [ "markdown" "markdown.mdx" ];
+        package = pkgs.unstable.marksman;
+        cmd = ["${pkgs.unstable.marksman}/bin/marksman" "server"];
+        filetypes = ["markdown" "markdown.mdx"];
         rootDir.__raw = ''
           function(fname)
             local root_files = { '.marksman.toml' }
@@ -922,8 +952,9 @@ in {
       nginx-language-server = {
         enable = true;
         autostart = true;
-        cmd = [ "${pkgs.nginx-language-server}/bin/nginx-language-server" ];
-        filetypes = [ "nginx" ];
+        package = pkgs.unstable.nginx-language-server;
+        cmd = ["${pkgs.unstable.nginx-language-server}/bin/nginx-language-server"];
+        filetypes = ["nginx"];
         rootDir.__raw = ''
           function(fname)
             return ${util}.root_pattern('nginx.conf', '.git')(fname) or ${util}.find_git_ancestor(fname)
@@ -934,22 +965,24 @@ in {
       perlpls = {
         enable = true;
         autostart = true;
-        cmd = [ "${pkgs.perl538Packages.PLS}/bin/pls" ];
+        package = pkgs.unstable.perl538Packages.PLS;
+        cmd = ["${pkgs.unstable.perl538Packages.PLS}/bin/pls"];
         settings = {
           perl = {
             perlcritic.enabled = false;
             syntax.enabled = true;
           };
         };
-        filetypes = [ "perl" ];
+        filetypes = ["perl"];
         rootDir.__raw = ''${util}.find_git_ancestor'';
       };
-      
+
       phpactor = {
         enable = true;
         autostart = true;
-        cmd = [ "${pkgs.phpactor}/bin/phpactor" "language-server" ];
-        filetypes = [ "php" ];
+        package = pkgs.unstable.phpactor;
+        cmd = ["${pkgs.unstable.phpactor}/bin/phpactor" "language-server"];
+        filetypes = ["php"];
         rootDir.__raw = ''
           function(pattern)
             local cwd = vim.loop.cwd()
@@ -964,8 +997,9 @@ in {
       prismals = {
         enable = true;
         autostart = true;
-        cmd = [ "${pkgs.nodePackages."@prisma/language-server"}/bin/prisma-language-server" "--stdio" ];
-        filetypes = [ "prisma" ];
+        package = pkgs.unstable.nodePackages."@prisma/language-server";
+        cmd = ["${pkgs.unstable.nodePackages."@prisma/language-server"}/bin/prisma-language-server" "--stdio"];
+        filetypes = ["prisma"];
         settings.prisma.prismaFmtBinPath = "";
         rootDir.__raw = ''${util}.root_pattern('.git', 'package.json')'';
       };
@@ -973,8 +1007,9 @@ in {
       r-language-server = {
         enable = true;
         autostart = true;
-        cmd = [ "${rls}/bin/R" "--no-echo" "-e" "languageserver::run()" ];
-        filetypes = [ "r" "rmd" ];
+        package = rls;
+        cmd = ["${rls}/bin/R" "--no-echo" "-e" "languageserver::run()"];
+        filetypes = ["r" "rmd"];
         rootDir.__raw = ''
           function(fname)
             return ${util}.find_git_ancestor(fname) or vim.loop.os_homedir()
@@ -985,8 +1020,9 @@ in {
       ruby-lsp = {
         enable = true;
         autostart = true;
-        cmd = [ "${pkgs.ruby-lsp}/bin/ruby-lsp" ];
-        filetypes = [ "ruby" ];
+        package = pkgs.unstable.ruby-lsp;
+        cmd = ["${pkgs.unstable.ruby-lsp}/bin/ruby-lsp"];
+        filetypes = ["ruby"];
         rootDir.__raw = ''${util}.root_pattern('Gemfile', '.git')'';
         extraOptions.init_options.formatter = "auto";
       };
@@ -994,16 +1030,20 @@ in {
       ruff = {
         enable = true;
         autostart = true;
-        cmd = [ "${pkgs.ruff}/bin/ruff" "server" ];
-        filetypes = [ "python" ];
+        package = pkgs.unstable.ruff;
+        cmd = ["${pkgs.unstable.ruff}/bin/ruff" "server"];
+        filetypes = ["python"];
         rootDir.__raw = ''${util}.root_pattern('pyproject.toml', 'ruff.toml', '.ruff.toml') or ${util}.find_git_ancestor()'';
       };
 
       rust-analyzer = {
         enable = true;
         autostart = true;
-        cmd = [ "${pkgs.rust-analyzer}/bin/rust-analyzer" ];
-        filetypes = [ "rust" ];
+        package = pkgs.unstable.rust-analyzer;
+        cmd = ["${pkgs.unstable.rust-analyzer}/bin/rust-analyzer"];
+        installRustc = true;
+        installCargo = true;
+        filetypes = ["rust"];
         rootDir.__raw = ''
           function(fname)
             ${rust.isLibrary}
@@ -1017,7 +1057,7 @@ in {
 
             if cargo_crate_dir ~= nil then
               local cmd = {
-                "${pkgs.cargo}/bin/cargo",
+                "${pkgs.unstable.cargo}/bin/cargo",
                 'metadata',
                 '--no-deps',
                 '--format-version',
@@ -1058,15 +1098,17 @@ in {
       svelte = {
         enable = true;
         autostart = true;
-        cmd = [ "${pkgs.nodePackages_latest.svelte-language-server}/bin/svelteserver" "--stdio" ];
-        filetypes = [ "svelte" ];
+        package = pkgs.unstable.nodePackages_latest.svelte-language-server;
+        cmd = ["${pkgs.unstable.nodePackages_latest.svelte-language-server}/bin/svelteserver" "--stdio"];
+        filetypes = ["svelte"];
         rootDir.__raw = ''${util}.root_pattern('package.json', '.git')'';
       };
-      
+
       tailwindcss = {
         enable = true;
         autostart = true;
-        cmd = [ "${pkgs.nodePackages."@tailwindcss/language-server"}/bin/tailwindcss-language-server" "--stdio" ];
+        package = pkgs.unstable.nodePackages."@tailwindcss/language-server";
+        cmd = ["${pkgs.unstable.nodePackages."@tailwindcss/language-server"}/bin/tailwindcss-language-server" "--stdio"];
         filetypes = [
           "aspnetcorerazor"
           "astro"
@@ -1183,30 +1225,33 @@ in {
       taplo = {
         enable = true;
         autostart = true;
-        cmd = [ "${pkgs.taplo}/bin/taplo" "lsp" "stdio" ];
-        filetypes = [ "toml" ];
+        package = pkgs.unstable.taplo;
+        cmd = ["${pkgs.unstable.taplo}/bin/taplo" "lsp" "stdio"];
+        filetypes = ["toml"];
         rootDir.__raw = ''util.find_git_ancestor'';
       };
 
       terraformls = {
         enable = true;
         autostart = true;
-        cmd = [ "${pkgs.terraform-ls}/bin/terraform-ls" "serve" ];
-        filetypes = [ "terraform" "terraform-vars" ];
+        package = pkgs.unstable.terraform-ls;
+        cmd = ["${pkgs.unstable.terraform-ls}/bin/terraform-ls" "serve"];
+        filetypes = ["terraform" "terraform-vars"];
         rootDir.__raw = ''util.root_pattern('.terraform', '.git')'';
       };
 
       texlab = {
         enable = true;
         autostart = true;
-        cmd = [ "${pkgs.texlab}/bin/texlab" ];
-        filetypes = [ "tex" "plaintex" "bib" ];
+        package = pkgs.unstable.texlab;
+        cmd = ["${pkgs.unstable.texlab}/bin/texlab"];
+        filetypes = ["tex" "plaintex" "bib"];
         rootDir.__raw = ''${util}.root_pattern('.git', '.latexmkrc', '.texlabroot', 'texlabroot', 'Tectonic.toml')'';
         settings = {
           texlab = {
             build = {
-              executable = "${pkgs.texliveFull}/bin/latexmk";
-              args = [ "-pdf" "-interaction=nonstopmode" "-synctex=1" "%f" ];
+              executable = "${pkgs.unstable.texliveFull}/bin/latexmk";
+              args = ["-pdf" "-interaction=nonstopmode" "-synctex=1" "%f"];
               onSave = false;
               forwardSearchAfter = false;
             };
@@ -1216,11 +1261,11 @@ in {
               onEdit = false;
             };
             diagnosticsDelay = 300;
-            latexFormatter = "${pkgs.texliveFull}/bin/latexindent";
+            latexFormatter = "${pkgs.unstable.texliveFull}/bin/latexindent";
             latexindent = {
               modifyLineBreaks = false;
             };
-            bibtexFormatter = "${pkgs.texlab}/bin/texlab";
+            bibtexFormatter = "${pkgs.unstable.texlab}/bin/texlab";
             formatterLineLength = 80;
           };
         };
@@ -1229,20 +1274,22 @@ in {
       tflint = {
         enable = true;
         autostart = true;
-        cmd = [ "${pkgs.tflint}/bin/tflint" "--langserver" ];
-        filetypes = [ "terraform" ];
+        package = pkgs.unstable.tflint;
+        cmd = ["${pkgs.unstable.tflint}/bin/tflint" "--langserver"];
+        filetypes = ["terraform"];
         rootDir.__raw = ''${util}.root_pattern('.terraform', '.git', '.tflint.hcl')'';
       };
 
       ts-ls = {
         enable = true;
         autostart = true;
+        package = pkgs.unstable.typescript-language-server;
         extraOptions = {
           init_options = {
             hostInfo = "neovim";
           };
         };
-        cmd = [ "${pkgs.typescript-language-server}/bin/typescript-language-server" "--stdio" ];
+        cmd = ["${pkgs.unstable.typescript-language-server}/bin/typescript-language-server" "--stdio"];
         filetypes = [
           "javascript"
           "javascriptreact"
@@ -1257,8 +1304,9 @@ in {
       vuels = {
         enable = true;
         autostart = true;
-        cmd = [ "${pkgs.nodePackages.vls}/bin/vls" ];
-        filetypes = [ "vue" ];
+        package = pkgs.unstable.nodePackages.vls;
+        cmd = ["${pkgs.unstable.nodePackages.vls}/bin/vls"];
+        filetypes = ["vue"];
         rootDir.__raw = ''${util}.root_pattern('package.json', 'vue.config.js')'';
         extraOptions = {
           init_options = {
@@ -1305,12 +1353,12 @@ in {
       yamlls = {
         enable = true;
         autostart = true;
-        cmd = [ "${pkgs.yaml-language-server}/bin/yaml-language-server" "--stdio" ];
-        filetypes = [ "yaml" "yaml.docker-compose" "yaml.gitlab" ];
+        package = pkgs.unstable.yaml-language-server;
+        cmd = ["${pkgs.unstable.yaml-language-server}/bin/yaml-language-server" "--stdio"];
+        filetypes = ["yaml" "yaml.docker-compose" "yaml.gitlab"];
         rootDir.__raw = ''${util}.find_git_ancestor'';
         settings.redhat.telemetry.enabled = false;
       };
-
     };
   };
 }

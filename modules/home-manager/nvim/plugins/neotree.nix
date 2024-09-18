@@ -1,5 +1,5 @@
-{ pkgs, ... }: {
-  neo-tree = {
+{pkgs, ...}: {
+  programs.nixvim.plugins.neo-tree = {
     enable = true;
     enableDiagnostics = true;
     enableGitStatus = true;
@@ -15,9 +15,7 @@
     popupBorderStyle = "rounded";
     sortCaseInsensitive = true;
     defaultComponentConfigs = {
-      container = {
-        enableCharacterFade = true
-      };
+      container.enableCharacterFade = true;
       indent = {
         indentSize = 2;
         padding = 1;
@@ -47,15 +45,15 @@
       };
       gitStatus = {
         symbols = {
-          added     = "✚";
-          modified  = "";
-          deleted   = "✖";
-          renamed   = "󰁕";
+          added = "✚";
+          modified = "";
+          deleted = "✖";
+          renamed = "󰁕";
           untracked = "";
-          ignored   = "";
-          unstaged  = "󰄱";
-          staged    = "";
-          conflict  = "";
+          ignored = "";
+          unstaged = "󰄱";
+          staged = "";
+          conflict = "";
         };
       };
     };

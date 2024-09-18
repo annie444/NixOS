@@ -1,5 +1,7 @@
 {
-  "General Settings" = {
-    clear = true;
+  programs.nixvim.autoGroups = {
+    "General Settings" = {
+      clear = true;
+    };
   };
 }
