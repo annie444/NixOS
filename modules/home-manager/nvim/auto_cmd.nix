@@ -8,7 +8,6 @@
         "dashboard"
         "neo-tree"
         "Trouble"
-        "lazy"
         "mason"
         "notify"
         "toggleterm"

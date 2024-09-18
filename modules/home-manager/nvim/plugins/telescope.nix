@@ -53,7 +53,7 @@
           };
           n = {
             ";" = {
-              __raw = "require('telescope.actions').actions.close";
+              __raw = "require('telescope.actions').close";
             };
           };
         };

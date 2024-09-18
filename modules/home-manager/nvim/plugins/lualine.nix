@@ -233,11 +233,6 @@ in {
           }
 
           {
-            __unkeyed-1.__raw = ''require("lazy.status").updates'';
-            cond.__raw = ''require("lazy.status").has_updates'';
-          }
-
-          {
             __unkeyed-1 = "diagnostics";
             sources = [
               "nvim_diagnostic"

@@ -131,7 +131,7 @@ in {
         '';
 
         mapping.__raw = ''
-          requre('cmp').mapping.preset.insert({
+          require('cmp').mapping.preset.insert({
             ["<C-k>"] = require('cmp').mapping.select_prev_item(),
             ["<C-j>"] = require('cmp').mapping.select_next_item(),
             ["<C-e>"] = require('cmp').mapping {

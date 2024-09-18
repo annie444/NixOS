@@ -26,7 +26,7 @@
         names = false;
       }
       {
-        language = "*";
+        language = ''['*']'';
       }
     ];
   };

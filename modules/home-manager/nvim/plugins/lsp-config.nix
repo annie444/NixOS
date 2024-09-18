@@ -74,6 +74,8 @@
     })
   '';
 
+  onAttach = builtins.readFile ../configs/onAttach.lua;
+
   rls = pkgs.rWrapper.override {packages = with pkgs.rPackages; [languageserver];};
 in {
   programs.nixvim.plugins.lsp = {
@@ -83,7 +85,7 @@ in {
 
     capabilities = ''require("cmp_nvim_lsp").default_capabilities()'';
 
-    onAttach = "onAttach";
+    onAttach = "${onAttach}";
 
     preConfig = ''
       ${config}

@@ -39,7 +39,7 @@
 
   icons = builtins.readFile ./configs/icons.lua;
   noice = builtins.readFile ./configs/noice.lua;
-  onAttach = builtins.readFile ./configs/onAttach.lua;
+
   eslint = builtins.readFile ./configs/eslint.lua;
   go = builtins.readFile ./configs/go.lua;
   java = builtins.readFile ./configs/java.lua;
@@ -108,7 +108,6 @@ in {
     + builtins.concatStringsSep "\n" [
       icons
       noice
-      onAttach
       eslint
       go
       java

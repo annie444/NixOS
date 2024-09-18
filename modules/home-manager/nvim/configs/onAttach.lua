@@ -31,10 +31,8 @@ local function lsp_highlight(client, bufnr)
   end
 end
 
-local function on_attach(client, bufnr)
-  lsp_keymaps(bufnr)
-  lsp_highlight(client, bufnr)
-  if client.supports_method("textDocument/formatting") then
-    require("lsp-format").on_attach(client)
-  end
+lsp_keymaps(bufnr)
+lsp_highlight(client, bufnr)
+if client.supports_method("textDocument/formatting") then
+  require("lsp-format").on_attach(client)
 end
