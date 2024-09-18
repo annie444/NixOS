@@ -14,43 +14,6 @@
 
   util = ''require("lspconfig.util")'';
 
-  lspKeymaps = ''
-    local function lsp_keymaps(bufnr)
-      local buf_opts = { buffer = bufnr, silent = true }
-      vim.keymap.set("n", "gD", ":Lspsaga lsp_finder<CR>", buf_opts)
-      vim.keymap.set("n", "gd", ":Lspsaga goto_definition<CR>", buf_opts)
-      vim.keymap.set("n", "gl", ":Lspsaga show_line_diagnostics<CR>", buf_opts)
-      vim.keymap.set("n", "gc", ":Lspsaga show_cursor_diagnostics<CR>", buf_opts)
-      vim.keymap.set("n", "gp", ":Lspsaga peek_definition<CR>", buf_opts)
-      vim.keymap.set("n", "K", ":Lspsaga hover_doc<CR>", buf_opts)
-      vim.keymap.set("n", "gi", vim.lsp.buf.implementation, buf_opts)
-    end
-  '';
-
-  lspHighlight = ''
-    local function lsp_highlight(client, bufnr)
-      if client.supports_method "textDocument/documentHighlight" then
-        vim.api.nvim_create_augroup("lsp_document_highlight", {
-          clear = false,
-        })
-        vim.api.nvim_clear_autocmds {
-          buffer = bufnr,
-          group = "lsp_document_highlight",
-        }
-        vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
-          group = "lsp_document_highlight",
-          buffer = bufnr,
-          callback = vim.lsp.buf.document_highlight,
-        })
-        vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
-          group = "lsp_document_highlight",
-          buffer = bufnr,
-          callback = vim.lsp.buf.clear_references,
-        })
-      end
-    end
-  '';
-
   signs = ''
     local signs = {
       Error = "",
@@ -117,26 +80,18 @@ in {
     enable = true;
     package = pkgs.unstable.vimPlugins.nvim-lspconfig;
     inlayHints = true;
-    capabilities = ''
-      require("cmp_nvim_lsp").default_capabilities()
-    '';
-    onAttach = ''
-      function(client, bufnr)
-        ${lspKeymaps}
-        ${lspHighlight}
-        lsp_keymaps(bufnr)
-        lsp_highlight(client, bufnr)
-        if client.supports_method("textDocument/formatting") then
-          require("lsp-format").on_attach(client)
-        end
-      end
-    '';
+
+    capabilities = ''require("cmp_nvim_lsp").default_capabilities()'';
+
+    onAttach = "onAttach";
+
     preConfig = ''
       ${config}
       ${onHover}
       ${onDiagnose}
       ${onSignatureHelp}
     '';
+
     servers = {
       ansiblels = {
         enable = true;
@@ -532,11 +487,7 @@ in {
           "svelte"
           "templ"
         ];
-        rootDir.__raw = ''
-          function(fname)
-            return ${util}.find_git_ancestor(fname)
-          end
-        '';
+        rootDir.__raw = ''function(fname) return ${util}.find_git_ancestor(fname) end'';
       };
 
       intelephense = {
@@ -585,7 +536,10 @@ in {
         package = pkgs.unstable.vscode-langservers-extracted;
         cmd = ["${pkgs.unstable.vscode-langservers-extracted}/bin/vscode-json-language-server" "--stdio"];
         filetypes = ["json" "jsonc"];
-        extraOptions.init_options.provideFormatter = true;
+        extraOptions = {
+          init_options.provideFormatter = true;
+          settings.json.schemas.__raw = lib.mkForce ''require('schemastore').json.schemas()'';
+        };
         rootDir.__raw = ''${util}.find_git_ancestor'';
       };
 
