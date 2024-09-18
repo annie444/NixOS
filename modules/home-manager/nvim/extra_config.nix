@@ -39,6 +39,7 @@
 
   icons = builtins.readFile ./configs/icons.lua;
   noice = builtins.readFile ./configs/noice.lua;
+  modes = builtins.readFile ./configs/modes.lua;
 
   eslint = builtins.readFile ./configs/eslint.lua;
   go = builtins.readFile ./configs/go.lua;
@@ -116,6 +117,7 @@ in {
       markdown
       php
       rust
+      modes
       tailwind
     ];
 }
