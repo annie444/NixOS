@@ -22,9 +22,6 @@
         names = false;
       }
       {
-        language = "yaml";
-      }
-      {
         language = "lua";
         names = false;
       }

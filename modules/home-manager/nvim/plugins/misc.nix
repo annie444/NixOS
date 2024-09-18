@@ -11,7 +11,12 @@
     ts-autotag.enable = true;
     ts-context-commentstring.enable = true;
     treesitter-refactor.enable = true;
-    schemastore.enable = true;
+    schemastore = {
+      enable = true;
+      package = pkgs.unstable.vimPlugins.SchemaStore-nvim;
+      json.enable = true;
+      yaml.enable = true;
+    };
     nvim-jdtls = {
       enable = true;
       cmd = [

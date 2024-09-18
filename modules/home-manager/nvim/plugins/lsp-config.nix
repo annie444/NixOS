@@ -1,4 +1,8 @@
-{pkgs, ...}: let
+{
+  pkgs,
+  lib,
+  ...
+}: let
   ansiblePython = pkgs.unstable.python312.withPackages (p: [
     p.ansible-core
     p.ansible
@@ -9,44 +13,6 @@
   ]);
 
   util = ''require("lspconfig.util")'';
-  async = ''require('lspconfig.async')'';
-
-  rust = {
-    isLibrary = ''
-      local function is_library(fname)
-        local user_home = ${util}.path.sanitize(vim.env.HOME)
-        local cargo_home = os.getenv 'CARGO_HOME' or ${util}.path.join(user_home, '.cargo')
-        local registry = ${util}.path.join(cargo_home, 'registry', 'src')
-        local git_registry = ${util}.path.join(cargo_home, 'git', 'checkouts')
-
-        local rustup_home = os.getenv 'RUSTUP_HOME' or ${util}.path.join(user_home, '.rustup')
-        local toolchains = ${util}.path.join(rustup_home, 'toolchains')
-
-        for _, item in ipairs { toolchains, registry, git_registry } do
-          if ${util}.path.is_descendant(item, fname) then
-            local clients = ${util}.get_lsp_clients { name = 'rust_analyzer' }
-            return #clients > 0 and clients[#clients].config.root_dir or nil
-          end
-        end
-      end
-    '';
-
-    reloadWorkspace = ''
-      local function reload_workspace(bufnr)
-        bufnr = ${util}.validate_bufnr(bufnr)
-        local clients = ${util}.get_lsp_clients { bufnr = bufnr, name = 'rust_analyzer' }
-        for _, client in ipairs(clients) do
-          vim.notify 'Reloading Cargo Workspace'
-          client.request('rust-analyzer/reloadWorkspace', nil, function(err)
-            if err then
-              error(tostring(err))
-            end
-            vim.notify 'Cargo workspace reloaded'
-          end, 0)
-        end
-      end
-    '';
-  };
 
   lspKeymaps = ''
     local function lsp_keymaps(bufnr)
@@ -145,24 +111,11 @@
     })
   '';
 
-  fixZeroVersion = ''
-    local function fix_zero_version(workspace_edit)
-        if workspace_edit and workspace_edit.documentChanges then
-          for _, change in pairs(workspace_edit.documentChanges) do
-            local text_document = change.textDocument
-            if text_document and text_document.version and text_document.version == 0 then
-              text_document.version = nil
-            end
-          end
-        end
-        return workspace_edit
-      end
-  '';
-
   rls = pkgs.rWrapper.override {packages = with pkgs.rPackages; [languageserver];};
 in {
   programs.nixvim.plugins.lsp = {
     enable = true;
+    package = pkgs.unstable.vimPlugins.nvim-lspconfig;
     inlayHints = true;
     capabilities = ''
       require("cmp_nvim_lsp").default_capabilities()
@@ -179,12 +132,10 @@ in {
       end
     '';
     preConfig = ''
-      function()
-        ${config}
-        ${onHover}
-        ${onDiagnose}
-        ${onSignatureHelp}
-      end
+      ${config}
+      ${onHover}
+      ${onDiagnose}
+      ${onSignatureHelp}
     '';
     servers = {
       ansiblels = {
@@ -199,10 +150,10 @@ in {
         extraOptions = {
           ansible = {
             ansible = {
-              path = "${pkgs.unstable.ansible}/bin/ansible";
+              path = "${ansiblePython}/bin/ansible";
             };
             executionEnvironment = {
-              enabled = false;
+              enabled = true;
             };
             python = {
               interpreterPath = "${ansiblePython}/bin/python312";
@@ -280,22 +231,14 @@ in {
           "serve"
         ];
         filetypes = ["proto"];
-        rootDir.__raw = ''
-          function(fname)
-            return ${util}.root_pattern('buf.work.yaml', '.git')(fname)
-          end
-        '';
+        rootDir.__raw = ''function(fname) return ${util}.root_pattern('buf.work.yaml', '.git')(fname) end'';
       };
 
       clangd = {
         enable = true;
         autostart = true;
         package = pkgs.unstable.rocmPackages.llvm.clang-tools-extra;
-        rootDir.__raw = ''
-          function(fname)
-            return ${util}.root_pattern('.clangd', '.clang-tidy', '.clang-format', 'compile_commands.json', 'compile_flags.txt', 'configure.ac')(fname) or ${util}.find_git_ancestor(fname)
-          end
-        '';
+        rootDir.__raw = ''function(fname) return ${util}.root_pattern('.clangd', '.clang-tidy', '.clang-format', 'compile_commands.json', 'compile_flags.txt', 'configure.ac')(fname) or ${util}.find_git_ancestor(fname) end'';
         cmd = ["${pkgs.unstable.rocmPackages.llvm.clang-tools-extra}/bin/clangd"];
         filetypes = ["c" "cpp" "objc" "objcpp" "cuda" "proto"];
         extraOptions = {
@@ -316,11 +259,7 @@ in {
         package = pkgs.unstable.cmake-language-server;
         cmd = ["${pkgs.unstable.cmake-language-server}/bin/cmake-language-server"];
         filetypes = ["cmake"];
-        rootDir.__raw = ''
-          function(fname)
-            return util.root_pattern(unpack('CMakePresets.json', 'CTestConfig.cmake', '.git', 'build', 'cmake'))(fname)
-          end
-        '';
+        rootDir.__raw = ''function(fname) return ${util}.root_pattern(unpack('CMakePresets.json', 'CTestConfig.cmake', '.git', 'build', 'cmake'))(fname) end'';
         extraOptions = {
           init_options = {
             buildDirectory = "build";
@@ -413,12 +352,7 @@ in {
           "svelte"
           "astro"
         ];
-        rootDir.__raw = ''
-          function(fname)
-            root_file = ${util}.insert_package_json(root_file, 'eslintConfig', fname)
-            return ${util}.root_pattern(unpack(root_file))(fname)
-          end
-        '';
+        rootDir.__raw = ''eslint_root_dir'';
         settings = {
           validate = "on";
           useESLintClass = false;
@@ -443,72 +377,12 @@ in {
           };
         };
         extraOptions = {
-          on_new_config.__raw = ''
-            function(config, new_root_dir)
-              -- The "workspaceFolder" is a VSCode concept. It limits how far the
-              -- server will traverse the file system when locating the ESLint config
-              -- file (e.g., .eslintrc).
-              config.settings.workspaceFolder = {
-                uri = new_root_dir,
-                name = vim.fn.fnamemodify(new_root_dir, ':t'),
-              }
-              -- Support flat config
-              if
-                vim.fn.filereadable(new_root_dir .. '/eslint.config.js') == 1
-                or vim.fn.filereadable(new_root_dir .. '/eslint.config.mjs') == 1
-                or vim.fn.filereadable(new_root_dir .. '/eslint.config.cjs') == 1
-                or vim.fn.filereadable(new_root_dir .. '/eslint.config.ts') == 1
-                or vim.fn.filereadable(new_root_dir .. '/eslint.config.mts') == 1
-                or vim.fn.filereadable(new_root_dir .. '/eslint.config.cts') == 1
-              then
-                config.settings.experimental.useFlatConfig = true
-              end
-
-              -- Support Yarn2 (PnP) projects
-              local pnp_cjs = util.path.join(new_root_dir, '.pnp.cjs')
-              local pnp_js = util.path.join(new_root_dir, '.pnp.js')
-              if ${util}.path.exists(pnp_cjs) or ${util}.path.exists(pnp_js) then
-                config.cmd = vim.list_extend({ 'yarn', 'exec' }, config.cmd)
-              end
-            end
-          '';
+          on_new_config.__raw = ''on_new_config'';
           handlers = {
-            "eslint/openDoc".__raw = ''
-              function(_, result)
-                if not result then
-                  return
-                end
-                local sysname = vim.loop.os_uname().sysname
-                if sysname:match 'Windows' then
-                  os.execute(string.format('start %q', result.url))
-                elseif sysname:match 'Linux' then
-                  os.execute(string.format('xdg-open %q', result.url))
-                else
-                  os.execute(string.format('open %q', result.url))
-                end
-                return {}
-              end
-            '';
-            "eslint/confirmESLintExecution".__raw = ''
-              function(_, result)
-                if not result then
-                  return
-                end
-                return 4 -- approved
-              end
-            '';
-            "eslint/probeFailed".__raw = ''
-              function()
-                vim.notify('[lspconfig] ESLint probe failed.', vim.log.levels.WARN)
-                return {}
-              end
-            '';
-            "eslint/noLibrary".__raw = ''
-              function()
-                vim.notify('[lspconfig] Unable to find ESLint library.', vim.log.levels.WARN)
-                return {}
-              end
-            '';
+            "eslint/openDoc".__raw = ''eslint_open_doc'';
+            "eslint/confirmESLintExecution".__raw = ''eslint_confirm_exec'';
+            "eslint/probeFailed".__raw = ''eslint_probe_failed'';
+            "eslint/noLibrary".__raw = ''eslint_no_lib'';
           };
         };
       };
@@ -519,11 +393,7 @@ in {
         package = pkgs.unstable.gleam;
         cmd = ["${pkgs.unstable.gleam}/bin/gleam" "lsp"];
         filetypes = ["gleam"];
-        rootDir.__raw = ''
-          function(fname)
-            return ${util}.root_pattern('gleam.toml', '.git')(fname)
-          end
-        '';
+        rootDir.__raw = ''function(fname) return ${util}.root_pattern('gleam.toml', '.git')(fname) end'';
       };
 
       golangci-lint-ls = {
@@ -537,19 +407,7 @@ in {
             command = ["golangci-lint" "run" "--out-format" "json"];
           };
         };
-        rootDir.__raw = ''
-          function(fname)
-            return ${util}.root_pattern(
-              '.golangci.yml',
-              '.golangci.yaml',
-              '.golangci.toml',
-              '.golangci.json',
-              'go.work',
-              'go.mod',
-              '.git'
-            )(fname)
-          end
-        '';
+        rootDir.__raw = ''go_root_pattern'';
       };
 
       gopls = {
@@ -558,24 +416,7 @@ in {
         package = pkgs.unstable.gopls;
         cmd = ["${pkgs.unstable.gopls}/bin/gopls"];
         filetypes = ["go" "gomod" "gowork" "gotmpl"];
-        rootDir.__raw = ''
-          function(fname)
-            -- see: https://github.com/neovim/nvim-lspconfig/issues/804
-            if not mod_cache then
-              local result = require("lspconfig.async").run_command { 'go', 'env', 'GOMODCACHE' }
-              if result and result[1] then
-                mod_cache = vim.trim(result[1])
-              end
-            end
-            if fname:sub(1, #mod_cache) == mod_cache then
-              local clients = ${util}.get_lsp_clients { name = 'gopls' }
-              if #clients > 0 then
-                return clients[#clients].config.root_dir
-              end
-            end
-            return ${util}.root_pattern('go.work', 'go.mod', '.git')(fname)
-          end
-        '';
+        rootDir.__raw = ''gopls_root_pattern'';
       };
 
       graphql = {
@@ -704,15 +545,7 @@ in {
         package = pkgs.unstable.nodePackages_latest.intelephense;
         cmd = ["${pkgs.unstable.nodePackages_latest.intelephense}/bin/intelephense" "--stdio"];
         filetypes = ["php"];
-        rootDir.__raw = ''
-          function(pattern)
-            local cwd = vim.loop.cwd()
-            local root = ${util}.root_pattern('composer.json', '.git')(pattern)
-
-            -- prefer cwd if root is a descendant
-            return ${util}.path.is_descendant(cwd, root) and cwd or root
-          end
-        '';
+        rootDir.__raw = ''php_root_pattern'';
       };
 
       java-language-server = {
@@ -732,77 +565,16 @@ in {
           "${pkgs.unstable.jdt-language-server}/bin/jdtls"
         ];
         filetypes = ["java"];
-        rootDir.__raw = ''
-          function(fname)
-            local root_files = {
-              -- Multi-module projects
-              { '.git', 'build.gradle', 'build.gradle.kts' },
-              -- Single-module projects
-              {
-                'build.xml', -- Ant
-                'pom.xml', -- Maven
-                'settings.gradle', -- Gradle
-                'settings.gradle.kts', -- Gradle
-              },
-            }
-            for _, patterns in ipairs(root_files) do
-              local root = ${util}.root_pattern(unpack(patterns))(fname)
-              if root then
-                return root
-              end
-            end
-          end
-        '';
+        rootDir.__raw = ''java_root_pattern'';
         extraOptions = {
           init_options = {
-            workspace.__raw = ''
-              function()
-                local cache_dir = os.getenv('XDG_CACHE_HOME') and os.getenv('XDG_CACHE_HOME') or ${util}.path.join(vim.loop.os_homedir(), '.cache')
-                local jdtls_cache_dir = ${util}.path.join(cache_dir, 'jdtls')
-                return ${util}.path.join(jdtls_cache_dir, 'workspace')
-              end
-            '';
+            workspace.__raw = ''java_workspace'';
           };
           handlers = {
-            "textDocument/codeAction".__raw = ''
-              function(err, actions, ctx)
-                ${fixZeroVersion}
-                for _, action in ipairs(actions) do
-                  if action.command == 'java.apply.workspaceEdit' then -- 'action' is Command in java format
-                    action.edit = fix_zero_version(action.edit or action.arguments[1])
-                  elseif type(action.command) == 'table' and action.command.command == 'java.apply.workspaceEdit' then -- 'action' is CodeAction in java format
-                    action.edit = fix_zero_version(action.edit or action.command.arguments[1])
-                  end
-                end
-                local handlers = require('vim.lsp.handlers')
-                handlers[ctx.method](err, actions, ctx)
-              end
-            '';
-            "textDocument/rename".__raw = ''
-              function(err, workspace_edit, ctx)
-                ${fixZeroVersion}
-                local handlers = require('vim.lsp.handlers')
-                handlers[ctx.method](err, fix_zero_version(workspace_edit), ctx)
-              end
-            '';
-            "workspace/applyEdit".__raw = ''
-              function(err, workspace_edit, ctx)
-                ${fixZeroVersion}
-                local handlers = require('vim.lsp.handlers')
-                handlers[ctx.method](err, fix_zero_version(workspace_edit), ctx)
-              end
-            '';
-            "language/status".__raw = ''
-              funtion()
-                local function on_language_status(_, result)
-                  local command = vim.api.nvim_command
-                  command 'echohl ModeMsg'
-                  command(string.format('echo "%s"', result.message))
-                  command 'echohl None'
-                end
-                return vim.schedule_wrap(on_language_status)
-              end
-            '';
+            "textDocument/codeAction".__raw = ''java_code_action'';
+            "textDocument/rename".__raw = ''java_rename'';
+            "workspace/applyEdit".__raw = ''java_apply_edit'';
+            "language/status".__raw = ''java_status'';
           };
         };
       };
@@ -832,11 +604,7 @@ in {
         package = pkgs.unstable.lexical;
         cmd = ["${pkgs.unstable.lexical}/bin/lexical"];
         filetypes = ["elixir" "eelixir" "heex" "surface"];
-        rootDir.__raw = ''
-          function(fname)
-            return ${util}.root_pattern('mix.exs')(fname) or ${util}.find_git_ancestor(fname)
-          end
-        '';
+        rootDir.__raw = ''function(fname) return ${util}.root_pattern('mix.exs')(fname) or ${util}.find_git_ancestor(fname) end'';
       };
 
       ltex = {
@@ -844,6 +612,7 @@ in {
         autostart = true;
         package = pkgs.unstable.ltex-ls;
         cmd = ["${pkgs.unstable.ltex-ls}/bin/ltex-ls"];
+
         filetypes = [
           "bib"
           "gitcommit"
@@ -862,26 +631,10 @@ in {
           "mail"
           "text"
         ];
+
         rootDir.__raw = ''${util}.find_git_ancestor'';
-        extraOptions.get_language_id.__raw = ''
-          function(_, filetype)
-            local language_id_mapping = {
-              bib = 'bibtex',
-              plaintex = 'tex',
-              rnoweb = 'rsweave',
-              rst = 'restructuredtext',
-              tex = 'latex',
-              pandoc = 'markdown',
-              text = 'plaintext',
-            }
-            local language_id = language_id_mapping[filetype]
-            if language_id then
-              return language_id
-            else
-              return filetype
-            end
-          end
-        '';
+        extraOptions.get_language_id.__raw = ''ltex_get_language'';
+
         settings = {
           completionEnabled = true;
           enabled = [
@@ -911,28 +664,7 @@ in {
         package = pkgs.unstable.lua-language-server;
         cmd = ["${pkgs.unstable.lua-language-server}/bin/lua-language-server"];
         filetypes = ["lua"];
-        rootDir.__raw = ''
-          function(fname)
-            local root_files = {
-              '.luarc.json',
-              '.luarc.jsonc',
-              '.luacheckrc',
-              '.stylua.toml',
-              'stylua.toml',
-              'selene.toml',
-              'selene.yml',
-            }
-            local root = ${util}.root_pattern(unpack(root_files))(fname)
-            if root and root ~= vim.env.HOME then
-              return root
-            end
-            root = ${util}.root_pattern 'lua/'(fname)
-            if root then
-              return root
-            end
-            return ${util}.find_git_ancestor(fname)
-          end
-        '';
+        rootDir.__raw = ''lua_root_dir'';
       };
 
       marksman = {
@@ -941,12 +673,7 @@ in {
         package = pkgs.unstable.marksman;
         cmd = ["${pkgs.unstable.marksman}/bin/marksman" "server"];
         filetypes = ["markdown" "markdown.mdx"];
-        rootDir.__raw = ''
-          function(fname)
-            local root_files = { '.marksman.toml' }
-            return ${util}.root_pattern(unpack(root_files))(fname) or ${util}.find_git_ancestor(fname)
-          end
-        '';
+        rootDir.__raw = ''md_root_dir'';
       };
 
       nginx-language-server = {
@@ -955,11 +682,7 @@ in {
         package = pkgs.unstable.nginx-language-server;
         cmd = ["${pkgs.unstable.nginx-language-server}/bin/nginx-language-server"];
         filetypes = ["nginx"];
-        rootDir.__raw = ''
-          function(fname)
-            return ${util}.root_pattern('nginx.conf', '.git')(fname) or ${util}.find_git_ancestor(fname)
-          end
-        '';
+        rootDir.__raw = ''function(fname) return ${util}.root_pattern('nginx.conf', '.git')(fname) or ${util}.find_git_ancestor(fname) end'';
       };
 
       perlpls = {
@@ -983,15 +706,7 @@ in {
         package = pkgs.unstable.phpactor;
         cmd = ["${pkgs.unstable.phpactor}/bin/phpactor" "language-server"];
         filetypes = ["php"];
-        rootDir.__raw = ''
-          function(pattern)
-            local cwd = vim.loop.cwd()
-            local root = ${util}.root_pattern('composer.json', '.git', '.phpactor.json', '.phpactor.yml')(pattern)
-
-            -- prefer cwd if root is a descendant
-            return ${util}.path.is_descendant(cwd, root) and cwd or root
-          end
-        '';
+        rootDir.__raw = ''php_actor_root_dir'';
       };
 
       prismals = {
@@ -1010,11 +725,7 @@ in {
         package = rls;
         cmd = ["${rls}/bin/R" "--no-echo" "-e" "languageserver::run()"];
         filetypes = ["r" "rmd"];
-        rootDir.__raw = ''
-          function(fname)
-            return ${util}.find_git_ancestor(fname) or vim.loop.os_homedir()
-          end
-        '';
+        rootDir.__raw = ''function(fname) return ${util}.find_git_ancestor(fname) or vim.loop.os_homedir() end'';
       };
 
       ruby-lsp = {
@@ -1044,54 +755,10 @@ in {
         installRustc = true;
         installCargo = true;
         filetypes = ["rust"];
-        rootDir.__raw = ''
-          function(fname)
-            ${rust.isLibrary}
-            local reuse_active = is_library(fname)
-            if reuse_active then
-              return reuse_active
-            end
-
-            local cargo_crate_dir = ${util}.root_pattern 'Cargo.toml'(fname)
-            local cargo_workspace_root
-
-            if cargo_crate_dir ~= nil then
-              local cmd = {
-                "${pkgs.unstable.cargo}/bin/cargo",
-                'metadata',
-                '--no-deps',
-                '--format-version',
-                '1',
-                '--manifest-path',
-                ${util}.path.join(cargo_crate_dir, 'Cargo.toml'),
-              }
-
-              local result = ${async}.run_command(cmd)
-
-              if result and result[1] then
-                result = vim.json.decode(table.concat(result, ""))
-                if result['workspace_root'] then
-                  cargo_workspace_root = ${util}.path.sanitize(result['workspace_root'])
-                end
-              end
-            end
-
-            return cargo_workspace_root
-              or cargo_crate_dir
-              or ${util}.root_pattern 'rust-project.json'(fname)
-              or ${util}.find_git_ancestor(fname)
-          end
-        '';
+        rootDir.__raw = ''rust_root_dir'';
         extraOptions = {
           capabilities.experimental.serverStatusNotification = true;
-          before_init.__raw = ''
-            function(init_params, config)
-              -- See https://github.com/rust-lang/rust-analyzer/blob/eb5da56d839ae0a9e9f50774fa3eb78eb0964550/docs/dev/lsp-extensions.md?plain=1#L26
-              if config.settings and config.settings['rust-analyzer'] then
-                init_params.initializationOptions = config.settings['rust-analyzer']
-              end
-            end
-          '';
+          before_init.__raw = ''rust_before_init'';
         };
       };
 
@@ -1189,37 +856,9 @@ in {
           };
         };
         extraOptions = {
-          on_new_config.__raw = ''
-            function(new_config)
-              if not new_config.settings then
-                new_config.settings = {}
-              end
-              if not new_config.settings.editor then
-                new_config.settings.editor = {}
-              end
-              if not new_config.settings.editor.tabSize then
-                -- set tab size for hover
-                new_config.settings.editor.tabSize = vim.lsp.util.get_effective_tabstop()
-              end
-            end
-          '';
+          on_new_config.__raw = ''tailwind_on_new_config'';
         };
-        rootDir.__raw = ''
-          function(fname)
-            return util.root_pattern(
-              'tailwind.config.js',
-              'tailwind.config.cjs',
-              'tailwind.config.mjs',
-              'tailwind.config.ts',
-              'postcss.config.js',
-              'postcss.config.cjs',
-              'postcss.config.mjs',
-              'postcss.config.ts'
-            )(fname) or ${util}.find_package_json_ancestor(fname) or ${util}.find_node_modules_ancestor(fname) or ${util}.find_git_ancestor(
-              fname
-            )
-          end
-        '';
+        rootDir.__raw = ''tailwind_root_dir'';
       };
 
       taplo = {
@@ -1228,7 +867,7 @@ in {
         package = pkgs.unstable.taplo;
         cmd = ["${pkgs.unstable.taplo}/bin/taplo" "lsp" "stdio"];
         filetypes = ["toml"];
-        rootDir.__raw = ''util.find_git_ancestor'';
+        rootDir.__raw = ''${util}.find_git_ancestor'';
       };
 
       terraformls = {
@@ -1237,7 +876,7 @@ in {
         package = pkgs.unstable.terraform-ls;
         cmd = ["${pkgs.unstable.terraform-ls}/bin/terraform-ls" "serve"];
         filetypes = ["terraform" "terraform-vars"];
-        rootDir.__raw = ''util.root_pattern('.terraform', '.git')'';
+        rootDir.__raw = ''${util}.root_pattern('.terraform', '.git')'';
       };
 
       texlab = {
@@ -1357,7 +996,13 @@ in {
         cmd = ["${pkgs.unstable.yaml-language-server}/bin/yaml-language-server" "--stdio"];
         filetypes = ["yaml" "yaml.docker-compose" "yaml.gitlab"];
         rootDir.__raw = ''${util}.find_git_ancestor'';
-        settings.redhat.telemetry.enabled = false;
+        extraOptions = {
+          settings = {
+            redhat.telemetry.enabled = false;
+            schemaStore.enable = true;
+            schemas.__raw = lib.mkForce ''require('schemastore').yaml.schemas()'';
+          };
+        };
       };
     };
   };

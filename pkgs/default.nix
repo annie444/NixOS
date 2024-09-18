@@ -4,5 +4,4 @@ pkgs: {
   # add your custom packages here
   # example:
   treesitter-amber = pkgs.callPackage ./treesitter-amber.nix {};
-  noice = pkgs.callPackage ./noice.nix {};
 }

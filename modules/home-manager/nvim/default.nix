@@ -26,6 +26,14 @@ in {
       enable = true;
       defaultEditor = true;
       enableMan = true;
+      viAlias = true;
+      vimAlias = true;
+      withNodeJs = true;
+      withRuby = true;
+      colorscheme = "dracula";
+
+      package = inputs.neovim-nightly-overlay.packages.${pkgs.system}.default;
+
       extraConfigVim = ''
         set spell
         syntax enable
@@ -33,25 +41,43 @@ in {
         set modeline
         set modelines=5
       '';
-      performance = {
-        combinePlugins.enable = true;
-        byteCompileLua = {
-          enable = true;
-          configs = true;
-          initLua = true;
-          nvimRuntime = true;
-          plugins = true;
-        };
-      };
+
+      performance.combinePlugins.enable = false;
+
+      # performance = {
+      #   byteCompileLua = {
+      #     enable = true;
+      #     initLua = true;
+      #     plugins = true;
+      #   };
+      # };
+
       luaLoader.enable = true;
       editorconfig.enable = true;
       clipboard.providers.wl-copy.enable = true;
+
       extraPlugins = [
-        pkgs.vimPlugins.plenary-nvim
-        pkgs.vimPlugins.neodev-nvim
-        pkgs.vimPlugins.nui-nvim
+        pkgs.unstable.vimPlugins.plenary-nvim
+        pkgs.unstable.vimPlugins.neodev-nvim
+        pkgs.unstable.vimPlugins.nui-nvim
         pkgs.treesitter-amber
-        pkgs.noice
+        pkgs.unstable.vimPlugins.noice-nvim
+      ];
+
+      extraPython3Packages = p: [
+        p.ipykernel
+        p.ipywidgets
+        p.ipycanvas
+        p.ipython
+        p.ipyparallel
+        p.pynvim
+        p.jupyter-client
+        p.ueberzug
+        p.pillow
+        p.cairosvg
+        p.pnglatex
+        p.plotly
+        p.pyperclip
       ];
     };
   };

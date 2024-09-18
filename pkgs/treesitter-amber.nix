@@ -2,6 +2,7 @@
 pkgs.tree-sitter.buildGrammar {
   language = "amber";
   version = "2024-08-13";
+  generate = true;
   src = pkgs.fetchFromGitHub {
     owner = "amber-lang";
     repo = "tree-sitter-amber";
