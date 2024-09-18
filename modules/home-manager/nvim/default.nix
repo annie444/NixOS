@@ -51,7 +51,6 @@ in {
         pkgs.vimPlugins.neodev-nvim
         pkgs.vimPlugins.nui-nvim
         pkgs.treesitter-amber
-        pkgs.treesitter-just
         pkgs.noice
       ];
     };
