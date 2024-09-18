@@ -24,7 +24,6 @@
         pkgs.vimPlugins.nvim-treesitter.passthru.allGrammars
         ++ [
           pkgs.treesitter-amber
-          pkgs.treesitter-just
         ];
 
       settings = {
