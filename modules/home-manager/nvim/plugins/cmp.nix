@@ -84,12 +84,6 @@ in {
     luasnip = {
       enable = true;
       settings.enable_autosnippets = true;
-      filetypeExtend = {
-        lua = [
-          "c"
-          "cpp"
-        ];
-      };
     };
     friendly-snippets.enable = true;
     cmp-fuzzy-buffer.enable = true;

@@ -1,7 +1,10 @@
 {
   programs.nixvim.autoGroups = {
-    "General Settings" = {
+    "GeneralSettings" = {
       clear = true;
+    };
+    "CustomTex" = {
+      clear = false;
     };
   };
 }

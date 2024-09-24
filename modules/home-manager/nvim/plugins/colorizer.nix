@@ -25,9 +25,6 @@
         language = "lua";
         names = false;
       }
-      {
-        language = ''['*']'';
-      }
     ];
   };
 }

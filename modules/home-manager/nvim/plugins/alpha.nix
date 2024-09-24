@@ -20,7 +20,7 @@ let
             hl_shortcut = "AlphaShortcut"
         }
         if keybind then
-            keybind_opts = if_nil(keybind_opts, { noremap = true, silent = true, nowait = true })
+            keybind_opts = vim.F.if_nil(keybind_opts, { noremap = true, silent = true, nowait = true })
             opts.keymap = { "n", sc_, keybind, keybind_opts }
         end
 

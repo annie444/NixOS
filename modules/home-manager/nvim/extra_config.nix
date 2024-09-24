@@ -51,73 +51,77 @@
   rust = builtins.readFile ./configs/rust.lua;
   tailwind = builtins.readFile ./configs/tailwind.lua;
 in {
-  programs.nixvim.extraConfigLua =
-    ''
-      local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
+  programs.nixvim = {
+    extraConfigLuaPre = builtins.concatStringsSep "\n" [
+      modes
+    ];
+    extraConfigLua =
+      ''
+        local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
 
-      parser_config.amber = {
-        install_info = {
-          url = "${pkgs.treesitter-amber}",
-          files = {"src/parser.c"},
-          branch = "main",
-          generate_requires_npm = true,
-          requires_generate_from_grammar = true, -- if folder contains pre-generated src/parser.c
-        },
-        filetype = "ab",
-      }
+        parser_config.amber = {
+          install_info = {
+            url = "${pkgs.treesitter-amber}",
+            files = {"src/parser.c"},
+            branch = "main",
+            generate_requires_npm = true,
+            requires_generate_from_grammar = true, -- if folder contains pre-generated src/parser.c
+          },
+          filetype = "ab",
+        }
 
-      ${reloadWorkspace}
-      ${isLibrary}
+        ${reloadWorkspace}
+        ${isLibrary}
 
-      local function rust_root_dir(fname)
-        local reuse_active = is_library(fname)
-        if reuse_active then
-          return reuse_active
-        end
+        local function rust_root_dir(fname)
+          local reuse_active = is_library(fname)
+          if reuse_active then
+            return reuse_active
+          end
 
-        local cargo_crate_dir = ${util}.root_pattern 'Cargo.toml'(fname)
-        local cargo_workspace_root
+          local cargo_crate_dir = ${util}.root_pattern 'Cargo.toml'(fname)
+          local cargo_workspace_root
 
-        if cargo_crate_dir ~= nil then
-          local cmd = {
-            "${pkgs.unstable.cargo}/bin/cargo",
-            'metadata',
-            '--no-deps',
-            '--format-version',
-            '1',
-            '--manifest-path',
-            ${util}.path.join(cargo_crate_dir, 'Cargo.toml'),
-          }
+          if cargo_crate_dir ~= nil then
+            local cmd = {
+              "${pkgs.unstable.cargo}/bin/cargo",
+              'metadata',
+              '--no-deps',
+              '--format-version',
+              '1',
+              '--manifest-path',
+              ${util}.path.join(cargo_crate_dir, 'Cargo.toml'),
+            }
 
-          local result = ${async}.run_command(cmd)
+            local result = ${async}.run_command(cmd)
 
-          if result and result[1] then
-            result = vim.json.decode(table.concat(result, ""))
-            if result['workspace_root'] then
-              cargo_workspace_root = ${util}.path.sanitize(result['workspace_root'])
+            if result and result[1] then
+              result = vim.json.decode(table.concat(result, ""))
+              if result['workspace_root'] then
+                cargo_workspace_root = ${util}.path.sanitize(result['workspace_root'])
+              end
             end
           end
+
+          return cargo_workspace_root
+            or cargo_crate_dir
+            or ${util}.root_pattern 'rust-project.json'(fname)
+            or ${util}.find_git_ancestor(fname)
         end
 
-        return cargo_workspace_root
-          or cargo_crate_dir
-          or ${util}.root_pattern 'rust-project.json'(fname)
-          or ${util}.find_git_ancestor(fname)
-      end
-
-    ''
-    + builtins.concatStringsSep "\n" [
-      icons
-      noice
-      eslint
-      go
-      java
-      ltex
-      lua
-      markdown
-      php
-      rust
-      modes
-      tailwind
-    ];
+      ''
+      + builtins.concatStringsSep "\n" [
+        icons
+        noice
+        eslint
+        go
+        java
+        ltex
+        lua
+        markdown
+        php
+        rust
+        tailwind
+      ];
+  };
 }

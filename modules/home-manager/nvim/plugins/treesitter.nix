@@ -6,6 +6,7 @@
   programs.nixvim.plugins = {
     treesitter-context = {
       enable = true;
+      package = pkgs.unstable.vimPlugins.nvim-treesitter-context;
       settings = {
         enable = true;
         max_lines = 0;
@@ -20,8 +21,9 @@
 
     treesitter = {
       enable = true;
+      package = pkgs.unstable.vimPlugins.nvim-treesitter;
       grammarPackages =
-        pkgs.vimPlugins.nvim-treesitter.passthru.allGrammars
+        pkgs.unstable.vimPlugins.nvim-treesitter.passthru.allGrammars
         ++ [
           pkgs.treesitter-amber
         ];

@@ -1,5 +1,6 @@
 {
   programs.nixvim.opts = {
+    background = "dark";
     backup = false;
     conceallevel = 2;
     fileencoding = "utf-8";

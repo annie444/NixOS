@@ -1,37 +1,16 @@
-let
+{pkgs, ...}: let
   added = "#67B0E8";
   delete = "#E57474";
   change = "#C47FD5";
   error = "#E57474";
   warn = "#E5C76B";
   hint = "#8CCF7E";
-  foreground = {
-    __raw = ''
-      function()
-        if vim.o.background == "dark" then
-          foreground = "#5A5D61"
-        else
-          foreground = "#000000"
-        end
-        return foreground
-      end
-    '';
-  };
-  background = {
-    __raw = ''
-      function()
-        if vim.o.background == "dark" then
-          background = "#0F1416"
-        else
-          background = ""
-        end
-        return background
-      end
-    '';
-  };
+  foreground = "#5A5D61";
+  background = "#0F1416";
 in {
   programs.nixvim.plugins.lualine = {
     enable = true;
+    package = pkgs.unstable.vimPlugins.lualine-nvim;
     settings = {
       options = {
         globalstatus = true;
@@ -153,12 +132,11 @@ in {
           {
             __unkeyed-1.__raw = ''
               function()
-                local mode_names = require("plugins.lualine.modes").name
                 local mode_name = vim.api.nvim_get_mode().mode
-                if mode_names[mode_name] == nil then
+                if mode_color.name[mode_name] == nil then
                   return mode_name
                 end
-                return mode_names[mode_name]
+                return mode_color.name[mode_name]
               end
             '';
             separator = {
@@ -167,7 +145,7 @@ in {
             };
             color.__raw = ''
               function()
-                return { bg = mode_color[vim.api.nvim_get_mode().mode], fg = "Black" }
+                return { bg = mode_color.colors[vim.api.nvim_get_mode().mode], fg = "Black" }
               end
             '';
           }
@@ -347,7 +325,7 @@ in {
             __unkeyed-1 = "progress";
             color.__raw = ''
               function()
-                return { bg = mode_color[vim.api.nvim_get_mode().mode], fg = "Black" }
+                return { bg = mode_color.colors[vim.api.nvim_get_mode().mode], fg = "Black" }
               end
             '';
             separator = {
@@ -381,7 +359,7 @@ in {
             '';
             color.__raw = ''
               function()
-                return { bg = mode_color[vim.api.nvim_get_mode().mode], fg = "Black" }
+                return { bg = mode_color.colors[vim.api.nvim_get_mode().mode], fg = "Black" }
               end
             '';
             separator = {

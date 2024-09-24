@@ -71,12 +71,9 @@
           end
         end
       '';
-      group = "general";
+      group = "GeneralSettings";
+      once = true;
       desc = "Open NeoTree when it's a Directory";
-    }
-
-    {
-      event = "CustomTex";
     }
 
     {
@@ -142,7 +139,7 @@
           vim.opt.clipboard = "unnamedplus"
         end
       '';
-      group = "General Settings";
+      group = "GeneralSettings";
       desc = "Lazy load clipboard";
     }
 
@@ -155,7 +152,7 @@
           vim.cmd "startinsert!"
         end
       '';
-      group = "General Settings";
+      group = "GeneralSettings";
       desc = "Terminal Options";
     }
 
@@ -168,7 +165,7 @@
           end
         end
       '';
-      group = "General Settings";
+      group = "GeneralSettings";
       desc = "Go To The Last Cursor Position";
     }
 
@@ -179,18 +176,18 @@
           require("vim.highlight").on_yank { higroup = "YankHighlight", timeout = 200 }
         end
       '';
-      group = "General Settings";
+      group = "GeneralSettings";
       desc = "Highlight when yanking";
     }
 
     {
       event = "BufEnter";
-      callback = ''
+      callback.__raw = ''
         function()
-          vim.opt.formatoptions:remove { "c", "r", "o" }
+          vim.opt.formatoptions:remove({ "c", "r", "o" })
         end
       '';
-      group = "General Settings";
+      group = "GeneralSettings";
       desc = "Disable New Line Comment";
     }
 
@@ -208,7 +205,7 @@
           vim.bo.shiftwidth = 4
         end
       '';
-      group = "General Settings";
+      group = "GeneralSettings";
       desc = "Set shiftwidth to 4 in these filetypes";
     }
 
@@ -224,7 +221,7 @@
           vim.cmd "silent! w"
         end
       '';
-      group = "General Settings";
+      group = "GeneralSettings";
       desc = "Auto Save";
     }
 
@@ -235,7 +232,7 @@
           vim.cmd "checktime"
         end
       '';
-      group = "General Settings";
+      group = "GeneralSettings";
       desc = "Update file when there are changes";
     }
 
@@ -246,7 +243,7 @@
           vim.cmd "wincmd ="
         end
       '';
-      group = "General Settings";
+      group = "GeneralSettings";
       desc = "Equalize Splits";
     }
 
@@ -261,7 +258,7 @@
           end
         end
       '';
-      group = "General Settings";
+      group = "GeneralSettings";
       desc = "Highlighting matched words when searching";
     }
 
@@ -279,7 +276,7 @@
           vim.opt_local.spell = true
         end
       '';
-      group = "General Settings";
+      group = "GeneralSettings";
       desc = "Enable Wrap in these filetypes";
     }
   ];
