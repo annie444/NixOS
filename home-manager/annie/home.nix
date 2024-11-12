@@ -14,6 +14,8 @@
     outputs.homeManagerModules.tmux
     outputs.homeManagerModules.nvim
     outputs.homeManagerModules.ssh
+    outputs.homeManagerModules.flatpak
+    outputs.homeManagerModules.kitty
 
     inputs.sops-nix.homeManagerModules.sops
 

@@ -136,6 +136,14 @@ in {
       magicOrExtension = ''\x7fELF....AI\x02'';
     };
 
+    systemd.services.flatpak-repo = {
+      wantedBy = ["multi-user.target"];
+      path = [pkgs.flatpak];
+      script = ''
+        flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+      '';
+    };
+
     virtualisation = {
       waydroid = lib.mkIf cfg.waydroid.enable {
         enable = true;
