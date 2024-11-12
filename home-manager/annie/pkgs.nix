@@ -35,6 +35,16 @@
     _1password-gui
     ocs-url
     google-chrome
+    libreoffice-qt6-fresh
+    unoconv
+    hunspell
+    hunspellDicts.en_US
+    hunspellDicts.en_CA
+    hunspellDicts.en_AU
+    hunspellDicts.en_GB-ise
+    hunspellDicts.es_PR
+    hunspellDicts.es_ES
+    hunspellDicts.es_CU
 
     # for firefox
     speechd
@@ -58,6 +68,10 @@
     helmfile-wrapped
     krew
     kubectl-tree
+
+    # kubernetes plugins
+    cilium-cli
+    hubble
 
     # Container development tools
     buildah
