@@ -79,8 +79,6 @@
     parted
     gptfdisk
     ddrescue
-    ccrypt
-    cryptsetup
 
     # Compilers
     autoconf

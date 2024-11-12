@@ -126,32 +126,6 @@ in {
       fontDir.enable = true;
     };
 
-    system.fsPackages = [pkgs.bindfs];
-    fileSystems = let
-      mkRoSymBind = path: {
-        device = path;
-        fsType = "fuse.bindfs";
-        options = ["ro" "resolve-symlinks" "x-gvfs-hide"];
-      };
-      aggregatedIcons = pkgs.buildEnv {
-        name = "system-icons";
-        paths = with pkgs; [
-          libsForQt5.breeze-qt5
-          gnome.gnome-themes-extra
-          kdePackages.breeze
-        ];
-        pathsToLink = ["/share/icons"];
-      };
-      aggregatedFonts = pkgs.buildEnv {
-        name = "system-fonts";
-        paths = config.fonts.packages;
-        pathsToLink = ["/share/fonts"];
-      };
-    in {
-      "/usr/share/icons" = mkRoSymBind "${aggregatedIcons}/share/icons";
-      "/usr/local/share/fonts" = mkRoSymBind "${aggregatedFonts}/share/fonts";
-    };
-
     # https://nixos.wiki/wiki/Appimage
     boot.binfmt.registrations.appimage = {
       wrapInterpreterInShell = false;
@@ -287,7 +261,6 @@ in {
             kdePackages.qt6ct
             kdePackages.qt6gtk2
             kdePackages.plasma5support
-            kdePackages.libquotient
             kdePackages.breeze
             flatpak-builder
             gnome.adwaita-icon-theme
