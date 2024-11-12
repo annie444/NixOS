@@ -4,6 +4,7 @@
   inputs,
   outputs,
   config,
+  lib,
   ...
 }: {
   # You can import other home-manager modules here
@@ -50,7 +51,6 @@
     defaultSopsFormat = "yaml";
     validateSopsFiles = true;
     secrets = {
-      
       "ssh/github/public" = {
         path = "/home/annie/.ssh/github_id25519.pub";
       };
@@ -84,6 +84,8 @@
     fish.enable = true;
     tmux.enable = true;
     nvim.enable = true;
+    kitty.enable = true;
+    flatpak.enable = true;
 
     ssh = {
       enable = true;
@@ -91,6 +93,7 @@
       homelabKeyPath = config.sops.secrets."ssh/homelab/private".path;
       ipacKeyPath = config.sops.secrets."ssh/ipac/private".path;
       githubKeyPath = config.sops.secrets."ssh/github/private".path;
+      gui = lib.mkDefault true;
     };
   };
 
@@ -102,6 +105,10 @@
       mbsync.Unit.After = ["sops-nix.service"];
     };
   };
+
+  services.kdeconnect.enable = true;
+
+  home.sessionVariables.NIXOS_OZONE_WL = "1";
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   home.stateVersion = "23.11";

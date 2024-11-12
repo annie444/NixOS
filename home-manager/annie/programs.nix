@@ -1,6 +1,4 @@
 {
-  lib,
-  config,
   outputs,
   pkgs,
   ...
@@ -32,5 +30,24 @@
     htop.enable = true;
     lazygit.enable = true;
     less.enable = true;
+    firefox = {
+      enable = true;
+      package = pkgs.firefox.override {
+        nativeMessagingHosts = [
+          pkgs.kdePackages.plasma-browser-integration
+        ];
+        cfg = {
+          pipewireSupport = true;
+          ffmpegSupport = true;
+          gssSupport = true;
+          useGlvnd = true;
+          alsaSupport = true;
+          sndioSupport = true;
+          jackSupport = true;
+          smartcardSupport = true;
+          speechSynthesisSupport = true;
+        };
+      };
+    };
   };
 }

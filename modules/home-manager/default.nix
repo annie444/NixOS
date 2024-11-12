@@ -7,4 +7,5 @@
   nvim = import ./nvim;
   ssh = import ./ssh.nix;
   kitty = import ./kitty.nix;
+  flatpak = import ./flatpak.nix;
 }

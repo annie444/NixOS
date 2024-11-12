@@ -22,7 +22,32 @@
     };
   };
 
+  qt = {
+    enable = true;
+    style.package = pkgs.qt6Packages.qtstyleplugin-kvantum;
+    platformTheme.name = "kde";
+  };
+
   home.packages = with pkgs; [
+    # GUI packages
+    thunderbird
+    _1password
+    _1password-gui
+    ocs-url
+    google-chrome
+
+    # for firefox
+    speechd
+    opensc
+    libjack2
+    sndio
+    alsa-lib
+    libpulseaudio
+    libglvnd
+    libkrb5
+    ffmpeg
+    pipewire
+
     # Add your packages here
     devbox
 

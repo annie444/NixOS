@@ -1,3 +1,0 @@
-{
-  disko.devices = {};
-}

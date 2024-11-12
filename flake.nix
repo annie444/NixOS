@@ -63,24 +63,6 @@
     homeManagerModules = import ./modules/home-manager;
 
     nixosConfigurations = {
-      homelab01 = nixpkgs.lib.nixosSystem {
-        specialArgs = {inherit inputs outputs;};
-        modules =
-          baseSystem
-          ++ [
-            ./nixos/homelab01/configuration.nix
-            ./nixos/homelab01/disko-config.nix
-          ];
-      };
-      homelab02 = nixpkgs.lib.nixosSystem {
-        specialArgs = {inherit inputs outputs;};
-        modules =
-          baseSystem
-          ++ [
-            ./nixos/homelab02/configuration.nix
-            ./nixos/homelab02/disko-config.nix
-          ];
-      };
       spinoza = nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs outputs;};
         modules =
@@ -93,19 +75,11 @@
     };
 
     homeConfigurations = {
-      "annie-no-gui" = home-manager.lib.homeManagerConfiguration {
+      "annie" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
         extraSpecialArgs = {inherit inputs outputs;};
         modules = [
           ./home-manager/annie/home.nix
-        ];
-      };
-      "annie-gui" = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.x86_64-linux;
-        extraSpecialArgs = {inherit inputs outputs;};
-        modules = [
-          ./home-manager/annie/home.nix
-          ./home-manager/annie/gui.nix
         ];
       };
     };
