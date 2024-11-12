@@ -34,6 +34,12 @@
     krew
     kubectl-tree
 
+    # Container development tools
+    buildah
+    skopeo
+    passt
+    fuse-overlayfs
+
     # security stuff
     sops
     age
