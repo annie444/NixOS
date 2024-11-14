@@ -151,6 +151,9 @@ in {
     };
 
     networking.networkmanager.enable = true;
+    environment.variables = {
+      XDG_DATA_DIRS = "$XDG_DATA_DIRS:/usr/share:/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share";
+    };
 
     hardware = {
       opengl = {
@@ -164,11 +167,14 @@ in {
         support32Bit = true;
       };
     };
+
     services = {
       dbus.enable = true;
       udisks2.enable = true;
       atd.enable = true;
       flatpak.enable = true;
+      packagekit.enable = true;
+      fwupd.enable = true;
       pipewire = {
         enable = true;
         alsa.enable = true;
@@ -270,6 +276,9 @@ in {
             kdePackages.qt6gtk2
             kdePackages.plasma5support
             kdePackages.breeze
+            kdePackages.discover
+            kdePackages.packagekit-qt
+            libportal
             flatpak-builder
             gnome.adwaita-icon-theme
             shared-mime-info
